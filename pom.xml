@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>maven-java-starter</groupId>
+        <artifactId>maven-java-starter</artifactId>
+        <version>java11-1.0</version>
+    </parent>
+
+    <!-- coordinates -->
+    <groupId>immutable-config</groupId>
+    <artifactId>immutable-config</artifactId>
+    <version>1.0.0</version>
+
+    <!-- additional information -->
+    <name>Immutable Configurations</name>
+    <description>Configuration utility library</description>
+    <inceptionYear>2020</inceptionYear>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/luiinge/immutable-config/issues</url>
+    </issueManagement>
+
+
+    <!-- versions -->
+    <properties>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <commons-configuration2.version>2.6</commons-configuration2.version>
+        <commons-lang3.version>3.9</commons-lang3.version>
+        <snakeyaml.version>1.25</snakeyaml.version>
+        <jackson.version>2.10.1</jackson.version>
+        <system-rules.version>1.18.0</system-rules.version>
+    </properties>
+
+    <!-- dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>${commons-configuration2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+        <!-- test dependencies -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${system-rules.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+            <version>4.11-beta-1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+    <!-- temporary, use github as maven repository -->
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://luiinge.github.io/maven-repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
