@@ -344,7 +344,7 @@ public class TestConfigurationBuilder {
             "property.b", "",
             "property.c", "c"
         )).asMap();
-        assertThat(confAsMap).containsExactly(
+        assertThat(confAsMap).contains(
             Map.entry("property.a", ""),
             Map.entry("property.b", ""),
             Map.entry("property.c", "c")
@@ -359,7 +359,7 @@ public class TestConfigurationBuilder {
             "property.b", "",
             "property.c", "c"
         )).asProperties();
-        assertThat(confAsProperties).containsExactly(
+        assertThat(confAsProperties).contains(
             Map.entry("property.a", ""),
             Map.entry("property.b", ""),
             Map.entry("property.c", "c")
