@@ -10,23 +10,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 
+/**
+ * This annotation allows classes to be used as a data source for a configuration
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface AnnotatedConfiguration {
 
-    String path() default "";
-
-
-    String pathPrefix() default "";
-
-
-    Property[] properties() default {};
-
-
-    boolean systemProperties() default false;
-
-
-    boolean environmentProperties() default false;
-
+    /** Pairs of [key,value] that defines the configuration */
+    Property[] value() default {};
 
 }

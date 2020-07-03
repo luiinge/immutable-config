@@ -1,11 +1,1 @@
-# Java
-**/target
-
-# IntelliJ
-**/.idea
-*.iml
-**/out
-/.classpath
-/.project
-/.settings/
-/src/site/markdown/
+/target

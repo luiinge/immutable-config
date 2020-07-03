@@ -19,12 +19,12 @@ import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
 import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
-import imconfig.ConfigurationBuilder;
+import imconfig.ConfigurationFactory;
 import imconfig.ConfigurationException;
 import imconfig.Property;
 
 
-public class TestConfigurationBuilder {
+public class TestConfigurationFactory {
 
     private static final String KEY_ENV = "test.env.key";
     private static final String VAL_ENV = "Test Environment Value";
@@ -81,35 +81,11 @@ public class TestConfigurationBuilder {
     @Rule
     public final EnvironmentVariables env = new EnvironmentVariables();
 
-    private ConfigurationBuilder builder;
+    private ConfigurationFactory factory;
 
 
-    @AnnotatedConfiguration(path = "src/test/resources/test-conf.properties", environmentProperties = true)
-    public static class ConfProperties {
-    }
 
-
-    @AnnotatedConfiguration(path = "classpath:test-conf.json", environmentProperties = true)
-    public static class ConfJSON {
-    }
-
-
-    @AnnotatedConfiguration(path = "classpath:test-conf.xml", environmentProperties = true)
-    public static class ConfXML {
-    }
-
-
-    @AnnotatedConfiguration(path = "classpath:test-conf.yaml", environmentProperties = true)
-    public static class ConfYAML {
-    }
-
-
-    @AnnotatedConfiguration(path = "classpath:non-existing.properties", environmentProperties = true)
-    public static class ConfNoFile {
-    }
-
-
-    @AnnotatedConfiguration(environmentProperties = true, properties = {
+    @AnnotatedConfiguration({
         @Property(key = KEY_ENV, value = VAL_ENV),
         @Property(key = KEY_STRING, value = VAL_STRING),
         @Property(key = KEY_STRINGS, value = { VAL_STRINGS_1, VAL_STRINGS_2 }),
@@ -140,128 +116,123 @@ public class TestConfigurationBuilder {
         }),
         @Property(key = "properties2.test2.key.string", value = VAL_STRING)
     })
-    public static class ConfAnnotatedProps {
-    }
+    public static class ConfAnnotatedProps {    }
 
 
-    @AnnotatedConfiguration(path = "classpath:malformed-conf.xml", environmentProperties = true)
-    public static class ConfMalformed {
-    }
-
-
-    @AnnotatedConfiguration(path = "classpath:unrecognized-format.xyq", environmentProperties = true)
-    public static class ConfUnrecognized {
-    }
 
 
     @Before
     public void prepare() {
-        builder = ConfigurationBuilder.instance();
+        factory = ConfigurationFactory.instance();
         env.set(KEY_ENV, VAL_ENV);
     }
 
 
     @Test
-    public void testBasicConfiguration() {
-        Configuration conf = builder.buildFromEnvironment();
-        assertEnvProperties(conf);
+    public void createConfigurationFromEnvironmentProperties() {
+        Configuration conf = factory.fromEnvironment();
+        assertEnvironmentPropertiesExist(conf);
     }
 
 
     @Test
-    public void testAnnotatedConfigurationUsingFile() {
-        Configuration conf = Configuration.fromAnnotation(ConfYAML.class);
-        assertProperties(conf);
+    public void createConfigurationFromYAMLFile() {
+        Configuration conf = factory.fromClasspathResource("test-conf.yaml");
+        assertExpectedPropertiesExist(conf);
 
     }
 
 
     @Test
-    public void testPropertyFileConfiguration() throws ConfigurationException {
-        Configuration conf = builder.merge(
-            builder.buildFromEnvironment(),
-            builder.buildFromAnnotation(ConfProperties.class)
-        );
-        assertProperties(conf);
-        assertEnvProperties(conf);
+    public void createConfigurationFromPropertiesFile() throws ConfigurationException {
+        Configuration conf = factory.fromClasspathResource("test-conf.properties");
+        assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void testJSONConfiguration() throws ConfigurationException {
-        Configuration conf = builder.merge(
-            builder.buildFromEnvironment(),
-            builder.buildFromAnnotation(ConfJSON.class)
-        );
-        assertProperties(conf);
-        assertEnvProperties(conf);
+    public void createConfigurationFromJSONFile() throws ConfigurationException {
+        Configuration conf = factory.fromClasspathResource("test-conf.json");
+        assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void testYAMLConfiguration() throws ConfigurationException {
-        Configuration conf = builder.merge(
-            builder.buildFromEnvironment(),
-            builder.buildFromAnnotation(ConfYAML.class)
-        );
-        assertProperties(conf);
-        assertEnvProperties(conf);
+    public void createConfigurationFromXMLFile() throws ConfigurationException {
+        Configuration conf = factory.fromClasspathResource("test-conf.xml");
+        assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void testXMLConfiguration() throws ConfigurationException {
-        Configuration conf = builder.merge(
-            builder.buildFromEnvironment(),
-            builder.buildFromAnnotation(ConfXML.class)
-        );
-        assertProperties(conf);
-        assertEnvProperties(conf);
+    public void appendEnvironmentConfigurationWithPropertiesFile() throws ConfigurationException {
+        Configuration conf = factory
+            .fromEnvironment()
+            .appendFromClasspathResource("test-conf.properties");
+        assertExpectedPropertiesExist(conf);
+        assertEnvironmentPropertiesExist(conf);
     }
 
 
+
     @Test
-    public void testAnnotatedPropertiesConfiguration() throws ConfigurationException {
-        Configuration conf = builder.merge(
-            builder.buildFromEnvironment(),
-            builder.buildFromAnnotation(ConfAnnotatedProps.class)
-        );
-        assertProperties(conf);
-        assertEnvProperties(conf);
+    public void createConfigurationFromAnnotatedClass() throws ConfigurationException {
+        Configuration conf = factory.fromAnnotation(ConfAnnotatedProps.class);
+        assertExpectedPropertiesExist(conf);
     }
 
 
     @Test(expected = ConfigurationException.class)
-    public void testMalformedConfiguration() throws ConfigurationException {
-        builder.buildFromAnnotation(ConfMalformed.class);
+    public void cannotCreateConfigurationFromMalformedFile() throws ConfigurationException {
+        factory.fromClasspathResource("malformed-conf.xml");
     }
 
 
     @Test(expected = ConfigurationException.class)
-    public void testUnrecognizedConfiguration() throws ConfigurationException {
-        builder.buildFromAnnotation(ConfUnrecognized.class);
+    public void cannotCreateConfigurationFromFileWithUnrecognizedFormat() throws ConfigurationException {
+        factory.fromClasspathResource("unrecognized-format.xyq");
     }
 
 
     @Test(expected = ConfigurationException.class)
-    public void testNonExistingFileConfiguratio() throws ConfigurationException {
-        builder.buildFromAnnotation(ConfNoFile.class);
+    public void cannotCreateConfigurationFromNonExistingFile() throws ConfigurationException {
+        factory.fromClasspathResource("unexisting-file");
     }
 
 
     @Test
-    public void testToString() throws ConfigurationException {
-        Assertions.assertThat(builder.buildFromAnnotation(ConfAnnotatedProps.class).toString())
+    public void invokingToStringReturnsEveryValuedProperty() throws ConfigurationException {
+        Assertions.assertThat(factory.fromAnnotation(ConfAnnotatedProps.class).toString())
             .isEqualTo(
-                "configuration:\n" + "---------------\n" + "test.env.key : Test Environment Value\n" + "properties.test.key.string : Properties Test String Value\n" + "properties.test.key.strings : [Properties Array Value 1, Properties Array Value 2]\n" + "properties.test.key.bool : true\n" + "properties.test.key.bools : [true, false, true]\n" + "properties.test.key.integer : 77\n" + "properties.test.key.integers : [77, 79, 83]\n" + "properties.test.key.long : 54353\n" + "properties.test.key.longs : [54353, 65256, 98432]\n" + "properties.test.key.float : 6.98\n" + "properties.test.key.floats : [6.98, 2.23, 1.24]\n" + "properties.test.key.double : 3.45\n" + "properties.test.key.doubles : [3.45, 6.76, 9.32]\n" + "properties.test.key.bigdecimal : 755.87\n" + "properties.test.key.bigdecimals : [755.87, 876.43, 908.32]\n" + "properties.test.key.biginteger : 123456789\n" + "properties.test.key.bigintegers : [123456789, 543987532, 549874348]\n" + "properties2.test2.key.string : Properties Test String Value\n" + "---------------"
+                "configuration:\n" +
+                "---------------\n" +
+                "test.env.key : Test Environment Value\n" +
+                "properties.test.key.string : Properties Test String Value\n" +
+                "properties.test.key.strings : [Properties Array Value 1, Properties Array Value 2]\n" +
+                "properties.test.key.bool : true\n" +
+                "properties.test.key.bools : [true, false, true]\n" +
+                "properties.test.key.integer : 77\n" +
+                "properties.test.key.integers : [77, 79, 83]\n" +
+                "properties.test.key.long : 54353\n" +
+                "properties.test.key.longs : [54353, 65256, 98432]\n" +
+                "properties.test.key.float : 6.98\n" +
+                "properties.test.key.floats : [6.98, 2.23, 1.24]\n" +
+                "properties.test.key.double : 3.45\n" +
+                "properties.test.key.doubles : [3.45, 6.76, 9.32]\n" +
+                "properties.test.key.bigdecimal : 755.87\n" +
+                "properties.test.key.bigdecimals : [755.87, 876.43, 908.32]\n" +
+                "properties.test.key.biginteger : 123456789\n" +
+                "properties.test.key.bigintegers : [123456789, 543987532, 549874348]\n" +
+                "properties2.test2.key.string : Properties Test String Value\n" +
+                "---------------"
             );
     }
 
 
     @Test
     public void testFilter() throws ConfigurationException {
-        Configuration conf = builder
-            .buildFromAnnotation(ConfAnnotatedProps.class)
+        Configuration conf = factory
+            .fromAnnotation(ConfAnnotatedProps.class)
             .filtered("properties2");
         System.out.println(conf);
         Assertions.assertThat(conf.get("properties.test.key.string", String.class)).isEmpty();
@@ -283,14 +254,14 @@ public class TestConfigurationBuilder {
         map2.put("property.c", "c");
         map2.put("property.d", "");
 
-        Configuration conf1 = builder.buildFromMap(map1).appendFromMap(map2);
+        Configuration conf1 = factory.fromMap(map1).appendFromMap(map2);
         assertThat(conf1.get("property.a", String.class)).contains("aa");
         assertThat(conf1.get("property.b", String.class)).contains("b");
         assertThat(conf1.get("property.c", String.class)).contains("c");
         assertThat(conf1.get("property.d", String.class)).contains("d");
         assertThat(conf1.getList("property.a", String.class)).hasSize(1);
 
-        Configuration conf2 = builder.buildFromMap(map2).appendFromMap(map1);
+        Configuration conf2 = factory.fromMap(map2).appendFromMap(map1);
         assertThat(conf2.get("property.a", String.class)).contains("a");
         assertThat(conf2.get("property.b", String.class)).contains("b");
         assertThat(conf2.get("property.c", String.class)).contains("c");
@@ -302,31 +273,48 @@ public class TestConfigurationBuilder {
 
 
     @Test
-    public void testEmptyProperties() {
-        var conf = Configuration.fromMap(Map.of(
+    public void invokingGetOnEmptyPropertyReturnsEmptyOptional() {
+        var conf = factory.fromMap(Map.of(
             "property.a", "",
             "property.b", "",
             "property.c", "c"
         ));
-        System.out.println(conf);
         assertThat(conf.keys()).contains("property.a","property.b","property.c");
         assertThat(conf.hasProperty("property.a")).isTrue();
         assertThat(conf.hasProperty("property.b")).isTrue();
         assertThat(conf.hasProperty("property.c")).isTrue();
         assertThat(conf.get("property.a", String.class)).isEmpty();
-        assertThat(conf.get("property.a", Integer.class)).isEmpty();
-        assertThat(conf.getList("property.b",String.class)).isEmpty();
+        assertThat(conf.get("property.b", Integer.class)).isEmpty();
+        assertThat(conf.get("property.c", String.class)).isNotEmpty();
     }
 
 
 
     @Test
-    public void testWithPrefix() {
-        var conf = Configuration.fromMap(Map.of(
+    public void invokingGetListOnEmptyPropertyReturnsEmptyList() {
+        var conf = factory.fromMap(Map.of(
             "property.a", "",
             "property.b", "",
             "property.c", "c"
-        )).withPrefix("prefix");
+        ));
+        assertThat(conf.keys()).contains("property.a","property.b","property.c");
+        assertThat(conf.hasProperty("property.a")).isTrue();
+        assertThat(conf.hasProperty("property.b")).isTrue();
+        assertThat(conf.hasProperty("property.c")).isTrue();
+        assertThat(conf.getList("property.a", String.class)).isEmpty();
+        assertThat(conf.getList("property.b", Integer.class)).isEmpty();
+        assertThat(conf.getList("property.c",String.class)).isNotEmpty();
+    }
+
+
+
+    @Test
+    public void deriveConfigurationAddingPrefix() {
+        var conf = factory.fromPairs(
+            "property.a", "",
+            "property.b", "",
+            "property.c", "c"
+        ).withPrefix("prefix");
         assertThat(conf.keys()).contains("prefix.property.a","prefix.property.b","prefix.property.c");
         assertThat(conf.hasProperty("prefix.property.a")).isTrue();
         assertThat(conf.hasProperty("prefix.property.b")).isTrue();
@@ -338,13 +326,13 @@ public class TestConfigurationBuilder {
 
 
     @Test
-    public void testAsMap() {
-        var confAsMap = Configuration.fromMap(Map.of(
+    public void transformConfigurationToMap() {
+        var confAsMap = factory.fromMap(Map.of(
             "property.a", "",
             "property.b", "",
             "property.c", "c"
         )).asMap();
-        assertThat(confAsMap).containsExactly(
+        assertThat(confAsMap).contains(
             Map.entry("property.a", ""),
             Map.entry("property.b", ""),
             Map.entry("property.c", "c")
@@ -353,20 +341,22 @@ public class TestConfigurationBuilder {
 
 
     @Test
-    public void testAsProperties() {
-        var confAsProperties = Configuration.fromMap(Map.of(
+    public void transformConfigurationToProperties() {
+        var confAsProperties = factory.fromMap(Map.of(
             "property.a", "",
             "property.b", "",
             "property.c", "c"
         )).asProperties();
-        assertThat(confAsProperties).containsExactly(
+        assertThat(confAsProperties).contains(
             Map.entry("property.a", ""),
             Map.entry("property.b", ""),
             Map.entry("property.c", "c")
         );
     }
 
-    private void assertProperties(Configuration conf) {
+
+
+    private void assertExpectedPropertiesExist(Configuration conf) {
 
         System.out.println(conf);
 
@@ -418,7 +408,7 @@ public class TestConfigurationBuilder {
     }
 
 
-    private void assertEnvProperties(Configuration conf) {
+    private void assertEnvironmentPropertiesExist(Configuration conf) {
         Assertions.assertThat(conf.get(KEY_ENV, String.class).get()).isEqualTo(VAL_ENV);
     }
 
