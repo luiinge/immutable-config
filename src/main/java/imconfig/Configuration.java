@@ -5,7 +5,6 @@ package imconfig;
 
 
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +17,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 
+/**
+ * The main interface used to get configuration values and create derived configurations.
+ */
 public interface Configuration {
 
 
@@ -162,14 +164,6 @@ public interface Configuration {
     Configuration appendFromPath(Path path);
 
 
-    /**
-     * Create a new configuration resulting the merge the current configuration
-     * with the configuration from the specified URL
-     *
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    Configuration appendFromURL(URL url);
-
 
     /**
      * Create a new configuration resulting the merge the current configuration
@@ -246,155 +240,8 @@ public interface Configuration {
      * @throws IllegalArgumentException if the number of strings is not even
      */
     default Configuration appendFromPairs(String... pairs) {
-        return append(ConfigurationBuilder.instance().buildFromPairs(pairs));
+        return append(ConfigurationFactory.instance().fromPairs(pairs));
     }
 
 
-
-
-     // convenience static methods from ConfigurationBuilder
-
-
-
-    /**
-     * Create a new configuration composed of two other configurations. When the same
-     * property is present in two or more configurations, the value from the
-     * delta configuration will prevail (except when it has an empty value)
-     */
-    static Configuration merge(Configuration base, Configuration delta) {
-        return ConfigurationBuilder.instance().merge(base,delta);
-    }
-
-
-    /**
-     * Create a new empty configuration
-     */
-    static Configuration empty() {
-        return ConfigurationBuilder.instance().empty();
-    }
-
-
-    /**
-     * Create a new configuration from a class annotated with
-     * {@link AnnotatedConfiguration}
-     *
-     * @param configuredClass Class annotated with {@link AnnotatedConfiguration}
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    static Configuration fromAnnotation(Class<?> configuredClass) {
-        return ConfigurationBuilder.instance().buildFromAnnotation(configuredClass);
-    }
-
-
-    /**
-     * Create a new configuration from a {@link AnnotatedConfiguration} annotation
-     *
-     * @param annotation
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    static Configuration fromAnnotation(AnnotatedConfiguration annotation) {
-        return ConfigurationBuilder.instance().buildFromAnnotation(annotation);
-    }
-
-
-    /**
-     * Create a new configuration from the OS environment properties
-     */
-    static Configuration fromEnvironment() {
-        return ConfigurationBuilder.instance().buildFromEnvironment();
-    }
-
-
-    /**
-     * Create a new configuration from the {@link System} properties
-     */
-    static Configuration fromSystem() {
-        return ConfigurationBuilder.instance().buildFromSystem();
-    }
-
-
-    /**
-     * Create a new configuration from the resource of the specified path
-     *
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    static Configuration fromPath(Path path) {
-        return ConfigurationBuilder.instance().buildFromPath(path);
-    }
-
-
-    /**
-     * Create a new configuration from the specified URL
-     *
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    static Configuration fromURL(URL url) {
-        return ConfigurationBuilder.instance().buildFromURL(url);
-    }
-
-
-    /**
-     * Create a new configuration from the specified URI
-     *
-     * @throws ConfigurationException if the configuration was not loaded
-     */
-    static Configuration fromURI(URI uri) {
-        return ConfigurationBuilder.instance().buildFromURI(uri);
-    }
-
-
-    /**
-     * Create a new configuration from either a Java classpath resource (if the
-     * path starts with the pseudo-schema <code>classpath:</code>) or a regular
-     * URI resource
-     */
-    static Configuration fromClasspathResourceOrURI(String path) {
-        return ConfigurationBuilder.instance().buildFromClasspathResourceOrURI(path);
-    }
-
-
-    /**
-     * Create a new configuration from a {@link Properties} object
-     */
-    static Configuration fromProperties(Properties properties) {
-        return ConfigurationBuilder.instance().buildFromProperties(properties);
-    }
-
-
-    /**
-     * Create a new configuration from a {@link Map} object
-     */
-    static Configuration fromMap(Map<String, ?> propertyMap) {
-        return ConfigurationBuilder.instance().buildFromMap(propertyMap);
-    }
-
-
-    /**
-     * Create a new configuration from one or several Java class resources
-     * resolved using the {@link ClassLoader#getResources(String)} method of the
-     * thread static class loader
-     */
-    static Configuration fromClasspathResource(String resourcePath) {
-        return ConfigurationBuilder.instance().buildFromClasspathResource(resourcePath);
-    }
-
-
-    /**
-     * Create a new configuration from one or several Java class resources
-     * resolved using the {@link ClassLoader#getResources(String)} method of the
-     * specified class loader
-     */
-    static Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
-        return ConfigurationBuilder.instance().buildFromClasspathResource(resourcePath, classLoader);
-    }
-
-
-    /**
-     * Create a new configuration from directly passed strings, using each two entries as a pair of
-     * <tt>key,value</tt>.
-     * @throws IllegalArgumentException if the number of strings is not even
-     */
-    static Configuration fromPairs(String... pairs) {
-        return ConfigurationBuilder.instance().buildFromPairs(pairs);
-    }
 }

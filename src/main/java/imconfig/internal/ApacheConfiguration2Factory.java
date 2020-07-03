@@ -13,15 +13,21 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.EnvironmentConfiguration;
 import org.apache.commons.configuration2.JSONConfiguration;
-import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.SystemConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
@@ -31,12 +37,12 @@ import org.apache.commons.configuration2.convert.ConversionHandler;
 
 import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
-import imconfig.ConfigurationBuilder;
 import imconfig.ConfigurationException;
+import imconfig.ConfigurationFactory;
 import imconfig.Property;
 
 
-public class ApacheConfiguration2Builder implements ConfigurationBuilder {
+public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();
 
@@ -74,9 +80,9 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
 
 
     @Override
-    public Configuration buildFromAnnotation(Class<?> configuredClass) {
+    public Configuration fromAnnotation(Class<?> configuredClass) {
         return Optional.ofNullable(configuredClass.getAnnotation(AnnotatedConfiguration.class))
-            .map(this::buildFromAnnotation)
+            .map(this::fromAnnotation)
             .orElseThrow(
                 () -> new ConfigurationException(
                     configuredClass + " is not annotated with @Configurator"
@@ -86,9 +92,9 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
 
 
     @Override
-    public Configuration buildFromAnnotation(AnnotatedConfiguration annotation) {
+    public Configuration fromAnnotation(AnnotatedConfiguration annotation) {
         BaseConfiguration configuration = configure(new BaseConfiguration());
-        for (Property property : annotation.properties()) {
+        for (Property property : annotation.value()) {
             String[] value = property.value();
             if (value.length == 1) {
                 configuration.addProperty(property.key(), value[0]);
@@ -96,46 +102,41 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
                 configuration.addProperty(property.key(), value);
             }
         }
-        if (annotation.path() != null && !annotation.path().isEmpty()) {
-            Configuration pathConfiguration = buildFromClasspathResourceOrURI(annotation.path());
-            pathConfiguration = pathConfiguration.inner(annotation.pathPrefix());
-            configuration.copy(toImpl(pathConfiguration));
-        }
         return new ApacheConfiguration2(this, configuration);
 
     }
 
 
     @Override
-    public Configuration buildFromEnvironment() {
+    public Configuration fromEnvironment() {
         return new ApacheConfiguration2(this, new EnvironmentConfiguration());
     }
 
 
     @Override
-    public Configuration buildFromSystem() {
+    public Configuration fromSystem() {
         return new ApacheConfiguration2(this, new SystemConfiguration());
     }
 
 
     @Override
-    public Configuration buildFromPath(Path path) {
-        return buildFromURI(path.toUri());
+    public Configuration fromPath(Path path) {
+        return fromURI(path.toUri());
     }
 
 
     @Override
-    public Configuration buildFromClasspathResourceOrURI(String path) {
+    public Configuration fromClasspathResourceOrURI(String path) {
         if (path.startsWith("classpath:")) {
-            return buildFromClasspathResource(path.substring("classpath:".length()));
+            return fromClasspathResource(path.substring("classpath:".length()));
         } else {
-            return buildFromURI(URI.create(path));
+            return fromURI(URI.create(path));
         }
     }
 
 
     @Override
-    public Configuration buildFromProperties(Properties properties) {
+    public Configuration fromProperties(Properties properties) {
         final BaseConfiguration configuration = configure(new BaseConfiguration());
         for (final Entry<Object, Object> property : properties.entrySet()) {
             configuration.addProperty(property.getKey().toString(), property.getValue());
@@ -145,7 +146,7 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
 
 
     @Override
-    public Configuration buildFromMap(Map<String, ?> properties) {
+    public Configuration fromMap(Map<String, ?> properties) {
         final BaseConfiguration configuration = configure(new BaseConfiguration());
         for (final Entry<String, ?> property : properties.entrySet()) {
             configuration.addProperty(property.getKey(), property.getValue());
@@ -155,9 +156,9 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
 
 
     @Override
-    public Configuration buildFromClasspathResource(String resourcePath, ClassLoader classLoader) {
+    public Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
         try {
-            Configuration base = Configuration.empty();
+            Configuration base = empty();
             List<Configuration> urlConfs = buildFromURLEnum(
                 classLoader.getResources(resourcePath),
                 resourcePath
@@ -173,17 +174,17 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
 
 
     @Override
-    public Configuration buildFromClasspathResource(String resourcePath) {
-        return buildFromClasspathResource(resourcePath, getClass().getClassLoader());
+    public Configuration fromClasspathResource(String resourcePath) {
+        return fromClasspathResource(resourcePath, getClass().getClassLoader());
     }
 
 
     @Override
-    public Configuration buildFromURI(URI uri) {
+    public Configuration fromURI(URI uri) {
         try {
             if (uri.getScheme() == null) {
                 Path path = Paths.get(uri.getPath());
-                return buildFromPath(path);
+                return fromPath(path);
             }
             return buildFromURL(uri.toURL());
         } catch (final MalformedURLException e) {
@@ -192,8 +193,7 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
     }
 
 
-    @Override
-    public Configuration buildFromURL(URL url) {
+    private Configuration buildFromURL(URL url) {
         Configuration configuration;
         if (url.getFile().endsWith(".properties")) {
             configuration = buildFromPropertiesFile(url);
@@ -267,15 +267,6 @@ public class ApacheConfiguration2Builder implements ConfigurationBuilder {
     }
 
 
-    private AbstractConfiguration toImpl(Configuration configuration) {
-        if (configuration instanceof ApacheConfiguration2) {
-            org.apache.commons.configuration2.Configuration impl = ((ApacheConfiguration2) configuration).conf;
-            if (impl instanceof AbstractConfiguration) {
-                return (AbstractConfiguration) impl;
-            }
-        }
-        return new MapConfiguration(configuration.asMap());
-    }
 
 
     private <T extends AbstractConfiguration> T configure(T configuration) {

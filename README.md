@@ -8,8 +8,8 @@ The primary focus of the library is **null-safety**, **immutability**, and **flu
 
 The `Configuration` class is immutable in order to ensure the values are not modified
 by any process, but it can build derived configurations. Also, when a property is not defined,
-the `get` and `getList` methods return an empty `Optional` and an empty `List`, respectively,
-instead of `null`.
+the `get` and `getList` methods return an empty `Optional` and an empty immutable `List`, 
+respectively, instead of `null`.
 
 There are a wide range of builder methods to get configurations from different sources, such as:
 - OS environment variables
@@ -24,85 +24,86 @@ The internal implementation is mainly a wrapper around [Apache Commons Configura
 but it may change at any point.
 
 
-Table of content
------------------------------------------------------------------------------------------
-- [Usage](#usage)
-- [Requirements](#requirements)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [License](#license)
-
-
-
 Usage
 -----------------------------------------------------------------------------------------
 
 ### Loading configurations
 
-In order to obtain a configuration, simply use one of the static methods in `Configuration`:
+In order to obtain a configuration, simply use one of the static methods in `ConfigurationFactory`:
 
 ```java
-Configuration conf = Configuration.fromPath(Path.of("myConfig.yaml"));
+Configuration conf = ConfigurationFactory.fromPath(Path.of("myConfig.yaml"));
 ```
 
 Two configurations can be merged, using one of them as base:
 
 ```java
-Configuration confA = Configuration.fromEnvironment();
-Configuration confB = Configuration.fromPath(Path.of("myConfig.yaml"));
+Configuration confA = ConfigurationFactory.fromEnvironment();
+Configuration confB = ConfigurationFactory.fromPath(Path.of("myConfig.yaml"));
 Configuration confC = confA.append(confB);
 ```
-or
+or, using the chainable methods:
 ```java
-Configuration conf = Configuration
+Configuration conf = ConfigurationFactory
   .fromEnvironment()
-  .appendFromPath(Path.of("myConnfig.yaml"));
+  .appendFromPath(Path.of("myConfig.yaml"));
+```
+
+You can create a new configuration from Java objects:
+```java
+Map<String,String> map = Map.of(
+    "propertyA","valueA",
+    "propertyB","valueB"
+);
+Configuration conf = ConfigurationFactory.fromMap(map);
+```
+```java
+Configuration conf = ConfigurationFactory.fromPairs(
+    "propertyA","valueA",
+    "propertyB","valueB"
+);
 ```
 
 In addition, you can annotate any class and use it as a configuration source:
 
 ```java
 @AnnotatedConfiguration(properties={
-  @Property(key="property.a", value="A"),
-  @Property(key="property.b", value="B")
+  @Property(key="propertyA", value="valueA"),
+  @Property(key="propertyB", value="valueB")
 })
 class MyConfigClass { }
 ```
 ```java
-Configuration conf = Configuration.fromAnnotation(MyConfigClass.class);
+Configuration conf = ConfigurationFactory.fromAnnotation(MyConfigClass.class);
 ```
 
 ### Maven dependency
 ```xml
 <dependency>
-   <groupId>immutable-configurer</groupId>
-   <artifactId>immutable-configurer</artifactId>
-   <version>1.0.0</version>
+    <groupId>immutable-config</groupId>
+    <artifactId>immutable-config</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
-
-[[back to top](#configurer)]
 
 Requirements
 -----------------------------------------------------------------------------------------
 - Java 11 or newer.
 
-[[back to top](#configurer)]
 
 ## Contributing
 
 ## Authors
 
-- Luis Iñesta Gelabert  :email: <linesta@iti.es> | <luiinge@gmail.com>
+- Luis Iñesta Gelabert - luiinge@gmail.com
 
-[[back to top](#configurer)]
 
 License
 -----------------------------------------------------------------------------------------
 MIT License
 
-Copyright (c) 2020 Luis Iñesta Gelabert
+Copyright (c) 2020 Luis Iñesta Gelabert - luiinge@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -122,7 +123,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[[back to top](#configurer)]
+
 
 References
 -----------------------------------------------------------------------------------------

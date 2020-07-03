@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import org.apache.commons.configuration2.BaseConfiguration;
 
 import imconfig.Configuration;
-import imconfig.ConfigurationBuilder;
+import imconfig.ConfigurationFactory;
 
 
 public class ApacheConfiguration2 extends AbstractConfiguration {
@@ -20,7 +20,7 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
 
 
     protected ApacheConfiguration2(
-                    ConfigurationBuilder builder,
+                    ConfigurationFactory builder,
                     org.apache.commons.configuration2.Configuration conf
     ) {
         super(builder);
