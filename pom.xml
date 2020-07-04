@@ -36,7 +36,7 @@
         <commons-logging.version>1.2</commons-logging.version>
         <commons-configuration2.version>2.7</commons-configuration2.version>
         <commons-lang3.version>3.9</commons-lang3.version>
-        <snakeyaml.version>1.25</snakeyaml.version>
+        <snakeyaml.version>1.26</snakeyaml.version>
         <jackson.version>2.10.1</jackson.version>
         <system-rules.version>1.18.0</system-rules.version>
     </properties>
