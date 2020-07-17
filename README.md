@@ -67,7 +67,7 @@ Configuration conf = ConfigurationFactory.instance().fromPairs(
 In addition, you can annotate any class and use it as a configuration source:
 
 ```java
-@AnnotatedConfiguration(properties={
+@AnnotatedConfiguration({
   @Property(key="propertyA", value="valueA"),
   @Property(key="propertyB", value="valueB")
 })
