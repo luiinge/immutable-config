@@ -32,19 +32,19 @@ Usage
 In order to obtain a configuration, simply use one of the static methods in `ConfigurationFactory`:
 
 ```java
-Configuration conf = ConfigurationFactory.fromPath(Path.of("myConfig.yaml"));
+Configuration conf = ConfigurationFactory.instance().fromPath(Path.of("myConfig.yaml"));
 ```
 
 Two configurations can be merged, using one of them as base:
 
 ```java
-Configuration confA = ConfigurationFactory.fromEnvironment();
-Configuration confB = ConfigurationFactory.fromPath(Path.of("myConfig.yaml"));
+Configuration confA = ConfigurationFactory.instance().fromEnvironment();
+Configuration confB = ConfigurationFactory.instance().fromPath(Path.of("myConfig.yaml"));
 Configuration confC = confA.append(confB);
 ```
 or, using the chainable methods:
 ```java
-Configuration conf = ConfigurationFactory
+Configuration conf = ConfigurationFactory.instance()
   .fromEnvironment()
   .appendFromPath(Path.of("myConfig.yaml"));
 ```
@@ -55,10 +55,10 @@ Map<String,String> map = Map.of(
     "propertyA","valueA",
     "propertyB","valueB"
 );
-Configuration conf = ConfigurationFactory.fromMap(map);
+Configuration conf = ConfigurationFactory.instance().fromMap(map);
 ```
 ```java
-Configuration conf = ConfigurationFactory.fromPairs(
+Configuration conf = ConfigurationFactory.instance().fromPairs(
     "propertyA","valueA",
     "propertyB","valueB"
 );
@@ -74,7 +74,7 @@ In addition, you can annotate any class and use it as a configuration source:
 class MyConfigClass { }
 ```
 ```java
-Configuration conf = ConfigurationFactory.fromAnnotation(MyConfigClass.class);
+Configuration conf = ConfigurationFactory.instance()lfromAnnotation(MyConfigClass.class);
 ```
 
 ### Maven dependency
