@@ -37,7 +37,7 @@
         <commons-configuration2.version>2.7</commons-configuration2.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <snakeyaml.version>1.26</snakeyaml.version>
-        <jackson.version>2.11.1</jackson.version>
+        <jackson.version>2.12.0</jackson.version>
         <system-rules.version>1.19.0</system-rules.version>
     </properties>
 
