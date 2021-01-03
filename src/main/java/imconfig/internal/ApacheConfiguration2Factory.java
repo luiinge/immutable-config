@@ -1,5 +1,5 @@
 /**
- * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+ * @author Luis Iñesta Gelabert - luiinge@gmail.com
  */
 package imconfig.internal;
 
@@ -14,8 +14,10 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,7 +25,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.EnvironmentConfiguration;
@@ -34,17 +35,18 @@ import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.convert.ConversionHandler;
-
 import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
 import imconfig.ConfigurationException;
 import imconfig.ConfigurationFactory;
 import imconfig.Property;
+import imconfig.PropertyDefinition;
 
 
 public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();
+    private final PropertyDefinitionParser parser = new PropertyDefinitionParser();
 
 
     @Override
@@ -66,7 +68,10 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
             }
             base.getList(property,String.class).forEach(value -> result.addProperty(property,value));
         }
-        return new ApacheConfiguration2(this, result);
+        Map<String, PropertyDefinition> definitions = new HashMap<>(base.getDefinitions());
+        definitions.putAll(delta.getDefinitions());
+
+        return new ApacheConfiguration2(this, definitions, result);
     }
 
 
@@ -155,6 +160,19 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
+
+    private Configuration fromMap(Map<String, ?> properties, Collection<PropertyDefinition> defs) {
+        final BaseConfiguration configuration = configure(new BaseConfiguration());
+        for (final Entry<String, ?> property : properties.entrySet()) {
+            configuration.addProperty(property.getKey(), property.getValue());
+        }
+        var definitions = defs.stream()
+            .collect(Collectors.toMap(PropertyDefinition::property,x->x));
+        return new ApacheConfiguration2(this, definitions, configuration);
+    }
+
+
+
     @Override
     public Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
         try {
@@ -183,14 +201,62 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     public Configuration fromURI(URI uri) {
         try {
             if (uri.getScheme() == null) {
-                Path path = Paths.get(uri.getPath());
-                return fromPath(path);
+                uri = Paths.get(uri.getPath()).toUri();
             }
             return buildFromURL(uri.toURL());
         } catch (final MalformedURLException e) {
             throw new ConfigurationException(e);
         }
     }
+
+
+
+    @Override
+    public Configuration accordingDefinitions(Collection<PropertyDefinition> definitions) {
+        Map<String,String> defaultValues = definitions
+            .stream()
+            .filter(definition -> definition.defaultValue().isPresent())
+            .collect(Collectors.toMap(
+                PropertyDefinition::property,
+                definition->definition.defaultValue().get()
+            ));
+        return fromMap(defaultValues,definitions);
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromURL(URL url) {
+        try (InputStream inputStream = url.openStream()) {
+            return accordingDefinitions(parser.read(inputStream));
+        } catch (IOException e) {
+            throw new ConfigurationException(e);
+        }
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromURI(URI uri) {
+        try {
+            if (uri.getScheme() == null) {
+                uri = Paths.get(uri.getPath()).toUri();
+            }
+            return accordingDefinitionsFromURL(uri.toURL());
+        } catch (final MalformedURLException e) {
+            throw new ConfigurationException(e);
+        }
+    }
+
+
+
+    @Override
+    public Configuration accordingDefinitionsFromPath(Path path) {
+        return accordingDefinitionsFromURI(path.toUri());
+    }
+
+
+
+
+
 
 
     private Configuration buildFromURL(URL url) {
@@ -228,7 +294,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
         try (InputStream stream = url.openStream()) {
             JSONConfiguration json = configure(new JSONConfiguration());
             json.read(stream);
-            return new ApacheConfiguration2(this, json);
+            return new ApacheConfiguration2(this, Map.of(), json);
         } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
         }
@@ -239,7 +305,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
         try (InputStream stream = url.openStream()) {
             YAMLConfiguration yaml = configure(new YAMLConfiguration());
             yaml.read(stream);
-            return new ApacheConfiguration2(this, yaml);
+            return new ApacheConfiguration2(this, Map.of(), yaml);
         } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
         }

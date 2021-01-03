@@ -5,23 +5,32 @@ package imconfig.internal;
 
 
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
-
 import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
 import imconfig.ConfigurationFactory;
+import imconfig.PropertyDefinition;
 
 
 public abstract class AbstractConfiguration implements Configuration {
 
     protected final ConfigurationFactory builder;
+    protected final Map<String,PropertyDefinition> definitions;
 
 
-    protected AbstractConfiguration(ConfigurationFactory builder) {
+    protected AbstractConfiguration(
+        ConfigurationFactory builder,
+        Map<String,PropertyDefinition> definitions
+    ) {
         this.builder = builder;
+        this.definitions = definitions;
     }
 
 
@@ -103,4 +112,52 @@ public abstract class AbstractConfiguration implements Configuration {
         singlePropertyMap.put(property, value);
         return builder.merge(this, builder.fromMap(singlePropertyMap));
     }
+
+
+    @Override
+    public Map<String, PropertyDefinition> getDefinitions() {
+        return Collections.unmodifiableMap(definitions);
+    }
+
+
+    @Override
+    public Optional<PropertyDefinition> getDefinition(String key) {
+        return Optional.ofNullable(definitions.get(key));
+    }
+
+
+    @Override
+    public Optional<String> validation(String key) {
+        String value = get(key, String.class).orElse(null);
+        if (value == null) {
+            return Optional.empty();
+        }
+        return getDefinition(key)
+            .filter(definition->!definition.accepts(value))
+            .map(PropertyDefinition::hint);
+    }
+
+
+    @Override
+    public Configuration accordingDefinitions(Collection<PropertyDefinition> definitions) {
+        return builder.merge(this, builder.accordingDefinitions(definitions));
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromPath(Path path) {
+        return builder.merge(this, builder.accordingDefinitionsFromPath(path));
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromURI(URI uri) {
+        return builder.merge(this, builder.accordingDefinitionsFromURI(uri));
+    }
+
+    @Override
+    public Configuration accordingDefinitionsFromURL(URL url) {
+        return builder.merge(this, builder.accordingDefinitionsFromURL(url));
+    }
+
 }

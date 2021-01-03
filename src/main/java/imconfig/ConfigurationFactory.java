@@ -5,7 +5,9 @@ package imconfig;
 
 
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -145,5 +147,53 @@ public interface ConfigurationFactory {
         }
         return fromMap(map);
     }
+
+
+
+    /**
+     * Create a new empty configuration according the given property definitions
+     * <p>
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitions(Collection<PropertyDefinition> definitions);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given URL.
+     * <p>
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromURL(URL url);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given path.
+     * <p>
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromPath(Path path);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given URI.
+     * <p>
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromURI(URI uri);
+
+
+
+
+
+
+
+
+
+
+
 
 }

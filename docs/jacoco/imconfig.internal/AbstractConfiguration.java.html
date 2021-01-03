@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">AbstractConfiguration.java</span></div><h1>AbstractConfiguration.java</h1><pre class="source lang-java linenums">/**
+ * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+ */
+package imconfig.internal;
+
+
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import imconfig.AnnotatedConfiguration;
+import imconfig.Configuration;
+import imconfig.ConfigurationFactory;
+import imconfig.PropertyDefinition;
+
+
+public abstract class AbstractConfiguration implements Configuration {
+
+    protected final ConfigurationFactory builder;
+    protected final Map&lt;String,PropertyDefinition&gt; definitions;
+
+
+    protected AbstractConfiguration(
+        ConfigurationFactory builder,
+        Map&lt;String,PropertyDefinition&gt; definitions
+<span class="fc" id="L31">    ) {</span>
+<span class="fc" id="L32">        this.builder = builder;</span>
+<span class="fc" id="L33">        this.definitions = definitions;</span>
+<span class="fc" id="L34">    }</span>
+
+
+    @Override
+    public Configuration append(Configuration otherConfiguration) {
+<span class="fc" id="L39">        return builder.merge(this, otherConfiguration);</span>
+    }
+
+
+    @Override
+    public Configuration appendFromAnnotation(Class&lt;?&gt; configuredClass) {
+<span class="nc" id="L45">        return builder.merge(this, builder.fromAnnotation(configuredClass));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromAnnotation(AnnotatedConfiguration annotation) {
+<span class="nc" id="L51">        return builder.merge(this, builder.fromAnnotation(annotation));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromClasspathResource(String resourcePath) {
+<span class="fc" id="L57">        return builder.merge(this, builder.fromClasspathResource(resourcePath));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromClasspathResource(String resourcePath, ClassLoader classLoader) {
+<span class="nc" id="L63">        return builder.merge(this, builder.fromClasspathResource(resourcePath, classLoader));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromClasspathResourceOrURI(String path) {
+<span class="nc" id="L69">        return builder.merge(this, builder.fromClasspathResourceOrURI(path));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromEnvironment() {
+<span class="nc" id="L75">        return builder.merge(this, builder.fromEnvironment());</span>
+    }
+
+
+    @Override
+    public Configuration appendFromSystem() {
+<span class="nc" id="L81">        return builder.merge(this, builder.fromSystem());</span>
+    }
+
+
+    @Override
+    public Configuration appendFromMap(Map&lt;String, ?&gt; propertyMap) {
+<span class="fc" id="L87">        return builder.merge(this, builder.fromMap(propertyMap));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromPath(Path path) {
+<span class="nc" id="L93">        return builder.merge(this, builder.fromPath(path));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromProperties(Properties properties) {
+<span class="nc" id="L99">        return builder.merge(this, builder.fromProperties(properties));</span>
+    }
+
+
+    @Override
+    public Configuration appendFromURI(URI uri) {
+<span class="nc" id="L105">        return builder.merge(this, builder.fromURI(uri));</span>
+    }
+
+
+    @Override
+    public Configuration appendProperty(String property, String value) {
+<span class="fc" id="L111">        Map&lt;String, String&gt; singlePropertyMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L112">        singlePropertyMap.put(property, value);</span>
+<span class="fc" id="L113">        return builder.merge(this, builder.fromMap(singlePropertyMap));</span>
+    }
+
+
+    @Override
+    public Map&lt;String, PropertyDefinition&gt; getDefinitions() {
+<span class="fc" id="L119">        return Collections.unmodifiableMap(definitions);</span>
+    }
+
+
+    @Override
+    public Optional&lt;PropertyDefinition&gt; getDefinition(String key) {
+<span class="fc" id="L125">        return Optional.ofNullable(definitions.get(key));</span>
+    }
+
+
+    @Override
+    public Optional&lt;String&gt; validation(String key) {
+<span class="fc" id="L131">        String value = get(key, String.class).orElse(null);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L133">            return Optional.empty();</span>
+        }
+<span class="fc" id="L135">        return getDefinition(key)</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">            .filter(definition-&gt;!definition.accepts(value))</span>
+<span class="fc" id="L137">            .map(PropertyDefinition::hint);</span>
+    }
+
+
+    @Override
+    public Configuration accordingDefinitions(Collection&lt;PropertyDefinition&gt; definitions) {
+<span class="nc" id="L143">        return builder.merge(this, builder.accordingDefinitions(definitions));</span>
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromPath(Path path) {
+<span class="fc" id="L149">        return builder.merge(this, builder.accordingDefinitionsFromPath(path));</span>
+    }
+
+
+    @Override
+    public Configuration accordingDefinitionsFromURI(URI uri) {
+<span class="fc" id="L155">        return builder.merge(this, builder.accordingDefinitionsFromURI(uri));</span>
+    }
+
+    @Override
+    public Configuration accordingDefinitionsFromURL(URL url) {
+<span class="fc" id="L160">        return builder.merge(this, builder.accordingDefinitionsFromURL(url));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

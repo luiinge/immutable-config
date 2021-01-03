@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>Immutable Configurations - Checkstyle report</title>
+    <link>https://github.com/luiinge/immutable-config</link>
+    <description>Immutable Configurations - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2020 - 2021 luiinge</copyright>
+    <item>
+      <title>File: 21,
+             Errors: 0,
+             Warnings: 965,
+             Infos: 0
+      </title>
+            <link>https://github.com/luiinge/immutable-config/checkstyle.html</link>
+      <description>
+        <p>Click <a href="https://github.com/luiinge/immutable-config/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.PropertyType.java">imconfig/PropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigurationException.java">imconfig/ConfigurationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  12
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.PropertyDefinitionParser.java">imconfig/internal/PropertyDefinitionParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  32
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configurable.java">imconfig/Configurable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configurer.java">imconfig/Configurer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.IntegerPropertyType.java">imconfig/types/IntegerPropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  60
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.TextPropertyType.java">imconfig/types/TextPropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  22
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2ConversionHandler.java">imconfig/internal/ApacheConfiguration2ConversionHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  14
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2Factory.java">imconfig/internal/ApacheConfiguration2Factory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  216
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.PropertyDefinition.java">imconfig/PropertyDefinition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  44
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.AbstractConfiguration.java">imconfig/internal/AbstractConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  81
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.DefinedConfiguration.java">imconfig/DefinedConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.EnumPropertyType.java">imconfig/types/EnumPropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  20
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2.java">imconfig/internal/ApacheConfiguration2.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  115
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.AnnotatedConfiguration.java">imconfig/AnnotatedConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configuration.java">imconfig/Configuration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  96
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigurationFactory.java">imconfig/ConfigurationFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  68
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Property.java">imconfig/Property.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.PropertyTypeFactory.java">imconfig/types/PropertyTypeFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  34
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.DecimalPropertyType.java">imconfig/types/DecimalPropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  60
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.PropertyDefinitionBuilder.java">imconfig/PropertyDefinitionBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  64
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+

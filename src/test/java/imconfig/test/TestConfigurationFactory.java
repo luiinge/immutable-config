@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Properties;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
@@ -182,6 +182,16 @@ public class TestConfigurationFactory {
     }
 
 
+    @Test
+    public void appendProperty() {
+        Configuration conf = factory
+            .fromAnnotation(ConfAnnotatedProps.class)
+            .appendProperty("appended.property", "appendedValue");
+        assertExpectedPropertiesExist(conf);
+        assertThat(conf.get("appended.property", String.class)).contains("appendedValue");
+    }
+
+
     @Test(expected = ConfigurationException.class)
     public void cannotCreateConfigurationFromMalformedFile() throws ConfigurationException {
         factory.fromClasspathResource("malformed-conf.xml");
@@ -234,7 +244,6 @@ public class TestConfigurationFactory {
         Configuration conf = factory
             .fromAnnotation(ConfAnnotatedProps.class)
             .filtered("properties2");
-        System.out.println(conf);
         Assertions.assertThat(conf.get("properties.test.key.string", String.class)).isEmpty();
         Assertions.assertThat(
             conf.get("properties2.test2.key.string", String.class).get()
@@ -274,11 +283,11 @@ public class TestConfigurationFactory {
 
     @Test
     public void invokingGetOnEmptyPropertyReturnsEmptyOptional() {
-        var conf = factory.fromMap(Map.of(
-            "property.a", "",
-            "property.b", "",
-            "property.c", "c"
-        ));
+        Properties properties = new Properties();
+        properties.setProperty("property.a","");
+        properties.setProperty("property.b", "");
+        properties.setProperty("property.c", "c");
+        var conf = factory.fromProperties(properties);
         assertThat(conf.keys()).contains("property.a","property.b","property.c");
         assertThat(conf.hasProperty("property.a")).isTrue();
         assertThat(conf.hasProperty("property.b")).isTrue();

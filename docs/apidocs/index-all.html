@@ -13,8 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -46,10 +45,10 @@ loadScripts(document, 'script');</script>
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="imconfig/module-summary.html">Module</a></li>
-<li><a href="imconfig/imconfig/package-summary.html">Package</a></li>
+<li>Package</li>
 <li>Class</li>
 <li>Use</li>
-<li><a href="imconfig/imconfig/package-tree.html">Tree</a></li>
+<li><a href="overview-tree.html">Tree</a></li>
 <li><a href="deprecated-list.html">Deprecated</a></li>
 <li class="navBarCell1Rev">Index</li>
 <li><a href="help-doc.html">Help</a></li>
@@ -93,11 +92,57 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </nav>
 </header>
 <main role="main">
-<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:A">
+<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a><a id="I:A">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyType.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in interface <a href="imconfig/imconfig/PropertyType.html" title="interface in imconfig">PropertyType</a></dt>
+<dd>
+<div class="block">Check if the current type accepts the given value</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/DecimalPropertyType.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in class <a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types">DecimalPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/EnumPropertyType.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in class <a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types">EnumPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/IntegerPropertyType.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in class <a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types">IntegerPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/TextPropertyType.html#accepts(java.lang.String)">accepts(String)</a></span> - Method in class <a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#accordingDefinitions(java.util.Collection)">accordingDefinitions(Collection&lt;PropertyDefinition&gt;)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Create a new configuration according the given property definitions.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationFactory.html#accordingDefinitions(java.util.Collection)">accordingDefinitions(Collection&lt;PropertyDefinition&gt;)</a></span> - Method in interface <a href="imconfig/imconfig/ConfigurationFactory.html" title="interface in imconfig">ConfigurationFactory</a></dt>
+<dd>
+<div class="block">Create a new empty configuration according the given property definitions</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#accordingDefinitionsFromPath(java.nio.file.Path)">accordingDefinitionsFromPath(Path)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Create a new configuration according the property definitions from the given path.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationFactory.html#accordingDefinitionsFromPath(java.nio.file.Path)">accordingDefinitionsFromPath(Path)</a></span> - Method in interface <a href="imconfig/imconfig/ConfigurationFactory.html" title="interface in imconfig">ConfigurationFactory</a></dt>
+<dd>
+<div class="block">Create a new empty configuration according the property definitions from the given path.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#accordingDefinitionsFromURI(java.net.URI)">accordingDefinitionsFromURI(URI)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Create a new defined configuration according the property definitions from the given URI.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationFactory.html#accordingDefinitionsFromURI(java.net.URI)">accordingDefinitionsFromURI(URI)</a></span> - Method in interface <a href="imconfig/imconfig/ConfigurationFactory.html" title="interface in imconfig">ConfigurationFactory</a></dt>
+<dd>
+<div class="block">Create a new empty configuration according the property definitions from the given URI.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#accordingDefinitionsFromURL(java.net.URL)">accordingDefinitionsFromURL(URL)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Create a new defined configuration according the property definitions from the given URL.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationFactory.html#accordingDefinitionsFromURL(java.net.URL)">accordingDefinitionsFromURL(URL)</a></span> - Method in interface <a href="imconfig/imconfig/ConfigurationFactory.html" title="interface in imconfig">ConfigurationFactory</a></dt>
+<dd>
+<div class="block">Create a new empty configuration according the property definitions from the given URL.</div>
+</dd>
 <dt><a href="imconfig/imconfig/AnnotatedConfiguration.html" title="annotation in imconfig"><span class="typeNameLink">AnnotatedConfiguration</span></a> - Annotation Type in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
 <dd>
 <div class="block">This annotation allows classes to be used as a data source for a configuration</div>
@@ -184,6 +229,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#asProperties()">asProperties()</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
 <dd>&nbsp;</dd>
 </dl>
+<a id="I:B">
+<!--   -->
+</a>
+<h2 class="title">B</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#build()">build()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#builder()">builder()</a></span> - Static method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>
+<div class="block">Get a new builder for this class</div>
+</dd>
+</dl>
 <a id="I:C">
 <!--   -->
 </a>
@@ -203,6 +260,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  new configuration.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationException.html#%3Cinit%3E(java.lang.String)">ConfigurationException(String)</a></span> - Constructor for exception <a href="imconfig/imconfig/ConfigurationException.html" title="class in imconfig">ConfigurationException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)">ConfigurationException(String, Throwable)</a></span> - Constructor for exception <a href="imconfig/imconfig/ConfigurationException.html" title="class in imconfig">ConfigurationException</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationException.html#%3Cinit%3E(java.lang.Throwable)">ConfigurationException(Throwable)</a></span> - Constructor for exception <a href="imconfig/imconfig/ConfigurationException.html" title="class in imconfig">ConfigurationException</a></dt>
 <dd>&nbsp;</dd>
@@ -224,6 +283,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">A convenient interface for objects that can apply a configuration to another object.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/PropertyTypeFactory.html#create(java.lang.String,java.util.Map)">create(String, Map&lt;String, Object&gt;)</a></span> - Method in class <a href="imconfig/imconfig/types/PropertyTypeFactory.html" title="class in imconfig.types">PropertyTypeFactory</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a id="I:D">
+<!--   -->
+</a>
+<h2 class="title">D</h2>
+<dl>
+<dt><a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types"><span class="typeNameLink">DecimalPropertyType</span></a> - Class in <a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/DecimalPropertyType.html#%3Cinit%3E(java.lang.Number,java.lang.Number)">DecimalPropertyType(Number, Number)</a></span> - Constructor for class <a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types">DecimalPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#decimalType()">decimalType()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#decimalType(java.lang.Number,java.lang.Number)">decimalType(Number, Number)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#defaultValue()">defaultValue()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#defaultValue(java.lang.String)">defaultValue(String)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="imconfig/imconfig/DefinedConfiguration.html" title="interface in imconfig"><span class="typeNameLink">DefinedConfiguration</span></a> - Interface in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#description()">description()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#description(java.lang.String)">description(String)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:E">
 <!--   -->
@@ -234,6 +319,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Create a new empty configuration</div>
 </dd>
+<dt><a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types"><span class="typeNameLink">EnumPropertyType</span></a> - Class in <a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/EnumPropertyType.html#%3Cinit%3E(java.util.List)">EnumPropertyType(List&lt;String&gt;)</a></span> - Constructor for class <a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types">EnumPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#enumType(java.lang.String...)">enumType(String...)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:F">
 <!--   -->
@@ -313,6 +404,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#get(java.lang.String,java.lang.Class)">get(String, Class&lt;T&gt;)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#getDefinition(java.lang.String)">getDefinition(String)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Retrieve the property definition for a given property</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/DefinedConfiguration.html#getDefinition(java.lang.String)">getDefinition(String)</a></span> - Method in interface <a href="imconfig/imconfig/DefinedConfiguration.html" title="interface in imconfig">DefinedConfiguration</a></dt>
+<dd>
+<div class="block">Retrieve the property definition for a given property</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#getDefinitions()">getDefinitions()</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Retrieve every property definition defined for this configuration</div>
+</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#getList(java.lang.String,java.lang.Class)">getList(String, Class&lt;T&gt;)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#getSet(java.lang.String,java.lang.Class)">getSet(String, Class&lt;T&gt;)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
@@ -326,6 +429,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h2 class="title">H</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#hasProperty(java.lang.String)">hasProperty(String)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#hint()">hint()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyType.html#hint()">hint()</a></span> - Method in interface <a href="imconfig/imconfig/PropertyType.html" title="interface in imconfig">PropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/DecimalPropertyType.html#hint()">hint()</a></span> - Method in class <a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types">DecimalPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/EnumPropertyType.html#hint()">hint()</a></span> - Method in class <a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types">EnumPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/IntegerPropertyType.html#hint()">hint()</a></span> - Method in class <a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types">IntegerPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/TextPropertyType.html#hint()">hint()</a></span> - Method in class <a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:I">
@@ -344,12 +459,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="imconfig/imconfig/package-summary.html">imconfig</a> - package imconfig</dt>
 <dd>&nbsp;</dd>
+<dt><a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a> - package imconfig.types</dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#inner(java.lang.String)">inner(String)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
 <dd>
 <div class="block">Creates a new configuration resulting of filtering the properties starting
  with the given prefix, and the removing it</div>
 </dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/ConfigurationFactory.html#instance()">instance()</a></span> - Static method in interface <a href="imconfig/imconfig/ConfigurationFactory.html" title="interface in imconfig">ConfigurationFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types"><span class="typeNameLink">IntegerPropertyType</span></a> - Class in <a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/IntegerPropertyType.html#%3Cinit%3E(java.lang.Number,java.lang.Number)">IntegerPropertyType(Number, Number)</a></span> - Constructor for class <a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types">IntegerPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#integerType()">integerType()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#integerType(java.lang.Number,java.lang.Number)">integerType(Number, Number)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#isEmpty()">isEmpty()</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
 <dd>&nbsp;</dd>
@@ -380,22 +505,91 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a new configuration composed of two other configurations.</div>
 </dd>
 </dl>
+<a id="I:N">
+<!--   -->
+</a>
+<h2 class="title">N</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyType.html#name()">name()</a></span> - Method in interface <a href="imconfig/imconfig/PropertyType.html" title="interface in imconfig">PropertyType</a></dt>
+<dd>
+<div class="block">The type name (for describing purposes).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/DecimalPropertyType.html#name()">name()</a></span> - Method in class <a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types">DecimalPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/EnumPropertyType.html#name()">name()</a></span> - Method in class <a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types">EnumPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/IntegerPropertyType.html#name()">name()</a></span> - Method in class <a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types">IntegerPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/TextPropertyType.html#name()">name()</a></span> - Method in class <a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></dt>
+<dd>&nbsp;</dd>
+</dl>
 <a id="I:P">
 <!--   -->
 </a>
 <h2 class="title">P</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/TextPropertyType.html#pattern()">pattern()</a></span> - Method in class <a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#property()">property()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#property(java.lang.String)">property(String)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="imconfig/imconfig/Property.html" title="annotation in imconfig"><span class="typeNameLink">Property</span></a> - Annotation Type in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
 <dd>
 <div class="block">Pair of [key,value] used in <a href="imconfig/imconfig/AnnotatedConfiguration.html#value()"><code>AnnotatedConfiguration.value()</code></a></div>
 </dd>
+<dt><a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig"><span class="typeNameLink">PropertyDefinition</span></a> - Class in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
+<dd>
+<div class="block">This class instantiates an immutable value object that represents
+ the definition of a given property.</div>
+</dd>
+<dt><a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig"><span class="typeNameLink">PropertyDefinitionBuilder</span></a> - Class in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
+<dd>
+<div class="block">This class allows you to create new <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a> objects in a fluent
+ manner, setting only the actual information you required.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#%3Cinit%3E()">PropertyDefinitionBuilder()</a></span> - Constructor for class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#propertyType(imconfig.PropertyType)">propertyType(PropertyType)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="imconfig/imconfig/PropertyType.html" title="interface in imconfig"><span class="typeNameLink">PropertyType</span></a> - Interface in <a href="imconfig/imconfig/package-summary.html">imconfig</a></dt>
+<dd>
+<div class="block">This class determines what are the accepted values for an specific
+ property.</div>
+</dd>
+<dt><a href="imconfig/imconfig/types/PropertyTypeFactory.html" title="class in imconfig.types"><span class="typeNameLink">PropertyTypeFactory</span></a> - Class in <a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/PropertyTypeFactory.html#%3Cinit%3E()">PropertyTypeFactory()</a></span> - Constructor for class <a href="imconfig/imconfig/types/PropertyTypeFactory.html" title="class in imconfig.types">PropertyTypeFactory</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a id="I:R">
+<!--   -->
+</a>
+<h2 class="title">R</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#required()">required()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#required()">required()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#required(java.lang.Boolean)">required(Boolean)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:T">
 <!--   -->
 </a>
 <h2 class="title">T</h2>
 <dl>
+<dt><a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types"><span class="typeNameLink">TextPropertyType</span></a> - Class in <a href="imconfig/imconfig/types/package-summary.html">imconfig.types</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/types/TextPropertyType.html#%3Cinit%3E(java.lang.String)">TextPropertyType(String)</a></span> - Constructor for class <a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#textType()">textType()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html#textType(java.lang.String)">textType(String)</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#toString()">toString()</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/PropertyDefinition.html#type()">type()</a></span> - Method in class <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:V">
@@ -403,6 +597,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">V</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/Configuration.html#validation(java.lang.String)">validation(String)</a></span> - Method in interface <a href="imconfig/imconfig/Configuration.html" title="interface in imconfig">Configuration</a></dt>
+<dd>
+<div class="block">Check whether the current value for the given property is valid according its definition</div>
+</dd>
+<dt><span class="memberNameLink"><a href="imconfig/imconfig/DefinedConfiguration.html#validation(java.lang.String)">validation(String)</a></span> - Method in interface <a href="imconfig/imconfig/DefinedConfiguration.html" title="interface in imconfig">DefinedConfiguration</a></dt>
+<dd>
+<div class="block">Check whether the current value for the given property is valid according its definition</div>
+</dd>
 <dt><span class="memberNameLink"><a href="imconfig/imconfig/AnnotatedConfiguration.html#value()">value()</a></span> - Method in annotation type <a href="imconfig/imconfig/AnnotatedConfiguration.html" title="annotation in imconfig">AnnotatedConfiguration</a></dt>
 <dd>
 <div class="block">Pairs of [key,value] that defines the configuration</div>
@@ -423,7 +625,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  key</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="allpackages-index.html">All&nbsp;Packages</a></div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">
@@ -437,10 +639,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="imconfig/module-summary.html">Module</a></li>
-<li><a href="imconfig/imconfig/package-summary.html">Package</a></li>
+<li>Package</li>
 <li>Class</li>
 <li>Use</li>
-<li><a href="imconfig/imconfig/package-tree.html">Tree</a></li>
+<li><a href="overview-tree.html">Tree</a></li>
 <li><a href="deprecated-list.html">Deprecated</a></li>
 <li class="navBarCell1Rev">Index</li>
 <li><a href="help-doc.html">Help</a></li>
@@ -470,7 +672,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

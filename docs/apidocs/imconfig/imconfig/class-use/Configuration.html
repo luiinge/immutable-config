@@ -13,8 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -99,12 +98,42 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="classUseContainer">
 <ul class="blockList">
 <li class="blockList">
+<table class="useSummary">
+<caption><span>Packages that use <a href="../Configuration.html" title="interface in imconfig">Configuration</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Package</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#imconfig">imconfig</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
 <ul class="blockList">
 <li class="blockList">
 <section role="region"><a id="imconfig">
 <!--   -->
 </a>
 <h3>Uses of <a href="../Configuration.html" title="interface in imconfig">Configuration</a> in <a href="../package-summary.html">imconfig</a></h3>
+<table class="useSummary">
+<caption><span>Subinterfaces of <a href="../Configuration.html" title="interface in imconfig">Configuration</a> in <a href="../package-summary.html">imconfig</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Interface</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>interface&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DefinedConfiguration.html" title="interface in imconfig">DefinedConfiguration</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">imconfig</a> that return <a href="../Configuration.html" title="interface in imconfig">Configuration</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
@@ -113,6 +142,62 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#accordingDefinitions(java.util.Collection)">accordingDefinitions</a></span>&#8203;(Collection&lt;<a href="../PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;definitions)</code></th>
+<td class="colLast">
+<div class="block">Create a new configuration according the given property definitions.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConfigurationFactory.</span><code><span class="memberNameLink"><a href="../ConfigurationFactory.html#accordingDefinitions(java.util.Collection)">accordingDefinitions</a></span>&#8203;(Collection&lt;<a href="../PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;definitions)</code></th>
+<td class="colLast">
+<div class="block">Create a new empty configuration according the given property definitions</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#accordingDefinitionsFromPath(java.nio.file.Path)">accordingDefinitionsFromPath</a></span>&#8203;(Path&nbsp;path)</code></th>
+<td class="colLast">
+<div class="block">Create a new configuration according the property definitions from the given path.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConfigurationFactory.</span><code><span class="memberNameLink"><a href="../ConfigurationFactory.html#accordingDefinitionsFromPath(java.nio.file.Path)">accordingDefinitionsFromPath</a></span>&#8203;(Path&nbsp;path)</code></th>
+<td class="colLast">
+<div class="block">Create a new empty configuration according the property definitions from the given path.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#accordingDefinitionsFromURI(java.net.URI)">accordingDefinitionsFromURI</a></span>&#8203;(URI&nbsp;uri)</code></th>
+<td class="colLast">
+<div class="block">Create a new defined configuration according the property definitions from the given URI.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConfigurationFactory.</span><code><span class="memberNameLink"><a href="../ConfigurationFactory.html#accordingDefinitionsFromURI(java.net.URI)">accordingDefinitionsFromURI</a></span>&#8203;(URI&nbsp;uri)</code></th>
+<td class="colLast">
+<div class="block">Create a new empty configuration according the property definitions from the given URI.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#accordingDefinitionsFromURL(java.net.URL)">accordingDefinitionsFromURL</a></span>&#8203;(URL&nbsp;url)</code></th>
+<td class="colLast">
+<div class="block">Create a new defined configuration according the property definitions from the given URL.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConfigurationFactory.</span><code><span class="memberNameLink"><a href="../ConfigurationFactory.html#accordingDefinitionsFromURL(java.net.URL)">accordingDefinitionsFromURL</a></span>&#8203;(URL&nbsp;url)</code></th>
+<td class="colLast">
+<div class="block">Create a new empty configuration according the property definitions from the given URL.</div>
+</td>
+</tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#append(imconfig.Configuration)">append</a></span>&#8203;(<a href="../Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;otherConfiguration)</code></th>
@@ -227,8 +312,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../Configuration.html" title="interface in imconfig">Configuration</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#appendProperty(java.lang.String,java.lang.String)">appendProperty</a></span>&#8203;(String&nbsp;localRepository,
-              String&nbsp;toString)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Configuration.</span><code><span class="memberNameLink"><a href="../Configuration.html#appendProperty(java.lang.String,java.lang.String)">appendProperty</a></span>&#8203;(String&nbsp;key,
+              String&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Create a new configuration resulting of adding or replacing a property to
  the current configuration.</div>
@@ -468,7 +553,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

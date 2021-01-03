@@ -13,8 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../jquery/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -27,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":18,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":18,"i24":6,"i25":6,"i26":6,"i27":6,"i28":6,"i29":6,"i30":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":18,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":6,"i27":6,"i28":6,"i29":18,"i30":6,"i31":6,"i32":6,"i33":6,"i34":6,"i35":6,"i36":6,"i37":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -124,6 +123,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Known Subinterfaces:</dt>
+<dd><code><a href="DefinedConfiguration.html" title="interface in imconfig">DefinedConfiguration</a></code></dd>
+</dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">Configuration</span></pre>
 <div class="block">The main interface used to get configuration values and create derived configurations.</div>
@@ -149,13 +152,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#accordingDefinitions(java.util.Collection)">accordingDefinitions</a></span>&#8203;(Collection&lt;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;definitions)</code></th>
+<td class="colLast">
+<div class="block">Create a new configuration according the given property definitions.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#accordingDefinitionsFromPath(java.nio.file.Path)">accordingDefinitionsFromPath</a></span>&#8203;(Path&nbsp;path)</code></th>
+<td class="colLast">
+<div class="block">Create a new configuration according the property definitions from the given path.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#accordingDefinitionsFromURI(java.net.URI)">accordingDefinitionsFromURI</a></span>&#8203;(URI&nbsp;uri)</code></th>
+<td class="colLast">
+<div class="block">Create a new defined configuration according the property definitions from the given URI.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#accordingDefinitionsFromURL(java.net.URL)">accordingDefinitionsFromURL</a></span>&#8203;(URL&nbsp;url)</code></th>
+<td class="colLast">
+<div class="block">Create a new defined configuration according the property definitions from the given URL.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#append(imconfig.Configuration)">append</a></span>&#8203;(<a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;otherConfiguration)</code></th>
 <td class="colLast">
 <div class="block">Create a new configuration resulting the merge the current configuration
  with another one</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromAnnotation(imconfig.AnnotatedConfiguration)">appendFromAnnotation</a></span>&#8203;(<a href="AnnotatedConfiguration.html" title="annotation in imconfig">AnnotatedConfiguration</a>&nbsp;annotation)</code></th>
 <td class="colLast">
@@ -163,7 +194,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from a <a href="AnnotatedConfiguration.html" title="annotation in imconfig"><code>AnnotatedConfiguration</code></a> annotation</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromAnnotation(java.lang.Class)">appendFromAnnotation</a></span>&#8203;(Class&lt;?&gt;&nbsp;configuredClass)</code></th>
 <td class="colLast">
@@ -171,7 +202,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from a class annotated with <a href="AnnotatedConfiguration.html" title="annotation in imconfig"><code>AnnotatedConfiguration</code></a></div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromClasspathResource(java.lang.String)">appendFromClasspathResource</a></span>&#8203;(String&nbsp;resourcePath)</code></th>
 <td class="colLast">
@@ -181,7 +212,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  static class loader</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromClasspathResource(java.lang.String,java.lang.ClassLoader)">appendFromClasspathResource</a></span>&#8203;(String&nbsp;resourcePath,
                            ClassLoader&nbsp;classLoader)</code></th>
@@ -192,7 +223,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  class loader</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromClasspathResourceOrURI(java.lang.String)">appendFromClasspathResourceOrURI</a></span>&#8203;(String&nbsp;path)</code></th>
 <td class="colLast">
@@ -202,7 +233,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  resource</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromEnvironment()">appendFromEnvironment</a></span>()</code></th>
 <td class="colLast">
@@ -210,7 +241,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from the environment properties</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromMap(java.util.Map)">appendFromMap</a></span>&#8203;(Map&lt;String,&#8203;?&gt;&nbsp;propertyMap)</code></th>
 <td class="colLast">
@@ -218,7 +249,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from a <code>Map</code> object</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>default <a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromPairs(java.lang.String...)">appendFromPairs</a></span>&#8203;(String...&nbsp;pairs)</code></th>
 <td class="colLast">
@@ -227,7 +258,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <tt>key,value</tt>.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromPath(java.nio.file.Path)">appendFromPath</a></span>&#8203;(Path&nbsp;path)</code></th>
 <td class="colLast">
@@ -235,7 +266,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from the resource of the specified path</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromProperties(java.util.Properties)">appendFromProperties</a></span>&#8203;(Properties&nbsp;properties)</code></th>
 <td class="colLast">
@@ -243,7 +274,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from a <code>Properties</code> object</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromSystem()">appendFromSystem</a></span>()</code></th>
 <td class="colLast">
@@ -251,7 +282,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from the <code>System</code> properties</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendFromURI(java.net.URI)">appendFromURI</a></span>&#8203;(URI&nbsp;uri)</code></th>
 <td class="colLast">
@@ -259,26 +290,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the configuration from the specified URI</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendProperty(java.lang.String,java.lang.String)">appendProperty</a></span>&#8203;(String&nbsp;localRepository,
-              String&nbsp;toString)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#appendProperty(java.lang.String,java.lang.String)">appendProperty</a></span>&#8203;(String&nbsp;key,
+              String&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Create a new configuration resulting of adding or replacing a property to
  the current configuration.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>Map&lt;String,&#8203;String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asMap()">asMap</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>Properties</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asProperties()">asProperties</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filtered(java.lang.String)">filtered</a></span>&#8203;(String&nbsp;keyPrefix)</code></th>
 <td class="colLast">
@@ -286,50 +317,64 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the given prefix</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEach(java.util.function.BiConsumer)">forEach</a></span>&#8203;(BiConsumer&lt;String,&#8203;String&gt;&nbsp;consumer)</code></th>
 <td class="colLast">
 <div class="block">Perform an action for each pair <code>[key,value]</code></div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;Optional&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String,java.lang.Class)">get</a></span>&#8203;(String&nbsp;key,
    Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i23" class="rowColor">
+<td class="colFirst"><code>Optional&lt;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDefinition(java.lang.String)">getDefinition</a></span>&#8203;(String&nbsp;key)</code></th>
+<td class="colLast">
+<div class="block">Retrieve the property definition for a given property</div>
+</td>
+</tr>
+<tr id="i24" class="altColor">
+<td class="colFirst"><code>Map&lt;String,&#8203;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDefinitions()">getDefinitions</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Retrieve every property definition defined for this configuration</div>
+</td>
+</tr>
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;List&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getList(java.lang.String,java.lang.Class)">getList</a></span>&#8203;(String&nbsp;key,
        Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;Set&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSet(java.lang.String,java.lang.Class)">getSet</a></span>&#8203;(String&nbsp;key,
       Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;Stream&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStream(java.lang.String,java.lang.Class)">getStream</a></span>&#8203;(String&nbsp;key,
          Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasProperty(java.lang.String)">hasProperty</a></span>&#8203;(String&nbsp;key)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ifPresent(java.lang.String,java.lang.Class,java.util.function.Consumer)">ifPresent</a></span>&#8203;(String&nbsp;key,
          Class&lt;T&gt;&nbsp;type,
          Consumer&lt;T&gt;&nbsp;consumer)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inner(java.lang.String)">inner</a></span>&#8203;(String&nbsp;keyPrefix)</code></th>
 <td class="colLast">
@@ -337,32 +382,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the given prefix, and the removing it</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isEmpty()">isEmpty</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>Iterator&lt;String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keyIterator()">keyIterator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>Iterable&lt;String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys()">keys</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>Stream&lt;String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keyStream()">keyStream</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i36" class="altColor">
+<td class="colFirst"><code>Optional&lt;String&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validation(java.lang.String)">validation</a></span>&#8203;(String&nbsp;key)</code></th>
+<td class="colLast">
+<div class="block">Check whether the current value for the given property is valid according its definition</div>
+</td>
+</tr>
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code><a href="Configuration.html" title="interface in imconfig">Configuration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withPrefix(java.lang.String)">withPrefix</a></span>&#8203;(String&nbsp;keyPrefix)</code></th>
 <td class="colLast">
@@ -775,8 +827,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>appendProperty</h4>
-<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;appendProperty&#8203;(String&nbsp;localRepository,
-                             String&nbsp;toString)</pre>
+<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;appendProperty&#8203;(String&nbsp;key,
+                             String&nbsp;value)</pre>
 <div class="block">Create a new configuration resulting of adding or replacing a property to
  the current configuration. Since this method creates a new object each
  time, it should not be used as the primary way to create large
@@ -786,7 +838,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a id="appendFromPairs(java.lang.String...)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>appendFromPairs</h4>
 <pre class="methodSignature">default&nbsp;<a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;appendFromPairs&#8203;(String...&nbsp;pairs)</pre>
@@ -796,6 +848,114 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>IllegalArgumentException</code> - if the number of strings is not even</dd>
+</dl>
+</li>
+</ul>
+<a id="validation(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>validation</h4>
+<pre class="methodSignature">Optional&lt;String&gt;&nbsp;validation&#8203;(String&nbsp;key)</pre>
+<div class="block">Check whether the current value for the given property is valid according its definition</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - The property key</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The validation message, or empty if the value is valid</dd>
+</dl>
+</li>
+</ul>
+<a id="getDefinition(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDefinition</h4>
+<pre class="methodSignature">Optional&lt;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;getDefinition&#8203;(String&nbsp;key)</pre>
+<div class="block">Retrieve the property definition for a given property</div>
+</li>
+</ul>
+<a id="getDefinitions()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDefinitions</h4>
+<pre class="methodSignature">Map&lt;String,&#8203;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;getDefinitions()</pre>
+<div class="block">Retrieve every property definition defined for this configuration</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>An unmodifiable map in the form of <property,definition></dd>
+</dl>
+</li>
+</ul>
+<a id="accordingDefinitions(java.util.Collection)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>accordingDefinitions</h4>
+<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;accordingDefinitions&#8203;(Collection&lt;<a href="PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a>&gt;&nbsp;definitions)</pre>
+<div class="block">Create a new configuration according the given property definitions.
+ <p>
+ Defined properties will be set to their default value if it exists and no current value is
+ set.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="accordingDefinitionsFromPath(java.nio.file.Path)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>accordingDefinitionsFromPath</h4>
+<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;accordingDefinitionsFromPath&#8203;(Path&nbsp;path)</pre>
+<div class="block">Create a new configuration according the property definitions from the given path.
+ <p>
+ Defined properties will be set to their default value if it exists and no current value is
+ set.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="accordingDefinitionsFromURI(java.net.URI)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>accordingDefinitionsFromURI</h4>
+<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;accordingDefinitionsFromURI&#8203;(URI&nbsp;uri)</pre>
+<div class="block">Create a new defined configuration according the property definitions from the given URI.
+ <p>
+ Defined properties will be set to their default value if it exists and no current value is
+ set.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="accordingDefinitionsFromURL(java.net.URL)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>accordingDefinitionsFromURL</h4>
+<pre class="methodSignature"><a href="Configuration.html" title="interface in imconfig">Configuration</a>&nbsp;accordingDefinitionsFromURL&#8203;(URL&nbsp;url)</pre>
+<div class="block">Create a new defined configuration according the property definitions from the given URL.
+ <p>
+ Defined properties will be set to their default value if it exists and no current value is
+ set.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -868,7 +1028,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

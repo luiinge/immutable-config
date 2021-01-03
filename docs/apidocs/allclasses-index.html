@@ -13,8 +13,7 @@
 <!--[if IE]>
 <script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
-<script type="text/javascript" src="jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -27,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":32,"i1":1,"i2":1,"i3":8,"i4":1,"i5":1,"i6":32};
-var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],8:["t4","Exception Summary"],32:["t6","Annotation Types Summary"]};
+var data = {"i0":32,"i1":1,"i2":1,"i3":8,"i4":1,"i5":1,"i6":2,"i7":1,"i8":2,"i9":2,"i10":32,"i11":2,"i12":2,"i13":1,"i14":2,"i15":2};
+var tabs = {65535:["t0","All Classes"],1:["t1","Interface Summary"],2:["t2","Class Summary"],8:["t4","Exception Summary"],32:["t6","Annotation Types Summary"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -52,10 +51,10 @@ loadScripts(document, 'script');</script>
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="imconfig/module-summary.html">Module</a></li>
-<li><a href="imconfig/imconfig/package-summary.html">Package</a></li>
+<li>Package</li>
 <li>Class</li>
 <li>Use</li>
-<li><a href="imconfig/imconfig/package-tree.html">Tree</a></li>
+<li><a href="overview-tree.html">Tree</a></li>
 <li><a href="deprecated-list.html">Deprecated</a></li>
 <li><a href="index-all.html">Index</a></li>
 <li><a href="help-doc.html">Help</a></li>
@@ -106,7 +105,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="typeSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Classes</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Interface Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Exception Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Annotation Types Summary</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Classes</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Interface Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Class Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Exception Summary</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Annotation Types Summary</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
@@ -151,10 +150,55 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </th>
 </tr>
 <tr id="i6" class="altColor">
+<td class="colFirst"><a href="imconfig/imconfig/types/DecimalPropertyType.html" title="class in imconfig.types">DecimalPropertyType</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><a href="imconfig/imconfig/DefinedConfiguration.html" title="interface in imconfig">DefinedConfiguration</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><a href="imconfig/imconfig/types/EnumPropertyType.html" title="class in imconfig.types">EnumPropertyType</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><a href="imconfig/imconfig/types/IntegerPropertyType.html" title="class in imconfig.types">IntegerPropertyType</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><a href="imconfig/imconfig/Property.html" title="annotation in imconfig">Property</a></td>
 <th class="colLast" scope="row">
 <div class="block">Pair of [key,value] used in <a href="imconfig/imconfig/AnnotatedConfiguration.html#value()"><code>AnnotatedConfiguration.value()</code></a></div>
 </th>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig">PropertyDefinition</a></td>
+<th class="colLast" scope="row">
+<div class="block">This class instantiates an immutable value object that represents
+ the definition of a given property.</div>
+</th>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><a href="imconfig/imconfig/PropertyDefinitionBuilder.html" title="class in imconfig">PropertyDefinitionBuilder</a></td>
+<th class="colLast" scope="row">
+<div class="block">This class allows you to create new <a href="imconfig/imconfig/PropertyDefinition.html" title="class in imconfig"><code>PropertyDefinition</code></a> objects in a fluent
+ manner, setting only the actual information you required.</div>
+</th>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><a href="imconfig/imconfig/PropertyType.html" title="interface in imconfig">PropertyType</a></td>
+<th class="colLast" scope="row">
+<div class="block">This class determines what are the accepted values for an specific
+ property.</div>
+</th>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><a href="imconfig/imconfig/types/PropertyTypeFactory.html" title="class in imconfig.types">PropertyTypeFactory</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><a href="imconfig/imconfig/types/TextPropertyType.html" title="class in imconfig.types">TextPropertyType</a></td>
+<th class="colLast" scope="row">&nbsp;</th>
 </tr>
 </table>
 </li>
@@ -173,10 +217,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="imconfig/module-summary.html">Module</a></li>
-<li><a href="imconfig/imconfig/package-summary.html">Package</a></li>
+<li>Package</li>
 <li>Class</li>
 <li>Use</li>
-<li><a href="imconfig/imconfig/package-tree.html">Tree</a></li>
+<li><a href="overview-tree.html">Tree</a></li>
 <li><a href="deprecated-list.html">Deprecated</a></li>
 <li><a href="index-all.html">Index</a></li>
 <li><a href="help-doc.html">Help</a></li>
@@ -206,7 +250,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020&#x2013;2021 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.</small></p>
 </footer>
 </body>
 </html>

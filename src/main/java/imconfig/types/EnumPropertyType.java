@@ -1,0 +1,34 @@
+package imconfig.types;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import imconfig.PropertyType;
+
+public class EnumPropertyType implements PropertyType {
+
+    private final List<String> values;
+
+    public EnumPropertyType(List<String> values) {
+        if (values == null || values.isEmpty()) {
+            throw new IllegalArgumentException("Enumeration values cannot be empty");
+        }
+        this.values = new ArrayList<>(values);
+    }
+
+    @Override
+    public String name() {
+        return "enum";
+    }
+
+    @Override
+    public String hint() {
+        return "One of the following: "+values.stream().collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public boolean accepts(String value) {
+        return values.contains(value);
+    }
+
+}

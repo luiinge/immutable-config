@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Immutable Configurations,imconfig,ConfigurationException,5,8,0,0,2,4,1,2,1,2
+Immutable Configurations,imconfig,PropertyDefinitionBuilder,9,97,0,0,2,25,1,14,1,14
+Immutable Configurations,imconfig,PropertyDefinition,0,62,1,7,0,17,1,12,0,9
+Immutable Configurations,imconfig,Configuration,14,0,0,0,3,0,2,0,2,0
+Immutable Configurations,imconfig,ConfigurationFactory,5,39,1,3,1,6,1,3,0,2
+Immutable Configurations,imconfig.internal,AbstractConfiguration,92,115,2,2,11,20,12,12,10,12
+Immutable Configurations,imconfig.internal,ApacheConfiguration2,81,262,7,17,13,52,14,24,9,17
+Immutable Configurations,imconfig.internal,PropertyDefinitionParser,28,76,0,2,5,16,1,5,1,4
+Immutable Configurations,imconfig.internal,ApacheConfiguration2ConversionHandler,0,67,0,2,0,12,0,5,0,4
+Immutable Configurations,imconfig.internal,ApacheConfiguration2Factory,104,560,6,36,25,103,9,45,5,28
+Immutable Configurations,imconfig.types,EnumPropertyType,19,16,2,2,3,5,4,2,2,2
+Immutable Configurations,imconfig.types,TextPropertyType,9,30,2,6,1,6,2,7,1,4
+Immutable Configurations,imconfig.types,DecimalPropertyType,35,70,9,17,9,15,7,10,2,2
+Immutable Configurations,imconfig.types,PropertyTypeFactory,33,53,3,9,9,13,3,5,0,2
+Immutable Configurations,imconfig.types,IntegerPropertyType,16,89,6,20,3,21,5,12,0,4

@@ -5,7 +5,9 @@ package imconfig;
 
 
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +230,7 @@ public interface Configuration {
      * time, it should not be used as the primary way to create large
      * configurations but rather to tweak existing ones.
      */
-    Configuration appendProperty(String localRepository, String toString);
+    Configuration appendProperty(String key, String value);
 
 
 
@@ -242,6 +244,68 @@ public interface Configuration {
     default Configuration appendFromPairs(String... pairs) {
         return append(ConfigurationFactory.instance().fromPairs(pairs));
     }
+
+
+    /**
+     * Check whether the current value for the given property is valid according its definition
+     * @param key The property key
+     * @return The validation message, or empty if the value is valid
+     */
+    Optional<String> validation(String key);
+
+
+
+    /**
+     * Retrieve the property definition for a given property
+     */
+    Optional<PropertyDefinition> getDefinition(String key);
+
+
+    /**
+     * Retrieve every property definition defined for this configuration
+     * @return An unmodifiable map in the form of <property,definition>
+     */
+    Map<String,PropertyDefinition> getDefinitions();
+
+
+    /**
+     * Create a new configuration according the given property definitions.
+     * <p>
+     * Defined properties will be set to their default value if it exists and no current value is
+     * set.
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitions(Collection<PropertyDefinition> definitions);
+
+
+    /**
+     * Create a new configuration according the property definitions from the given path.
+     * <p>
+     * Defined properties will be set to their default value if it exists and no current value is
+     * set.
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromPath(Path path);
+
+
+    /**
+     * Create a new defined configuration according the property definitions from the given URI.
+     * <p>
+     * Defined properties will be set to their default value if it exists and no current value is
+     * set.
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromURI(URI uri);
+
+
+    /**
+     * Create a new defined configuration according the property definitions from the given URL.
+     * <p>
+     * Defined properties will be set to their default value if it exists and no current value is
+     * set.
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromURL(URL url);
 
 
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig</a> &gt; <span class="el_source">PropertyDefinition.java</span></div><h1>PropertyDefinition.java</h1><pre class="source lang-java linenums">package imconfig;
+
+import java.util.Optional;
+
+/**
+ * This class instantiates an immutable value object that represents
+ * the definition of a given property.
+ * &lt;p&gt;
+ * Property definitions can be created manually or read from a YAML file.
+ *
+ * @author Luis Iñesta Gelabert - luiinge@gmail.com
+ *
+ */
+public class PropertyDefinition {
+
+    /**
+     * Get a new builder for this class
+     */
+    public static PropertyDefinitionBuilder builder() {
+<span class="fc" id="L20">        return new PropertyDefinitionBuilder();</span>
+    }
+
+
+
+    private final String property;
+    private final String description;
+    private final boolean required;
+    private final String defaultValue;
+    private final PropertyType propertyType;
+
+
+    PropertyDefinition(
+        String property,
+        String description,
+        boolean required,
+        String defaultValue,
+        PropertyType type
+<span class="fc" id="L38">    ) {</span>
+<span class="fc" id="L39">        this.property = property;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        this.description = (description == null ? &quot;&quot; : description);</span>
+<span class="fc" id="L41">        this.defaultValue = defaultValue;</span>
+<span class="fc" id="L42">        this.required = required;</span>
+<span class="fc" id="L43">        this.propertyType = type;</span>
+<span class="fc" id="L44">    }</span>
+
+
+    public String property() {
+<span class="fc" id="L48">        return property;</span>
+    }
+
+    public String description() {
+<span class="fc" id="L52">        return description;</span>
+    }
+
+    public boolean required() {
+<span class="fc" id="L56">        return required;</span>
+    }
+
+    public Optional&lt;String&gt; defaultValue() {
+<span class="fc" id="L60">        return Optional.ofNullable(defaultValue);</span>
+    }
+
+    public String type() {
+<span class="fc" id="L64">        return propertyType.name();</span>
+    }
+
+    public String hint() {
+<span class="fc" id="L68">        return propertyType.hint();</span>
+    }
+
+    public boolean accepts(String value) {
+<span class="pc bpc" id="L72" title="1 of 6 branches missed.">        if (required &amp;&amp; (value == null || value.isBlank())) {</span>
+<span class="fc" id="L73">            return false;</span>
+        }
+<span class="fc" id="L75">        return propertyType.accepts(value);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
