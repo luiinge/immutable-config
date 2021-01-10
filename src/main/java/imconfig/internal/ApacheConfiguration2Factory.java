@@ -12,18 +12,12 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -130,15 +124,6 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
-    @Override
-    public Configuration fromClasspathResourceOrURI(String path) {
-        if (path.startsWith("classpath:")) {
-            return fromClasspathResource(path.substring("classpath:".length()));
-        } else {
-            return fromURI(URI.create(path));
-        }
-    }
-
 
     @Override
     public Configuration fromProperties(Properties properties) {
@@ -174,38 +159,23 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
 
     @Override
-    public Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
-        try {
-            Configuration base = empty();
-            List<Configuration> urlConfs = buildFromURLEnum(
-                classLoader.getResources(resourcePath),
-                resourcePath
-            );
-            for (Configuration urlConf : urlConfs) {
-                base = base.append(urlConf);
-            }
-            return base;
-        } catch (IOException e) {
-            throw new ConfigurationException(e);
-        }
-    }
-
-
-    @Override
-    public Configuration fromClasspathResource(String resourcePath) {
-        return fromClasspathResource(resourcePath, getClass().getClassLoader());
-    }
-
-
-    @Override
     public Configuration fromURI(URI uri) {
-        try {
-            if (uri.getScheme() == null) {
-                uri = Paths.get(uri.getPath()).toUri();
-            }
-            return buildFromURL(uri.toURL());
-        } catch (final MalformedURLException e) {
-            throw new ConfigurationException(e);
+        return fromURI(uri,null);
+    }
+
+
+    @Override
+    public Configuration fromResource(String resource, ClassLoader classLoader) {
+        return fromURI(URI.create("classpath:///"+resource),classLoader);
+    }
+
+
+
+    private Configuration fromURI(URI uri, ClassLoader classLoader) {
+       try {
+           return buildFromURL(adaptURI(uri, classLoader));
+        } catch (MalformedURLException e) {
+           throw new ConfigurationException(e);
         }
     }
 
@@ -224,24 +194,17 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
-    @Override
-    public Configuration accordingDefinitionsFromURL(URL url) {
-        try (InputStream inputStream = url.openStream()) {
-            return accordingDefinitions(parser.read(inputStream));
-        } catch (IOException e) {
-            throw new ConfigurationException(e);
-        }
-    }
-
 
     @Override
     public Configuration accordingDefinitionsFromURI(URI uri) {
-        try {
-            if (uri.getScheme() == null) {
-                uri = Paths.get(uri.getPath()).toUri();
-            }
-            return accordingDefinitionsFromURL(uri.toURL());
-        } catch (final MalformedURLException e) {
+        return accordingDefinitionsFromURI(uri,null);
+    }
+
+
+    private Configuration accordingDefinitionsFromURI(URI uri, ClassLoader classLoader) {
+        try (var inputStream = adaptURI(uri, classLoader).openStream()) {
+            return accordingDefinitions(parser.read(inputStream));
+        } catch (final IOException e) {
             throw new ConfigurationException(e);
         }
     }
@@ -254,6 +217,10 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
+    @Override
+    public Configuration accordingDefinitionsFromResource(String resource,ClassLoader classLoader) {
+        return accordingDefinitionsFromURI(URI.create("classpath:///"+resource),classLoader);
+    }
 
 
 
@@ -273,19 +240,6 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
             throw new ConfigurationException("Cannot determine resource type of " + url);
         }
         return configuration;
-    }
-
-
-    private List<Configuration> buildFromURLEnum(Enumeration<URL> urls, String resourcePath) {
-        final List<Configuration> configurations = new ArrayList<>();
-        if (!urls.hasMoreElements()) {
-            throw new ConfigurationException("Cannot find resource " + resourcePath);
-        } else {
-            for (URL url : distinctURLs(urls)) {
-                configurations.add(buildFromURL(url));
-            }
-        }
-        return configurations;
     }
 
 
@@ -340,7 +294,14 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
         return configuration;
     }
 
-    private Set<URL> distinctURLs (Enumeration<URL> urls) {
-        return Collections.list(urls).stream().collect(Collectors.toSet());
+
+
+    private URL adaptURI(URI uri, ClassLoader classLoader) throws MalformedURLException {
+        if ("classpath".equals(uri.getScheme())) {
+            return new URL("classpath",null, -1, uri.getPath(), new ClasspathURLStreamHandler(classLoader));
+        } else {
+            return uri.toURL();
+        }
     }
+
 }

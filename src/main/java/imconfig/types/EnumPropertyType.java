@@ -1,6 +1,5 @@
 package imconfig.types;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import imconfig.PropertyType;
@@ -13,7 +12,7 @@ public class EnumPropertyType implements PropertyType {
         if (values == null || values.isEmpty()) {
             throw new IllegalArgumentException("Enumeration values cannot be empty");
         }
-        this.values = new ArrayList<>(values);
+        this.values = values.stream().map(String::toLowerCase).collect(Collectors.toList());
     }
 
     @Override
@@ -28,7 +27,7 @@ public class EnumPropertyType implements PropertyType {
 
     @Override
     public boolean accepts(String value) {
-        return values.contains(value);
+        return values.contains(value.toLowerCase());
     }
 
 }

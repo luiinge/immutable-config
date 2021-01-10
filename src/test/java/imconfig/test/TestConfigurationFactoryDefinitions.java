@@ -6,7 +6,6 @@ package imconfig.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import org.junit.Test;
 import imconfig.Configuration;
@@ -22,12 +21,6 @@ public class TestConfigurationFactoryDefinitions {
 
 
     @Test
-    public void testBuildEmptyConfigurationWithDefinitionFromURL() throws MalformedURLException {
-        var conf = factory.accordingDefinitionsFromURL(definitionPath.toUri().toURL());
-        assertConfiguration(conf);
-    }
-
-    @Test
     public void testBuildEmptyConfigurationWithDefinitionFromURI() {
         var conf = factory.accordingDefinitionsFromURI(definitionPath.toUri());
         assertConfiguration(conf);
@@ -36,13 +29,6 @@ public class TestConfigurationFactoryDefinitions {
     @Test
     public void testBuildEmptyConfigurationWithDefinitionFromPath() {
         var conf = factory.accordingDefinitionsFromPath(definitionPath);
-        assertConfiguration(conf);
-    }
-
-
-    @Test
-    public void testAttachDefinitionFromURL() throws MalformedURLException {
-        var conf = factory.empty().accordingDefinitionsFromURL(definitionPath.toUri().toURL());
         assertConfiguration(conf);
     }
 
@@ -72,12 +58,14 @@ public class TestConfigurationFactoryDefinitions {
 
 
     private void assertConfiguration(Configuration conf) {
-        assertThat(conf.getDefinitions()).hasSize(5);
+        assertThat(conf.getDefinitions()).hasSize(6);
         assertThat(conf.getDefinition("defined.property.required")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.with-default-value")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.regex-text")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.min-max-number")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.enumeration")).isNotEmpty();
+        assertThat(conf.getDefinition("defined.property.boolean")).isNotEmpty();
+
         assertThat(conf.getDefinition("undefined.property")).isEmpty();
 
         assertThat(conf.get("defined.property.regex-text", String.class)).isEmpty();

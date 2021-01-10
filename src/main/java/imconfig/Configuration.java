@@ -5,7 +5,6 @@ package imconfig;
 
 
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
@@ -178,15 +177,6 @@ public interface Configuration {
 
     /**
      * Create a new configuration resulting the merge the current configuration
-     * with the configuration from either a Java classpath resource (if the path
-     * starts with the pseudo-schema <code>classpath:</code>) or a regular URI
-     * resource
-     */
-    Configuration appendFromClasspathResourceOrURI(String path);
-
-
-    /**
-     * Create a new configuration resulting the merge the current configuration
      * with the configuration from a {@link Properties} object
      */
     Configuration appendFromProperties(Properties properties);
@@ -202,19 +192,10 @@ public interface Configuration {
     /**
      * Create a new configuration resulting the merge the current configuration
      * with the configuration from one or several Java class resources resolved
-     * using the {@link ClassLoader#getResources(String)} method of the thread
-     * static class loader
-     */
-    Configuration appendFromClasspathResource(String resourcePath);
-
-
-    /**
-     * Create a new configuration resulting the merge the current configuration
-     * with the configuration from one or several Java class resources resolved
      * using the {@link ClassLoader#getResources(String)} method of the specified
      * class loader
      */
-    Configuration appendFromClasspathResource(String resourcePath, ClassLoader classLoader);
+    Configuration appendFromResource(String resourcePath, ClassLoader classLoader);
 
 
     /**
@@ -299,13 +280,13 @@ public interface Configuration {
 
 
     /**
-     * Create a new defined configuration according the property definitions from the given URL.
+     * Create a new defined configuration according the property definitions from the given
+     * classpath resource and class loader.
      * <p>
      * Defined properties will be set to their default value if it exists and no current value is
      * set.
      * @see PropertyDefinition
      */
-    Configuration accordingDefinitionsFromURL(URL url);
-
+    Configuration accordingDefinitionsFromResource(String resource, ClassLoader classLoader);
 
 }

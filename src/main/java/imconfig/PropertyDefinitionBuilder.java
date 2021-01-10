@@ -2,6 +2,7 @@ package imconfig;
 
 import java.util.List;
 import java.util.Objects;
+import imconfig.types.BooleanPropertyType;
 import imconfig.types.DecimalPropertyType;
 import imconfig.types.EnumPropertyType;
 import imconfig.types.IntegerPropertyType;
@@ -84,6 +85,11 @@ public class PropertyDefinitionBuilder {
         return this;
     }
 
+    public PropertyDefinitionBuilder booleanType() {
+        this.propertyType = new BooleanPropertyType();
+        return this;
+    }
+
 
     public PropertyDefinitionBuilder propertyType(PropertyType propertyType) {
         this.propertyType = propertyType;
@@ -96,6 +102,7 @@ public class PropertyDefinitionBuilder {
         Objects.requireNonNull(propertyType);
         return new PropertyDefinition(property, description, required, defaultValue, propertyType);
     }
+
 
 
 

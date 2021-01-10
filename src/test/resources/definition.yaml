@@ -26,3 +26,6 @@ defined.property.enumeration:
          - red
          - yellow
          - orange
+
+defined.property.boolean:
+   type: boolean

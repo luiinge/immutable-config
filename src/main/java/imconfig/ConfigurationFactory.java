@@ -5,7 +5,6 @@ package imconfig;
 
 
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -88,7 +87,7 @@ public interface ConfigurationFactory {
 
 
     /**
-     * Create a new configuration from the specified URI
+     * Create a new configuration from the specified URI.
      *
      * @throws ConfigurationException if the configuration was not loaded
      */
@@ -96,11 +95,12 @@ public interface ConfigurationFactory {
 
 
     /**
-     * Create a new configuration from either a Java classpath resource (if the
-     * path starts with the pseudo-schema <code>classpath:</code>) or a regular
-     * URI resource
+     * Create a new configuration from the specified classpath resource.
+     *
+     * @throws ConfigurationException if the configuration was not loaded
      */
-    Configuration fromClasspathResourceOrURI(String path);
+    Configuration fromResource(String resource, ClassLoader classLoader);
+
 
 
     /**
@@ -113,22 +113,6 @@ public interface ConfigurationFactory {
      * Create a new configuration from a {@link Map} object
      */
     Configuration fromMap(Map<String, ?> propertyMap);
-
-
-    /**
-     * Create a new configuration from one or several Java class resources
-     * resolved using the {@link ClassLoader#getResources(String)} method of the
-     * thread default class loader
-     */
-    Configuration fromClasspathResource(String resourcePath);
-
-
-    /**
-     * Create a new configuration from one or several Java class resources
-     * resolved using the {@link ClassLoader#getResources(String)} method of the
-     * specified class loader
-     */
-    Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader);
 
 
 
@@ -159,14 +143,6 @@ public interface ConfigurationFactory {
     Configuration accordingDefinitions(Collection<PropertyDefinition> definitions);
 
 
-    /**
-     * Create a new empty configuration according the property definitions from the given URL.
-     * <p>
-     * Defined properties will be set to their default value if it exists
-     * @see PropertyDefinition
-     */
-    Configuration accordingDefinitionsFromURL(URL url);
-
 
     /**
      * Create a new empty configuration according the property definitions from the given path.
@@ -180,10 +156,25 @@ public interface ConfigurationFactory {
     /**
      * Create a new empty configuration according the property definitions from the given URI.
      * <p>
+     * You can use the schema <pre>classpath:</pre> to reference classpath resources.
+     * <p>
      * Defined properties will be set to their default value if it exists
      * @see PropertyDefinition
      */
     Configuration accordingDefinitionsFromURI(URI uri);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given
+     * classpath resource.
+     * <p>
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Configuration accordingDefinitionsFromResource(String resource, ClassLoader classLoader);
+
+
+
 
 
 

@@ -35,6 +35,9 @@ public final class PropertyTypeFactory {
             if ("enum".equals(type)) {
                 return new EnumPropertyType((List<String>)arguments.get("values"));
             }
+            if ("boolean".equals(type)) {
+                return new BooleanPropertyType();
+            }
             throw new ConfigurationException(
                 "Undefined property type: "+type+
                 " . Accepted values are: text, integer, decimal, enum"

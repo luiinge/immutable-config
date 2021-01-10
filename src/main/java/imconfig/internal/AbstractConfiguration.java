@@ -5,7 +5,6 @@ package imconfig.internal;
 
 
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,20 +52,8 @@ public abstract class AbstractConfiguration implements Configuration {
 
 
     @Override
-    public Configuration appendFromClasspathResource(String resourcePath) {
-        return builder.merge(this, builder.fromClasspathResource(resourcePath));
-    }
-
-
-    @Override
-    public Configuration appendFromClasspathResource(String resourcePath, ClassLoader classLoader) {
-        return builder.merge(this, builder.fromClasspathResource(resourcePath, classLoader));
-    }
-
-
-    @Override
-    public Configuration appendFromClasspathResourceOrURI(String path) {
-        return builder.merge(this, builder.fromClasspathResourceOrURI(path));
+    public Configuration appendFromResource(String resourcePath, ClassLoader classLoader) {
+        return builder.merge(this, builder.fromResource(resourcePath, classLoader));
     }
 
 
@@ -155,9 +142,12 @@ public abstract class AbstractConfiguration implements Configuration {
         return builder.merge(this, builder.accordingDefinitionsFromURI(uri));
     }
 
-    @Override
-    public Configuration accordingDefinitionsFromURL(URL url) {
-        return builder.merge(this, builder.accordingDefinitionsFromURL(url));
-    }
 
+    @Override
+    public Configuration accordingDefinitionsFromResource(String resource,ClassLoader classLoader) {
+        return builder.merge(
+            this,
+            builder.accordingDefinitionsFromResource(resource, classLoader)
+        );
+    }
 }

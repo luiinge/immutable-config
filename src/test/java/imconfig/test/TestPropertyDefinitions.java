@@ -151,4 +151,33 @@ public class TestPropertyDefinitions {
         assertThat(definition.accepts("4.6")).isTrue();
         assertThat(definition.accepts("4.7")).isFalse();
     }
+
+
+    @Test
+    public void testEnumOnlyAcceptsValuesInList() {
+        var definition = PropertyDefinition.builder()
+            .property("test")
+            .enumType("hello","goodbay")
+            .build();
+        assertThat(definition.accepts("hello")).isTrue();
+        assertThat(definition.accepts("HELLO")).isTrue();
+        assertThat(definition.accepts("Hello")).isTrue();
+        assertThat(definition.accepts("goodbay")).isTrue();
+        assertThat(definition.accepts("GOODBAY")).isTrue();
+        assertThat(definition.accepts("Goodbay")).isTrue();
+        assertThat(definition.accepts("later")).isFalse();
+    }
+
+
+    @Test
+    public void testBooleanOnlyAcceptsTrueOrFalse() {
+        var definition = PropertyDefinition.builder()
+            .property("test")
+            .booleanType()
+            .build();
+        assertThat(definition.accepts("true")).isTrue();
+        assertThat(definition.accepts("false")).isTrue();
+        assertThat(definition.accepts("other")).isFalse();
+    }
+
 }
