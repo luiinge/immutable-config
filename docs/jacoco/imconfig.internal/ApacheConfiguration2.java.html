@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApacheConfiguration2.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">ApacheConfiguration2.java</span></div><h1>ApacheConfiguration2.java</h1><pre class="source lang-java linenums">/*
+ * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+ */
+package imconfig.internal;
+
+
+import imconfig.*;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
+
+
+public class ApacheConfiguration2 extends AbstractConfiguration {
+
+    protected final org.apache.commons.configuration2.Configuration conf;
+
+
+    protected ApacheConfiguration2(
+        ConfigurationFactory builder,
+        Map&lt;String, PropertyDefinition&gt; definitions,
+        org.apache.commons.configuration2.Configuration conf
+    ) {
+<span class="fc" id="L26">        super(builder, definitions);</span>
+<span class="fc" id="L27">        this.conf = conf;</span>
+<span class="fc" id="L28">    }</span>
+
+
+
+    protected ApacheConfiguration2(
+        ConfigurationFactory builder,
+        org.apache.commons.configuration2.Configuration conf
+    ) {
+<span class="fc" id="L36">        super(builder, Map.of());</span>
+<span class="fc" id="L37">        this.conf = conf;</span>
+<span class="fc" id="L38">    }</span>
+
+
+
+    @Override
+    public Configuration withPrefix(String keyPrefix) {
+<span class="fc" id="L44">        BaseConfiguration innerConf = prepare(new BaseConfiguration());</span>
+<span class="fc" id="L45">        conf.getKeys().forEachRemaining(</span>
+<span class="fc" id="L46">            key -&gt; innerConf.addProperty(keyPrefix + &quot;.&quot; + key, conf.getProperty(key))</span>
+        );
+<span class="fc" id="L48">        return new ApacheConfiguration2(builder, definitions, innerConf);</span>
+    }
+
+
+    @Override
+    public Configuration filtered(String keyPrefix) {
+<span class="fc" id="L54">        BaseConfiguration innerConf = prepare(new BaseConfiguration());</span>
+<span class="fc" id="L55">        conf.getKeys(keyPrefix).forEachRemaining(key -&gt; {</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">            if (key.startsWith(keyPrefix)) {</span>
+<span class="fc" id="L57">                innerConf.addProperty(key, conf.getProperty(key));</span>
+            }
+<span class="fc" id="L59">        });</span>
+<span class="fc" id="L60">        return new ApacheConfiguration2(builder, definitions, innerConf);</span>
+    }
+
+
+    @Override
+    public Configuration inner(String keyPrefix) {
+<span class="nc bnc" id="L66" title="All 4 branches missed.">        if (keyPrefix == null || keyPrefix.isEmpty()) {</span>
+<span class="nc" id="L67">            return this;</span>
+        }
+<span class="nc" id="L69">        return new ApacheConfiguration2(builder, definitions, conf.subset(keyPrefix));</span>
+    }
+
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L75">        return conf.isEmpty();</span>
+    }
+
+
+    @Override
+    public boolean hasProperty(String key) {
+<span class="fc" id="L81">        return conf.containsKey(key);</span>
+    }
+
+
+    @Override
+    public Iterable&lt;String&gt; keys() {
+<span class="fc" id="L87">        return keyList();</span>
+    }
+
+
+    @Override
+    public Iterator&lt;String&gt; keyIterator() {
+<span class="nc" id="L93">        return conf.getKeys();</span>
+    }
+
+
+    @Override
+    public Stream&lt;String&gt; keyStream() {
+<span class="fc" id="L99">        return keyList().stream();</span>
+    }
+
+
+    private List&lt;String&gt; keyList() {
+<span class="fc" id="L104">        List&lt;String&gt; keys = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L105">        conf.getKeys().forEachRemaining(keys::add);</span>
+<span class="fc" id="L106">        return keys;</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; Optional&lt;T&gt; get(String key, Class&lt;T&gt; type) {
+<span class="fc" id="L112">        var definition = definitions.get(key);</span>
+<span class="fc" id="L113">        String raw = conf.getString(key);</span>
+<span class="fc bfc" id="L114" title="All 4 branches covered.">        boolean empty = (raw == null || &quot;&quot;.equals(raw));</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (definition != null) {</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            var value = empty ? definition.defaultValue().orElse(null) : raw;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">            if (value != null) {</span>
+<span class="fc" id="L118">                return Optional.of(convert(value, type));</span>
+            } else {
+<span class="fc" id="L120">                return Optional.empty();</span>
+            }
+        } else {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            return Optional.ofNullable(empty ? null : conf.get(type, key));</span>
+        }
+    }
+
+
+    @Override
+    public &lt;T&gt; List&lt;T&gt; getList(String key, Class&lt;T&gt; type) {
+<span class="fc" id="L130">        return Optional.ofNullable(conf.getList(type, key)).orElse(Collections.emptyList());</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; Set&lt;T&gt; getSet(String key, Class&lt;T&gt; type) {
+<span class="nc" id="L136">        return new HashSet&lt;&gt;(getList(key, type));</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; Stream&lt;T&gt; getStream(String key, Class&lt;T&gt; type) {
+<span class="nc" id="L142">        return getList(key, type).stream();</span>
+    }
+
+
+    @Override
+    public Properties asProperties() {
+<span class="fc" id="L148">        Properties properties = new Properties();</span>
+<span class="fc" id="L149">        conf.getKeys().forEachRemaining(key -&gt; properties.put(key, conf.getString(key)));</span>
+<span class="fc" id="L150">        return properties;</span>
+    }
+
+
+    @Override
+    public Map&lt;String, String&gt; asMap() {
+<span class="fc" id="L156">        Map&lt;String, String&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L157">        conf.getKeys().forEachRemaining(key -&gt; map.put(key, conf.getString(key)));</span>
+<span class="fc" id="L158">        return map;</span>
+    }
+
+
+    @Override
+    public String toString() {
+<span class="fc" id="L164">        StringBuilder string = new StringBuilder(&quot;configuration:\n---------------\n&quot;);</span>
+<span class="fc" id="L165">        conf.getKeys().forEachRemaining(key -&gt; {</span>
+<span class="fc" id="L166">            final String[] values = conf.getStringArray(key);</span>
+<span class="fc" id="L167">            String value = &quot;&lt;undefined&gt;&quot;;</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            if (values.length == 1) {</span>
+<span class="fc" id="L169">                value = values[0];</span>
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">            } else if (values.length &gt; 1) {</span>
+<span class="fc" id="L171">                value = Arrays.toString(values);</span>
+            }
+<span class="fc" id="L173">            string</span>
+<span class="fc" id="L174">                .append(key)</span>
+<span class="fc" id="L175">                .append(&quot; : &quot;)</span>
+<span class="fc" id="L176">                .append(value)</span>
+<span class="fc" id="L177">                .append(&quot;\n&quot;);</span>
+<span class="fc" id="L178">        });</span>
+<span class="fc" id="L179">        return string.append(&quot;---------------&quot;).toString();</span>
+    }
+
+
+    @Override
+    public void forEach(BiConsumer&lt;String, String&gt; consumer) {
+<span class="nc" id="L185">        conf.getKeys().forEachRemaining(key -&gt; consumer.accept(key, conf.get(String.class, key)));</span>
+<span class="nc" id="L186">    }</span>
+
+
+
+
+    private &lt;T&gt; T convert(String raw, Class&lt;T&gt; type) {
+<span class="fc" id="L192">        var abstractConf = (org.apache.commons.configuration2.AbstractConfiguration)conf;</span>
+<span class="fc" id="L193">        return abstractConf.getConversionHandler().to(raw, type, abstractConf.getInterpolator());</span>
+    }
+
+
+    private &lt;T extends org.apache.commons.configuration2.AbstractConfiguration&gt; T prepare(T abstractConfiguration) {
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        if (builder.hasMultivalueSeparator()) {</span>
+<span class="fc" id="L199">            abstractConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(builder.multivalueSeparator()));</span>
+        }
+<span class="fc" id="L201">        return abstractConfiguration;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

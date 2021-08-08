@@ -37,7 +37,7 @@ public class ApacheConfiguration2ConversionHandler extends DefaultConversionHand
 
     @SuppressWarnings("unchecked")
     @Override
-    protected <T extends Object> T convertValue(
+    protected <T> T convertValue(
         Object src,
         Class<T> targetCls,
         ConfigurationInterpolator ci

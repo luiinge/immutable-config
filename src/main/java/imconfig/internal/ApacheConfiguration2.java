@@ -1,52 +1,63 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
  */
 package imconfig.internal;
 
 
+import imconfig.*;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import org.apache.commons.configuration2.BaseConfiguration;
-
-import imconfig.Configuration;
-import imconfig.ConfigurationFactory;
-
 
 public class ApacheConfiguration2 extends AbstractConfiguration {
 
-    final org.apache.commons.configuration2.Configuration conf;
+    protected final org.apache.commons.configuration2.Configuration conf;
 
 
     protected ApacheConfiguration2(
-                    ConfigurationFactory builder,
-                    org.apache.commons.configuration2.Configuration conf
+        ConfigurationFactory builder,
+        Map<String, PropertyDefinition> definitions,
+        org.apache.commons.configuration2.Configuration conf
     ) {
-        super(builder);
+        super(builder, definitions);
         this.conf = conf;
     }
 
 
+
+    protected ApacheConfiguration2(
+        ConfigurationFactory builder,
+        org.apache.commons.configuration2.Configuration conf
+    ) {
+        super(builder, Map.of());
+        this.conf = conf;
+    }
+
+
+
     @Override
     public Configuration withPrefix(String keyPrefix) {
-        BaseConfiguration innerConf = new BaseConfiguration();
+        BaseConfiguration innerConf = prepare(new BaseConfiguration());
         conf.getKeys().forEachRemaining(
             key -> innerConf.addProperty(keyPrefix + "." + key, conf.getProperty(key))
         );
-        return new ApacheConfiguration2(builder, innerConf);
+        return new ApacheConfiguration2(builder, definitions, innerConf);
     }
 
 
     @Override
     public Configuration filtered(String keyPrefix) {
-        BaseConfiguration innerConf = new BaseConfiguration();
+        BaseConfiguration innerConf = prepare(new BaseConfiguration());
         conf.getKeys(keyPrefix).forEachRemaining(key -> {
             if (key.startsWith(keyPrefix)) {
                 innerConf.addProperty(key, conf.getProperty(key));
             }
         });
-        return new ApacheConfiguration2(builder, innerConf);
+        return new ApacheConfiguration2(builder, definitions, innerConf);
     }
 
 
@@ -55,7 +66,7 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
         if (keyPrefix == null || keyPrefix.isEmpty()) {
             return this;
         }
-        return new ApacheConfiguration2(builder, conf.subset(keyPrefix));
+        return new ApacheConfiguration2(builder, definitions, conf.subset(keyPrefix));
     }
 
 
@@ -98,9 +109,19 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
 
     @Override
     public <T> Optional<T> get(String key, Class<T> type) {
+        var definition = definitions.get(key);
         String raw = conf.getString(key);
         boolean empty = (raw == null || "".equals(raw));
-        return Optional.ofNullable(empty ? null : conf.get(type, key));
+        if (definition != null) {
+            var value = empty ? definition.defaultValue().orElse(null) : raw;
+            if (value != null) {
+                return Optional.of(convert(value, type));
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            return Optional.ofNullable(empty ? null : conf.get(type, key));
+        }
     }
 
 
@@ -162,6 +183,22 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
     @Override
     public void forEach(BiConsumer<String, String> consumer) {
         conf.getKeys().forEachRemaining(key -> consumer.accept(key, conf.get(String.class, key)));
+    }
+
+
+
+
+    private <T> T convert(String raw, Class<T> type) {
+        var abstractConf = (org.apache.commons.configuration2.AbstractConfiguration)conf;
+        return abstractConf.getConversionHandler().to(raw, type, abstractConf.getInterpolator());
+    }
+
+
+    private <T extends org.apache.commons.configuration2.AbstractConfiguration> T prepare(T abstractConfiguration) {
+        if (builder.hasMultivalueSeparator()) {
+            abstractConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(builder.multivalueSeparator()));
+        }
+        return abstractConfiguration;
     }
 
 }

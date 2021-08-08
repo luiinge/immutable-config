@@ -12,7 +12,6 @@ module imconfig {
     exports imconfig;
 
     requires org.apache.commons.configuration2;
-    requires commons.beanutils;
     requires org.yaml.snakeyaml;
     requires org.slf4j;
     requires org.apache.commons.lang3;

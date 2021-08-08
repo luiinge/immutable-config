@@ -1,50 +1,53 @@
-/**
- * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+/*
+ * @author Luis Iñesta Gelabert - luiinge@gmail.com
  */
 package imconfig.internal;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.EnvironmentConfiguration;
-import org.apache.commons.configuration2.JSONConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.SystemConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.YAMLConfiguration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.convert.ConversionHandler;
-
-import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
-import imconfig.ConfigurationException;
-import imconfig.ConfigurationFactory;
-import imconfig.Property;
+import imconfig.*;
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.*;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.convert.*;
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();
+    private final PropertyDefinitionParser parser = new PropertyDefinitionParser();
+
+    private char separator = 0;
+
+
+    @Override
+    public ConfigurationFactory multivalueSeparator(char separator) {
+        if (separator == 0) {
+            throw new IllegalArgumentException("Invalid separator symbol: "+separator);
+        }
+        this.separator = separator;
+        return this;
+    }
+
+
+    @Override
+    public boolean hasMultivalueSeparator() {
+        return this.separator != 0;
+    }
+
+
+    @Override
+    public char multivalueSeparator() {
+        return this.separator;
+    }
 
 
     @Override
@@ -66,7 +69,10 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
             }
             base.getList(property,String.class).forEach(value -> result.addProperty(property,value));
         }
-        return new ApacheConfiguration2(this, result);
+        Map<String, PropertyDefinition> definitions = new HashMap<>(base.getDefinitions());
+        definitions.putAll(delta.getDefinitions());
+
+        return new ApacheConfiguration2(this, definitions, result);
     }
 
 
@@ -125,16 +131,8 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
-    @Override
-    public Configuration fromClasspathResourceOrURI(String path) {
-        if (path.startsWith("classpath:")) {
-            return fromClasspathResource(path.substring("classpath:".length()));
-        } else {
-            return fromURI(URI.create(path));
-        }
-    }
 
-
+    @SuppressWarnings("CollectionDeclaredAsConcreteClass")
     @Override
     public Configuration fromProperties(Properties properties) {
         final BaseConfiguration configuration = configure(new BaseConfiguration());
@@ -155,53 +153,97 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
+
+    private Configuration fromMap(Map<String, ?> properties, Collection<PropertyDefinition> definitions) {
+        final BaseConfiguration configuration = configure(new BaseConfiguration());
+        for (final Entry<String, ?> property : properties.entrySet()) {
+            configuration.addProperty(property.getKey(), property.getValue());
+        }
+        var definitionMap = definitions.stream()
+            .collect(Collectors.toMap(PropertyDefinition::property,x->x));
+        return new ApacheConfiguration2(this, definitionMap, configuration);
+    }
+
+
+
     @Override
-    public Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
-        try {
-            Configuration base = empty();
-            List<Configuration> urlConfs = buildFromURLEnum(
-                classLoader.getResources(resourcePath),
-                resourcePath
-            );
-            for (Configuration urlConf : urlConfs) {
-                base = base.append(urlConf);
-            }
-            return base;
+    public Configuration fromURI(URI uri) {
+        return fromURI(uri,null);
+    }
+
+
+    @Override
+    public Configuration fromResource(String resource, ClassLoader classLoader) {
+        return fromURI(URI.create("classpath:///"+resource),classLoader);
+    }
+
+
+
+    private Configuration fromURI(URI uri, ClassLoader classLoader) {
+       try {
+           return buildFromURL(adaptURI(uri, classLoader));
+        } catch (MalformedURLException e) {
+           throw new ConfigurationException(e);
+        }
+    }
+
+
+
+    @Override
+    public Configuration accordingDefinitions(Collection<PropertyDefinition> definitions) {
+        Map<String,String> defaultValues = definitions
+            .stream()
+            .filter(definition -> definition.defaultValue().isPresent())
+            .collect(Collectors.toMap(
+                PropertyDefinition::property,
+                definition->definition.defaultValue().orElseThrow()
+            ));
+        return fromMap(defaultValues,definitions);
+    }
+
+
+
+    @Override
+    public Configuration accordingDefinitionsFromURI(URI uri) {
+        return accordingDefinitionsFromURI(uri,null);
+    }
+
+
+    private Configuration accordingDefinitionsFromURI(URI uri, ClassLoader classLoader) {
+        try (var inputStream = adaptURI(uri, classLoader).openStream()) {
+            return accordingDefinitions(parser.read(inputStream));
         } catch (IOException e) {
             throw new ConfigurationException(e);
         }
     }
 
 
+
     @Override
-    public Configuration fromClasspathResource(String resourcePath) {
-        return fromClasspathResource(resourcePath, getClass().getClassLoader());
+    public Configuration accordingDefinitionsFromPath(Path path) {
+        return accordingDefinitionsFromURI(path.toUri());
     }
 
 
     @Override
-    public Configuration fromURI(URI uri) {
-        try {
-            if (uri.getScheme() == null) {
-                Path path = Paths.get(uri.getPath());
-                return fromPath(path);
-            }
-            return buildFromURL(uri.toURL());
-        } catch (final MalformedURLException e) {
-            throw new ConfigurationException(e);
-        }
+    public Configuration accordingDefinitionsFromResource(String resource,ClassLoader classLoader) {
+        return accordingDefinitionsFromURI(URI.create("classpath:///"+resource),classLoader);
     }
+
+
+
 
 
     private Configuration buildFromURL(URL url) {
         Configuration configuration;
-        if (url.getFile().endsWith(".properties")) {
+        String file = url.getFile();
+        if (file.endsWith(".properties")) {
             configuration = buildFromPropertiesFile(url);
-        } else if (url.getFile().endsWith(".json")) {
+        } else if (file.endsWith(".json")) {
             configuration = buildFromJSON(url);
-        } else if (url.getFile().endsWith(".xml")) {
+        } else if (file.endsWith(".xml")) {
             configuration = buildFromXML(url);
-        } else if (url.getFile().endsWith(".yaml")) {
+        } else if (file.endsWith(".yaml")) {
             configuration = buildFromYAML(url);
         } else {
             throw new ConfigurationException("Cannot determine resource type of " + url);
@@ -210,25 +252,12 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     }
 
 
-    private List<Configuration> buildFromURLEnum(Enumeration<URL> urls, String resourcePath) {
-        final List<Configuration> configurations = new ArrayList<>();
-        if (!urls.hasMoreElements()) {
-            throw new ConfigurationException("Cannot find resource " + resourcePath);
-        } else {
-            for (URL url : distinctURLs(urls)) {
-                configurations.add(buildFromURL(url));
-            }
-        }
-        return configurations;
-    }
-
-
 
     private Configuration buildFromJSON(URL url) {
         try (InputStream stream = url.openStream()) {
             JSONConfiguration json = configure(new JSONConfiguration());
             json.read(stream);
-            return new ApacheConfiguration2(this, json);
+            return new ApacheConfiguration2(this, Map.of(), json);
         } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
         }
@@ -239,7 +268,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
         try (InputStream stream = url.openStream()) {
             YAMLConfiguration yaml = configure(new YAMLConfiguration());
             yaml.read(stream);
-            return new ApacheConfiguration2(this, yaml);
+            return new ApacheConfiguration2(this, Map.of(), yaml);
         } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
         }
@@ -247,7 +276,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
 
     private Configuration buildFromPropertiesFile(URL url) {
-        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream)) {
+        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
             PropertiesConfiguration properties = configure(new PropertiesConfiguration());
             properties.read(reader);
             return new ApacheConfiguration2(this, properties);
@@ -259,7 +288,8 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private Configuration buildFromXML(URL url) {
         try {
-            XMLConfiguration xml = configure(new Configurations().xml(url));
+            var configurations = new Configurations();
+            XMLConfiguration xml = configure(configurations.xml(url));
             return new ApacheConfiguration2(this, xml);
         } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
@@ -271,10 +301,20 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private <T extends AbstractConfiguration> T configure(T configuration) {
         configuration.setConversionHandler(conversionHandler);
+        if (hasMultivalueSeparator()) {
+            configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(multivalueSeparator()));
+        }
         return configuration;
     }
 
-    private Set<URL> distinctURLs (Enumeration<URL> urls) {
-        return Collections.list(urls).stream().collect(Collectors.toSet());
+
+
+    private URL adaptURI(URI uri, ClassLoader classLoader) throws MalformedURLException {
+        if ("classpath".equals(uri.getScheme())) {
+            return new URL("classpath",null, -1, uri.getPath(), new ClasspathURLStreamHandler(classLoader));
+        } else {
+            return uri.toURL();
+        }
     }
+
 }
