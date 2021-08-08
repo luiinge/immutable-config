@@ -1,22 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">AbstractConfiguration.java</span></div><h1>AbstractConfiguration.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">AbstractConfiguration.java</span></div><h1>AbstractConfiguration.java</h1><pre class="source lang-java linenums">/*
  * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
  */
 package imconfig.internal;
 
 
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import imconfig.AnnotatedConfiguration;
-import imconfig.Configuration;
-import imconfig.ConfigurationFactory;
-import imconfig.PropertyDefinition;
+import java.util.*;
+import java.util.stream.*;
+
+import static java.util.stream.Collectors.*;
+import imconfig.*;
 
 
 public abstract class AbstractConfiguration implements Configuration {
@@ -28,137 +22,185 @@ public abstract class AbstractConfiguration implements Configuration {
     protected AbstractConfiguration(
         ConfigurationFactory builder,
         Map&lt;String,PropertyDefinition&gt; definitions
-<span class="fc" id="L31">    ) {</span>
-<span class="fc" id="L32">        this.builder = builder;</span>
-<span class="fc" id="L33">        this.definitions = definitions;</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L25">    ) {</span>
+<span class="fc" id="L26">        this.builder = builder;</span>
+<span class="fc" id="L27">        this.definitions = definitions;</span>
+<span class="fc" id="L28">    }</span>
 
 
     @Override
     public Configuration append(Configuration otherConfiguration) {
-<span class="fc" id="L39">        return builder.merge(this, otherConfiguration);</span>
+<span class="nc" id="L33">        return builder.merge(this, otherConfiguration);</span>
     }
 
 
     @Override
     public Configuration appendFromAnnotation(Class&lt;?&gt; configuredClass) {
-<span class="nc" id="L45">        return builder.merge(this, builder.fromAnnotation(configuredClass));</span>
+<span class="nc" id="L39">        return builder.merge(this, builder.fromAnnotation(configuredClass));</span>
     }
 
 
     @Override
     public Configuration appendFromAnnotation(AnnotatedConfiguration annotation) {
-<span class="nc" id="L51">        return builder.merge(this, builder.fromAnnotation(annotation));</span>
+<span class="nc" id="L45">        return builder.merge(this, builder.fromAnnotation(annotation));</span>
     }
 
 
     @Override
-    public Configuration appendFromClasspathResource(String resourcePath) {
-<span class="fc" id="L57">        return builder.merge(this, builder.fromClasspathResource(resourcePath));</span>
-    }
-
-
-    @Override
-    public Configuration appendFromClasspathResource(String resourcePath, ClassLoader classLoader) {
-<span class="nc" id="L63">        return builder.merge(this, builder.fromClasspathResource(resourcePath, classLoader));</span>
-    }
-
-
-    @Override
-    public Configuration appendFromClasspathResourceOrURI(String path) {
-<span class="nc" id="L69">        return builder.merge(this, builder.fromClasspathResourceOrURI(path));</span>
+    public Configuration appendFromResource(String resourcePath, ClassLoader classLoader) {
+<span class="fc" id="L51">        return builder.merge(this, builder.fromResource(resourcePath, classLoader));</span>
     }
 
 
     @Override
     public Configuration appendFromEnvironment() {
-<span class="nc" id="L75">        return builder.merge(this, builder.fromEnvironment());</span>
+<span class="nc" id="L57">        return builder.merge(this, builder.fromEnvironment());</span>
     }
 
 
     @Override
     public Configuration appendFromSystem() {
-<span class="nc" id="L81">        return builder.merge(this, builder.fromSystem());</span>
+<span class="nc" id="L63">        return builder.merge(this, builder.fromSystem());</span>
     }
 
 
     @Override
     public Configuration appendFromMap(Map&lt;String, ?&gt; propertyMap) {
-<span class="fc" id="L87">        return builder.merge(this, builder.fromMap(propertyMap));</span>
+<span class="fc" id="L69">        return builder.merge(this, builder.fromMap(propertyMap));</span>
     }
 
 
     @Override
     public Configuration appendFromPath(Path path) {
-<span class="nc" id="L93">        return builder.merge(this, builder.fromPath(path));</span>
+<span class="nc" id="L75">        return builder.merge(this, builder.fromPath(path));</span>
     }
 
 
     @Override
     public Configuration appendFromProperties(Properties properties) {
-<span class="nc" id="L99">        return builder.merge(this, builder.fromProperties(properties));</span>
+<span class="nc" id="L81">        return builder.merge(this, builder.fromProperties(properties));</span>
     }
 
 
     @Override
     public Configuration appendFromURI(URI uri) {
-<span class="nc" id="L105">        return builder.merge(this, builder.fromURI(uri));</span>
+<span class="nc" id="L87">        return builder.merge(this, builder.fromURI(uri));</span>
     }
 
 
     @Override
     public Configuration appendProperty(String property, String value) {
-<span class="fc" id="L111">        Map&lt;String, String&gt; singlePropertyMap = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L112">        singlePropertyMap.put(property, value);</span>
-<span class="fc" id="L113">        return builder.merge(this, builder.fromMap(singlePropertyMap));</span>
+<span class="fc" id="L93">        Map&lt;String, String&gt; singlePropertyMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L94">        singlePropertyMap.put(property, value);</span>
+<span class="fc" id="L95">        return builder.merge(this, builder.fromMap(singlePropertyMap));</span>
     }
 
 
     @Override
     public Map&lt;String, PropertyDefinition&gt; getDefinitions() {
-<span class="fc" id="L119">        return Collections.unmodifiableMap(definitions);</span>
+<span class="fc" id="L101">        return Collections.unmodifiableMap(definitions);</span>
     }
 
 
     @Override
     public Optional&lt;PropertyDefinition&gt; getDefinition(String key) {
-<span class="fc" id="L125">        return Optional.ofNullable(definitions.get(key));</span>
+<span class="fc" id="L107">        return Optional.ofNullable(definitions.get(key));</span>
     }
 
 
     @Override
-    public Optional&lt;String&gt; validation(String key) {
-<span class="fc" id="L131">        String value = get(key, String.class).orElse(null);</span>
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (value == null) {</span>
-<span class="nc" id="L133">            return Optional.empty();</span>
+    public boolean hasDefinition(String key) {
+<span class="nc" id="L113">        return definitions.containsKey(key);</span>
+    }
+
+
+    @Override
+    public List&lt;String&gt; validations(String key) {
+<span class="fc" id="L119">        return getDefinition(key).map(definition -&gt; validations(key, definition)).orElseGet(List::of);</span>
+    }
+
+
+    private List&lt;String&gt; validations(String key, PropertyDefinition definition) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        List&lt;String&gt; values = definition.multivalue() ?</span>
+<span class="fc" id="L125">            getList(key, String.class) :</span>
+<span class="fc" id="L126">            get(key, String.class).map(List::of).orElseGet(List::of);</span>
+<span class="fc" id="L127">        return values</span>
+<span class="fc" id="L128">        .stream()</span>
+<span class="fc" id="L129">        .map(definition::validate)</span>
+<span class="fc" id="L130">        .flatMap(Optional::stream)</span>
+<span class="fc" id="L131">        .collect(toList());</span>
+    }
+
+
+    @Override
+    public Map&lt;String,List&lt;String&gt;&gt; validations() {
+<span class="fc" id="L137">        var invalidValues = keyStream()</span>
+<span class="fc" id="L138">            .map(key -&gt; Map.entry(key, validations(key)))</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            .filter(entry -&gt; !entry.getValue().isEmpty());</span>
+<span class="fc" id="L140">        var missingValues = definitions.values().stream()</span>
+<span class="fc" id="L141">            .filter(PropertyDefinition::required)</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">            .filter(it-&gt;!this.hasProperty(it.property()))</span>
+<span class="fc" id="L143">            .map(it-&gt;Map.entry(</span>
+<span class="fc" id="L144">                it.property(),</span>
+<span class="fc" id="L145">                it.validate(null).map(List::of).orElseGet(List::of)</span>
+            ));
+<span class="fc" id="L147">        return Stream.concat(invalidValues,missingValues)</span>
+<span class="fc" id="L148">            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+    }
+
+
+    @Override
+    public Configuration validate() {
+<span class="fc" id="L154">        var validations = validations();</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (!validations.isEmpty()) {</span>
+<span class="fc" id="L156">           var message = validations.entrySet().stream()</span>
+<span class="fc" id="L157">               .map(entry -&gt; String.format(</span>
+                   &quot;%s : %s&quot;,
+<span class="fc" id="L159">                   entry.getKey(),</span>
+<span class="fc" id="L160">                   String.join(&quot;\n&quot;+(&quot; &quot;).repeat(entry.getKey().length() + 3),  entry.getValue())</span>
+               ))
+<span class="fc" id="L162">               .collect(Collectors.joining(&quot;\n\t&quot;, &quot;The configuration contains one or more invalid values:\n\t&quot;,&quot;&quot;));</span>
+<span class="fc" id="L163">           throw new ConfigurationException(message);</span>
         }
-<span class="fc" id="L135">        return getDefinition(key)</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">            .filter(definition-&gt;!definition.accepts(value))</span>
-<span class="fc" id="L137">            .map(PropertyDefinition::hint);</span>
+<span class="nc" id="L165">        return this;</span>
     }
 
 
     @Override
     public Configuration accordingDefinitions(Collection&lt;PropertyDefinition&gt; definitions) {
-<span class="nc" id="L143">        return builder.merge(this, builder.accordingDefinitions(definitions));</span>
+<span class="nc" id="L171">        return builder.merge(this, builder.accordingDefinitions(definitions));</span>
     }
 
 
     @Override
     public Configuration accordingDefinitionsFromPath(Path path) {
-<span class="fc" id="L149">        return builder.merge(this, builder.accordingDefinitionsFromPath(path));</span>
+<span class="fc" id="L177">        return builder.merge(this, builder.accordingDefinitionsFromPath(path));</span>
     }
 
 
     @Override
     public Configuration accordingDefinitionsFromURI(URI uri) {
-<span class="fc" id="L155">        return builder.merge(this, builder.accordingDefinitionsFromURI(uri));</span>
+<span class="fc" id="L183">        return builder.merge(this, builder.accordingDefinitionsFromURI(uri));</span>
     }
 
+
     @Override
-    public Configuration accordingDefinitionsFromURL(URL url) {
-<span class="fc" id="L160">        return builder.merge(this, builder.accordingDefinitionsFromURL(url));</span>
+    public Configuration accordingDefinitionsFromResource(String resource,ClassLoader classLoader) {
+<span class="nc" id="L189">        return builder.merge(</span>
+            this,
+<span class="nc" id="L191">            builder.accordingDefinitionsFromResource(resource, classLoader)</span>
+        );
     }
+
+
+    @Override
+    public String getDefinitionsToString() {
+<span class="fc" id="L198">       return getDefinitions().values().stream()</span>
+<span class="fc" id="L199">           .map(PropertyDefinition::toString)</span>
+<span class="fc" id="L200">           .collect(Collectors.joining(&quot;\n&quot;));</span>
+    }
+
+
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

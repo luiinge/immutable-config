@@ -1,0 +1,28 @@
+--class-path
+'/home/luis/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/luis/.m2/repository/org/apache/commons/commons-text/1.8/commons-text-1.8.jar:/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.11.1/jackson-annotations-2.11.1.jar:/home/luis/.m2/repository/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar:/home/luis/.m2/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar:/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.11.1/jackson-databind-2.11.1.jar:/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.11.1/jackson-core-2.11.1.jar'
+--module-path
+'/home/luis/.m2/repository/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar:/home/luis/.m2/repository/org/yaml/snakeyaml/1.29/snakeyaml-1.29.jar:/home/luis/.m2/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar:/home/luis/.m2/repository/org/apache/commons/commons-configuration2/2.7/commons-configuration2-2.7.jar'
+-encoding
+'UTF-8'
+-public
+-quiet
+-sourcepath
+'/home/luis/github/immutable-config/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2020&#x2013;2021 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/luis/github/immutable-config/docs/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Immutable Configurations 1.1.0 API'
+-noqualifier
+'all'
+-notimestamp
+-use
+-version
+-windowtitle
+'Immutable Configurations 1.1.0 API'

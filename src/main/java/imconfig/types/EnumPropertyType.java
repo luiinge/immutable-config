@@ -22,7 +22,7 @@ public class EnumPropertyType implements PropertyType {
 
     @Override
     public String hint() {
-        return "One of the following: "+values.stream().collect(Collectors.joining(", "));
+        return "One of the following: "+ String.join(", ", values);
     }
 
     @Override

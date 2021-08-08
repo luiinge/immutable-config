@@ -1,10 +1,8 @@
-package imconfig.test;
+package imconfig.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import imconfig.PropertyDefinition;
-import imconfig.internal.PropertyDefinitionParser;
+
 
 public class TestDefinitionParser {
 

@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2020 - 2021 luiinge</copyright>
     <item>
-      <title>File: 21,
+      <title>File: 23,
              Errors: 0,
-             Warnings: 965,
+             Warnings: 1102,
              Infos: 0
       </title>
             <link>https://github.com/luiinge/immutable-config/checkstyle.html</link>
@@ -74,13 +74,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.PropertyDefinitionParser.java">imconfig/internal/PropertyDefinitionParser.java</a>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configurable.java">imconfig/Configurable.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  32
+                  4
                 </td>
                 <td>
                   0
@@ -88,13 +88,13 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configurable.java">imconfig/Configurable.java</a>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.PropertyDefinitionParser.java">imconfig/internal/PropertyDefinitionParser.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  5
+                  37
                 </td>
                 <td>
                   0
@@ -158,13 +158,27 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ClasspathURLStreamHandler.java">imconfig/internal/ClasspathURLStreamHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  23
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2Factory.java">imconfig/internal/ApacheConfiguration2Factory.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  216
+                  226
                 </td>
                 <td>
                   0
@@ -178,7 +192,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  44
+                  81
                 </td>
                 <td>
                   0
@@ -192,7 +206,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  81
+                  102
                 </td>
                 <td>
                   0
@@ -206,7 +220,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  5
                 </td>
                 <td>
                   0
@@ -220,21 +234,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  20
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2.java">imconfig/internal/ApacheConfiguration2.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  115
+                  19
                 </td>
                 <td>
                   0
@@ -256,13 +256,41 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.internal.ApacheConfiguration2.java">imconfig/internal/ApacheConfiguration2.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  120
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.BooleanPropertyType.java">imconfig/types/BooleanPropertyType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.Configuration.java">imconfig/Configuration.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  96
+                  94
                 </td>
                 <td>
                   0
@@ -276,7 +304,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  68
+                  75
                 </td>
                 <td>
                   0
@@ -291,20 +319,6 @@ under the License.
                 </td>
                 <td>
                   6
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.PropertyTypeFactory.java">imconfig/types/PropertyTypeFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  34
                 </td>
                 <td>
                   0
@@ -332,7 +346,21 @@ under the License.
                   0
                 </td>
                 <td>
-                  64
+                  79
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.types.internal.PropertyTypeFactory.java">imconfig/types/internal/PropertyTypeFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  41
                 </td>
                 <td>
                   0

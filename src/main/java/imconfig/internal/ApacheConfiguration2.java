@@ -1,32 +1,21 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
  */
 package imconfig.internal;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import imconfig.*;
+import org.apache.commons.configuration2.BaseConfiguration;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
-import org.apache.commons.configuration2.BaseConfiguration;
-import imconfig.Configuration;
-import imconfig.ConfigurationException;
-import imconfig.ConfigurationFactory;
-import imconfig.PropertyDefinition;
 
 
 public class ApacheConfiguration2 extends AbstractConfiguration {
 
-    final org.apache.commons.configuration2.Configuration conf;
+    protected final org.apache.commons.configuration2.Configuration conf;
 
 
     protected ApacheConfiguration2(
@@ -52,7 +41,7 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
 
     @Override
     public Configuration withPrefix(String keyPrefix) {
-        BaseConfiguration innerConf = new BaseConfiguration();
+        BaseConfiguration innerConf = prepare(new BaseConfiguration());
         conf.getKeys().forEachRemaining(
             key -> innerConf.addProperty(keyPrefix + "." + key, conf.getProperty(key))
         );
@@ -62,7 +51,7 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
 
     @Override
     public Configuration filtered(String keyPrefix) {
-        BaseConfiguration innerConf = new BaseConfiguration();
+        BaseConfiguration innerConf = prepare(new BaseConfiguration());
         conf.getKeys(keyPrefix).forEachRemaining(key -> {
             if (key.startsWith(keyPrefix)) {
                 innerConf.addProperty(key, conf.getProperty(key));
@@ -123,16 +112,16 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
         var definition = definitions.get(key);
         String raw = conf.getString(key);
         boolean empty = (raw == null || "".equals(raw));
-        if (empty && definition != null) {
-            if (definition.required()) {
-                throw new ConfigurationException("Property '"+key+"' is required but has no value");
+        if (definition != null) {
+            var value = empty ? definition.defaultValue().orElse(null) : raw;
+            if (value != null) {
+                return Optional.of(convert(value, type));
+            } else {
+                return Optional.empty();
             }
-            var defaultValue = definition.defaultValue().orElse(null);
-            if (defaultValue != null) {
-                return Optional.of(convert(defaultValue, type));
-            }
+        } else {
+            return Optional.ofNullable(empty ? null : conf.get(type, key));
         }
-        return Optional.ofNullable(empty ? null : conf.get(type, key));
     }
 
 
@@ -202,6 +191,14 @@ public class ApacheConfiguration2 extends AbstractConfiguration {
     private <T> T convert(String raw, Class<T> type) {
         var abstractConf = (org.apache.commons.configuration2.AbstractConfiguration)conf;
         return abstractConf.getConversionHandler().to(raw, type, abstractConf.getInterpolator());
+    }
+
+
+    private <T extends org.apache.commons.configuration2.AbstractConfiguration> T prepare(T abstractConfiguration) {
+        if (builder.hasMultivalueSeparator()) {
+            abstractConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(builder.multivalueSeparator()));
+        }
+        return abstractConfiguration;
     }
 
 }

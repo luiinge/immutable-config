@@ -23,8 +23,8 @@ public class IntegerPropertyType implements PropertyType {
     @Override
     public String hint() {
         String hint;
-<span class="pc bpc" id="L26" title="3 of 4 branches missed.">        if (min==null &amp;&amp; max==null) {</span>
-<span class="nc" id="L27">            hint = &quot;Any integer number&quot;;</span>
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (min==null &amp;&amp; max==null) {</span>
+<span class="fc" id="L27">            hint = &quot;Any integer number&quot;;</span>
 <span class="pc bpc" id="L28" title="1 of 2 branches missed.">        } else if (min==null) {</span>
 <span class="nc" id="L29">            hint = &quot;Integer number less than &quot;+max;</span>
 <span class="pc bpc" id="L30" title="1 of 2 branches missed.">        } else if (max==null) {</span>

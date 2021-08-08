@@ -2,9 +2,12 @@ package imconfig.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+
+import java.util.*;
 import java.util.regex.PatternSyntaxException;
+
+import imconfig.*;
 import org.junit.Test;
-import imconfig.PropertyDefinition;
 
 public class TestPropertyDefinitions {
 
@@ -15,8 +18,8 @@ public class TestPropertyDefinitions {
             .required()
             .textType()
             .build();
-        assertThat(definition.accepts("")).isFalse();
-        assertThat(definition.accepts(null)).isFalse();
+        assertThat(definition.validate("")).isNotEmpty();
+        assertThat(definition.validate(null)).isNotEmpty();
     }
 
 
@@ -26,10 +29,10 @@ public class TestPropertyDefinitions {
             .property("test")
             .textType()
             .build();
-        assertThat(definition.accepts("")).isTrue();
-        assertThat(definition.accepts("dasdjhsajkdhsakjd")).isTrue();
-        assertThat(definition.accepts("12312321123")).isTrue();
-        assertThat(definition.accepts(")(*%^&%*^&%^&%#*&^)&*(&()*&)(*&")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("dasdjhsajkdhsakjd")).isEmpty();
+        assertThat(definition.validate("12312321123")).isEmpty();
+        assertThat(definition.validate(")(*%^&%*^&%^&%#*&^)&*(&()*&)(*&")).isEmpty();
     }
 
 
@@ -46,14 +49,13 @@ public class TestPropertyDefinitions {
 
     @Test
     public void testTextWithPatternAcceptsOnlyMatchingValues() {
-        var definition = PropertyDefinition.builder()
-            .property("test")
+        var definition = PropertyDefinition.builder("test")
             .textType("A\\d\\dB")
             .build();
-        assertThat(definition.accepts("")).isFalse();
-        assertThat(definition.accepts("dasdjhsajkdhsakjd")).isFalse();
-        assertThat(definition.accepts("A1B")).isFalse();
-        assertThat(definition.accepts("A12B")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("dasdjhsajkdhsakjd")).isNotEmpty();
+        assertThat(definition.validate("A1B")).isNotEmpty();
+        assertThat(definition.validate("A12B")).isEmpty();
     }
 
 
@@ -63,10 +65,10 @@ public class TestPropertyDefinitions {
             .property("test")
             .integerType()
             .build();
-        assertThat(definition.accepts("")).isFalse();
-        assertThat(definition.accepts("dasdjhsajkdhsakjd")).isFalse();
-        assertThat(definition.accepts("12.65")).isFalse();
-        assertThat(definition.accepts("13")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("dasdjhsajkdhsakjd")).isNotEmpty();
+        assertThat(definition.validate("12.65")).isNotEmpty();
+        assertThat(definition.validate("13")).isEmpty();
     }
 
 
@@ -76,16 +78,17 @@ public class TestPropertyDefinitions {
             .property("test")
             .integerType()
             .build();
-        assertThat(definition.accepts("-32")).isTrue();
-        assertThat(definition.accepts("0")).isTrue();
-        assertThat(definition.accepts("1")).isTrue();
-        assertThat(definition.accepts("43247329874239874")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("-32")).isEmpty();
+        assertThat(definition.validate("0")).isEmpty();
+        assertThat(definition.validate("1")).isEmpty();
+        assertThat(definition.validate("43247329874239874")).isEmpty();
     }
 
 
     @Test
     public void testIntegerWithInvalidBoundsThrowsException() {
-        var builder = PropertyDefinition.builder().property("test");;
+        var builder = PropertyDefinition.builder().property("test");
         assertThatCode(()->builder.integerType(6,3))
         .isExactlyInstanceOf(IllegalArgumentException.class)
         .hasMessage("Minimum value cannot be greater than maximum value");
@@ -98,10 +101,11 @@ public class TestPropertyDefinitions {
             .property("test")
             .integerType(3,6)
             .build();
-        assertThat(definition.accepts("2")).isFalse();
-        assertThat(definition.accepts("3")).isTrue();
-        assertThat(definition.accepts("6")).isTrue();
-        assertThat(definition.accepts("7")).isFalse();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("2")).isNotEmpty();
+        assertThat(definition.validate("3")).isEmpty();
+        assertThat(definition.validate("6")).isEmpty();
+        assertThat(definition.validate("7")).isNotEmpty();
     }
 
 
@@ -111,10 +115,10 @@ public class TestPropertyDefinitions {
             .property("test")
             .decimalType()
             .build();
-        assertThat(definition.accepts("")).isFalse();
-        assertThat(definition.accepts("dasdjhsajkdhsakjd")).isFalse();
-        assertThat(definition.accepts("12.65")).isTrue();
-        assertThat(definition.accepts("13")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("dasdjhsajkdhsakjd")).isNotEmpty();
+        assertThat(definition.validate("12.65")).isEmpty();
+        assertThat(definition.validate("13")).isEmpty();
     }
 
 
@@ -124,10 +128,11 @@ public class TestPropertyDefinitions {
             .property("test")
             .decimalType()
             .build();
-        assertThat(definition.accepts("-32.0")).isTrue();
-        assertThat(definition.accepts("0.0")).isTrue();
-        assertThat(definition.accepts("1.7")).isTrue();
-        assertThat(definition.accepts("43247329874239874.4243242343243")).isTrue();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("-32.0")).isEmpty();
+        assertThat(definition.validate("0.0")).isEmpty();
+        assertThat(definition.validate("1.7")).isEmpty();
+        assertThat(definition.validate("43247329874239874.4243242343243")).isEmpty();
     }
 
 
@@ -146,10 +151,11 @@ public class TestPropertyDefinitions {
             .property("test")
             .decimalType(4.3,4.6)
             .build();
-        assertThat(definition.accepts("4.2")).isFalse();
-        assertThat(definition.accepts("4.3")).isTrue();
-        assertThat(definition.accepts("4.6")).isTrue();
-        assertThat(definition.accepts("4.7")).isFalse();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("4.2")).isNotEmpty();
+        assertThat(definition.validate("4.3")).isEmpty();
+        assertThat(definition.validate("4.6")).isEmpty();
+        assertThat(definition.validate("4.7")).isNotEmpty();
     }
 
 
@@ -159,13 +165,14 @@ public class TestPropertyDefinitions {
             .property("test")
             .enumType("hello","goodbay")
             .build();
-        assertThat(definition.accepts("hello")).isTrue();
-        assertThat(definition.accepts("HELLO")).isTrue();
-        assertThat(definition.accepts("Hello")).isTrue();
-        assertThat(definition.accepts("goodbay")).isTrue();
-        assertThat(definition.accepts("GOODBAY")).isTrue();
-        assertThat(definition.accepts("Goodbay")).isTrue();
-        assertThat(definition.accepts("later")).isFalse();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("hello")).isEmpty();
+        assertThat(definition.validate("HELLO")).isEmpty();
+        assertThat(definition.validate("Hello")).isEmpty();
+        assertThat(definition.validate("goodbay")).isEmpty();
+        assertThat(definition.validate("GOODBAY")).isEmpty();
+        assertThat(definition.validate("Goodbay")).isEmpty();
+        assertThat(definition.validate("later")).isNotEmpty();
     }
 
 
@@ -175,9 +182,119 @@ public class TestPropertyDefinitions {
             .property("test")
             .booleanType()
             .build();
-        assertThat(definition.accepts("true")).isTrue();
-        assertThat(definition.accepts("false")).isTrue();
-        assertThat(definition.accepts("other")).isFalse();
+        assertThat(definition.validate("")).isEmpty();
+        assertThat(definition.validate("true")).isEmpty();
+        assertThat(definition.validate("false")).isEmpty();
+        assertThat(definition.validate("other")).isNotEmpty();
     }
 
+
+    @Test
+    public void testRequiredPropertyNotAcceptEmptyOrNullValue() {
+        var definition = PropertyDefinition.builder()
+                .property("test")
+                .textType()
+                .required()
+                .build();
+        assertThat(definition.validate("")).isNotEmpty();
+        assertThat(definition.validate(null)).isNotEmpty();
+        assertThat(definition.validate("x")).isEmpty();
+    }
+
+
+
+    private List<PropertyDefinition> definitions() {
+        return List.of(
+            PropertyDefinition.builder()
+                .property("pA")
+                .description("This is a required boolean property")
+                .required()
+                .booleanType()
+                .build(),
+            PropertyDefinition.builder()
+                .property("pB")
+                .description("This is a enum property with default value")
+                .defaultValue("two")
+                .enumType("one", "two", "three")
+                .build(),
+            PropertyDefinition.builder()
+                .property("pC")
+                .description("This is decimal property with no bound")
+                .decimalType()
+                .build(),
+            PropertyDefinition.builder()
+                .property("pD")
+                .description("This is a integer property with bounds")
+                .integerType(10,15)
+                .build(),
+            PropertyDefinition.builder()
+                .property("pE")
+                .description("This is a enum property multivalue")
+                .multivalue()
+                .enumType("one", "two", "three")
+                .build()
+        );
+    }
+
+
+    @Test
+    public void testDefinitionToString() {
+        List<PropertyDefinition> definitions = definitions();
+        var configuration = ConfigurationFactory.instance()
+            .accordingDefinitions(definitions)
+            .appendProperty("pE", "undefined property");
+
+        assertThat(configuration.getDefinitionsToString()).isEqualTo(
+            "- pA: This is a required boolean property\n"+
+            "  true | false (required)\n"+
+            "- pB: This is a enum property with default value\n"+
+            "  One of the following: one, two, three [default: two]\n"+
+            "- pC: This is decimal property with no bound\n"+
+            "  Any decimal number\n"+
+            "- pD: This is a integer property with bounds\n"+
+            "  Integer number between 10 and 15\n"+
+            "- pE: This is a enum property multivalue\n"+
+            "  List of one of the following: one, two, three"
+        );
+
+    }
+
+
+
+
+    @Test
+    public void validationsOfConfiguration() {
+        var definitions = definitions();
+        var configuration = Configuration.factory().accordingDefinitions(definitions)
+            .appendProperty("pB","four")
+            .appendProperty("pD", "20");
+        assertThat(configuration.validations()).containsExactly(
+            Map.entry("pA",List.of("Property is required but not present")),
+            Map.entry("pB",List.of("Invalid value 'four', expected: One of the following: one, two, three [default: two]")),
+            Map.entry("pD",List.of("Invalid value '20', expected: Integer number between 10 and 15"))
+        );
+        assertThatCode(configuration::validate)
+            .isInstanceOf(ConfigurationException.class)
+            .hasMessage(
+                "The configuration contains one or more invalid values:\n" +
+                "\tpA : Property is required but not present\n" +
+                "\tpB : Invalid value 'four', expected: One of the following: one, two, three [default: two]\n" +
+                "\tpD : Invalid value '20', expected: Integer number between 10 and 15"
+            );
+    }
+
+
+    @Test
+    public void validationsOfMultivaluedConfigurationProperty() {
+        var definitions = definitions();
+        var configuration = Configuration.factory().multivalueSeparator(',').accordingDefinitions(definitions)
+            .appendProperty("pE","one,two,five,six");
+        assertThat(configuration.validations()).containsExactly(
+            Map.entry("pA",List.of("Property is required but not present")),
+            Map.entry("pE",List.of(
+                "Invalid value 'five', expected: One of the following: one, two, three",
+                "Invalid value 'six', expected: One of the following: one, two, three"
+            ))
+        );
+    }
 }

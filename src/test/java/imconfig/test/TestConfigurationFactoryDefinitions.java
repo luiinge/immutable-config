@@ -1,16 +1,15 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - luiinge@gmail.com
  */
 package imconfig.test;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import java.nio.file.Path;
+import imconfig.*;
 import org.junit.Test;
-import imconfig.Configuration;
-import imconfig.ConfigurationException;
-import imconfig.ConfigurationFactory;
+
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class TestConfigurationFactoryDefinitions {
@@ -52,8 +51,8 @@ public class TestConfigurationFactoryDefinitions {
         var conf = factory
             .fromPairs("defined.property.min-max-number", "6")
             .accordingDefinitionsFromPath(definitionPath);
-        assertThat(conf.validation("defined.property.min-max-number"))
-        .contains("Integer number between 2 and 3");
+        assertThat(conf.validations("defined.property.min-max-number"))
+        .contains("Invalid value '6', expected: Integer number between 2 and 3");
     }
 
 
@@ -65,15 +64,8 @@ public class TestConfigurationFactoryDefinitions {
         assertThat(conf.getDefinition("defined.property.min-max-number")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.enumeration")).isNotEmpty();
         assertThat(conf.getDefinition("defined.property.boolean")).isNotEmpty();
-
         assertThat(conf.getDefinition("undefined.property")).isEmpty();
-
         assertThat(conf.get("defined.property.regex-text", String.class)).isEmpty();
-
-        assertThatCode(()->conf.get("defined.property.required", Integer.class))
-            .isExactlyInstanceOf(ConfigurationException.class)
-            .hasMessage("Property 'defined.property.required' is required but has no value");
-
         assertThat(conf.get("defined.property.with-default-value", Integer.class)).hasValue(5);
     }
 

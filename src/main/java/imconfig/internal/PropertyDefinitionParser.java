@@ -1,16 +1,13 @@
 package imconfig.internal;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import imconfig.*;
+import imconfig.types.internal.PropertyTypeFactory;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.yaml.snakeyaml.Yaml;
-import imconfig.ConfigurationException;
-import imconfig.PropertyDefinition;
-import imconfig.types.PropertyTypeFactory;
 
 public class PropertyDefinitionParser {
 
@@ -19,14 +16,14 @@ public class PropertyDefinitionParser {
 
 
     @SuppressWarnings("unchecked")
-    public Collection<PropertyDefinition> read (Reader reader) {
+    Collection<PropertyDefinition> read (Reader reader) {
         Map<String,Map<String,Object>> map = yaml.loadAs(reader, HashMap.class);
         return map.entrySet().stream().map(this::parseDefinition).collect(Collectors.toList());
     }
 
 
     @SuppressWarnings("unchecked")
-    public Collection<PropertyDefinition> read (InputStream inputStream) {
+    Collection<PropertyDefinition> read (InputStream inputStream) {
         Map<String,Map<String,Object>> map = yaml.loadAs(inputStream, HashMap.class);
         return map.entrySet().stream().map(this::parseDefinition).collect(Collectors.toList());
     }
@@ -49,7 +46,7 @@ public class PropertyDefinitionParser {
                 .build();
         } catch (RuntimeException e) {
             throw new ConfigurationException(
-                "Bad configuration of property '"+entry.getKey()+"' : "+e.getMessage()
+                "Bad configuration of property '"+entry.getKey()+"' : "+e.getMessage(), e
             );
         }
     }

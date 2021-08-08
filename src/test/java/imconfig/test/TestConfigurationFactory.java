@@ -126,7 +126,7 @@ public class TestConfigurationFactory {
 
     @Before
     public void prepare() {
-        factory = ConfigurationFactory.instance();
+        factory = ConfigurationFactory.instance().multivalueSeparator(',');
         env.set(KEY_ENV, VAL_ENV);
     }
 
@@ -169,7 +169,7 @@ public class TestConfigurationFactory {
 
     @Test
     public void appendEnvironmentConfigurationWithPropertiesFile() throws ConfigurationException {
-        Configuration conf = factory
+        Configuration conf = Configuration.factory().multivalueSeparator(',')
             .fromEnvironment()
             .appendFromResource("test-conf.properties", CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
@@ -254,12 +254,12 @@ public class TestConfigurationFactory {
 
     @Test
     public void testCompose() {
-        HashMap<String, String> map1 = new HashMap<>();
+        Map<String, String> map1 = new HashMap<>();
         map1.put("property.a", "a");
         map1.put("property.b", "b");
         map1.put("property.c", "");
         map1.put("property.d","d");
-        HashMap<String, String> map2 = new HashMap<>();
+        Map<String, String> map2 = new HashMap<>();
         map2.put("property.a", "aa");
         map2.put("property.c", "c");
         map2.put("property.d", "");

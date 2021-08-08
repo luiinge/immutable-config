@@ -1,0 +1,1 @@
+/home/luis/.sdkman/candidates/java/current/bin/javadoc @options @packages @argfile

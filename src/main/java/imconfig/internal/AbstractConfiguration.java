@@ -1,4 +1,4 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
  */
 package imconfig.internal;
@@ -6,16 +6,11 @@ package imconfig.internal;
 
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import imconfig.AnnotatedConfiguration;
-import imconfig.Configuration;
-import imconfig.ConfigurationFactory;
-import imconfig.PropertyDefinition;
+import java.util.*;
+import java.util.stream.*;
+
+import static java.util.stream.Collectors.*;
+import imconfig.*;
 
 
 public abstract class AbstractConfiguration implements Configuration {
@@ -114,14 +109,60 @@ public abstract class AbstractConfiguration implements Configuration {
 
 
     @Override
-    public Optional<String> validation(String key) {
-        String value = get(key, String.class).orElse(null);
-        if (value == null) {
-            return Optional.empty();
+    public boolean hasDefinition(String key) {
+        return definitions.containsKey(key);
+    }
+
+
+    @Override
+    public List<String> validations(String key) {
+        return getDefinition(key).map(definition -> validations(key, definition)).orElseGet(List::of);
+    }
+
+
+    private List<String> validations(String key, PropertyDefinition definition) {
+        List<String> values = definition.multivalue() ?
+            getList(key, String.class) :
+            get(key, String.class).map(List::of).orElseGet(List::of);
+        return values
+        .stream()
+        .map(definition::validate)
+        .flatMap(Optional::stream)
+        .collect(toList());
+    }
+
+
+    @Override
+    public Map<String,List<String>> validations() {
+        var invalidValues = keyStream()
+            .map(key -> Map.entry(key, validations(key)))
+            .filter(entry -> !entry.getValue().isEmpty());
+        var missingValues = definitions.values().stream()
+            .filter(PropertyDefinition::required)
+            .filter(it->!this.hasProperty(it.property()))
+            .map(it->Map.entry(
+                it.property(),
+                it.validate(null).map(List::of).orElseGet(List::of)
+            ));
+        return Stream.concat(invalidValues,missingValues)
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+
+    @Override
+    public Configuration validate() {
+        var validations = validations();
+        if (!validations.isEmpty()) {
+           var message = validations.entrySet().stream()
+               .map(entry -> String.format(
+                   "%s : %s",
+                   entry.getKey(),
+                   String.join("\n"+(" ").repeat(entry.getKey().length() + 3),  entry.getValue())
+               ))
+               .collect(Collectors.joining("\n\t", "The configuration contains one or more invalid values:\n\t",""));
+           throw new ConfigurationException(message);
         }
-        return getDefinition(key)
-            .filter(definition->!definition.accepts(value))
-            .map(PropertyDefinition::hint);
+        return this;
     }
 
 
@@ -150,4 +191,15 @@ public abstract class AbstractConfiguration implements Configuration {
             builder.accordingDefinitionsFromResource(resource, classLoader)
         );
     }
+
+
+    @Override
+    public String getDefinitionsToString() {
+       return getDefinitions().values().stream()
+           .map(PropertyDefinition::toString)
+           .collect(Collectors.joining("\n"));
+    }
+
+
+
 }

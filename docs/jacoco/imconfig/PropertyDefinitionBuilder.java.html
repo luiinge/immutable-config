@@ -2,6 +2,7 @@
 
 import java.util.List;
 import java.util.Objects;
+import imconfig.types.BooleanPropertyType;
 import imconfig.types.DecimalPropertyType;
 import imconfig.types.EnumPropertyType;
 import imconfig.types.IntegerPropertyType;
@@ -11,7 +12,6 @@ import imconfig.types.TextPropertyType;
  * This class allows you to create new {@link PropertyDefinition} objects in a fluent
  * manner, setting only the actual information you required. Invoke {@link #build()}
  * after setting the attributes to obtain the created object.
- * @author Luis Iñesta Gelabert - luiinge@gmail.com
  *
  */
 <span class="fc" id="L17">public class PropertyDefinitionBuilder {</span>
@@ -19,83 +19,102 @@ import imconfig.types.TextPropertyType;
     private String property;
     private String description;
     private boolean required;
+    private boolean multivalue;
     private String defaultValue;
     private PropertyType propertyType;
 
 
     public PropertyDefinitionBuilder property(String property) {
-<span class="fc" id="L27">        this.property = property;</span>
-<span class="fc" id="L28">        return this;</span>
+<span class="fc" id="L28">        this.property = property;</span>
+<span class="fc" id="L29">        return this;</span>
     }
 
     public PropertyDefinitionBuilder description(String description) {
-<span class="fc" id="L32">        this.description = description;</span>
-<span class="fc" id="L33">        return this;</span>
+<span class="fc" id="L33">        this.description = description;</span>
+<span class="fc" id="L34">        return this;</span>
     }
 
     public PropertyDefinitionBuilder required() {
-<span class="fc" id="L37">        this.required = true;</span>
-<span class="fc" id="L38">        return this;</span>
+<span class="fc" id="L38">        this.required = true;</span>
+<span class="fc" id="L39">        return this;</span>
     }
 
 
     public PropertyDefinitionBuilder required(Boolean required) {
-<span class="fc" id="L43">        this.required = Boolean.TRUE.equals(required);</span>
-<span class="fc" id="L44">        return this;</span>
+<span class="fc" id="L44">        this.required = Boolean.TRUE.equals(required);</span>
+<span class="fc" id="L45">        return this;</span>
+    }
+
+
+    public PropertyDefinitionBuilder multivalue() {
+<span class="fc" id="L50">        this.multivalue = true;</span>
+<span class="fc" id="L51">        return this;</span>
+    }
+
+
+    public PropertyDefinitionBuilder multivalue(Boolean multivalue) {
+<span class="nc" id="L56">        this.multivalue = Boolean.TRUE.equals(multivalue);</span>
+<span class="nc" id="L57">        return this;</span>
     }
 
 
     public PropertyDefinitionBuilder defaultValue(String defaultValue) {
-<span class="fc" id="L49">        this.defaultValue = defaultValue;</span>
-<span class="fc" id="L50">        return this;</span>
+<span class="fc" id="L62">        this.defaultValue = defaultValue;</span>
+<span class="fc" id="L63">        return this;</span>
     }
 
 
     public PropertyDefinitionBuilder textType(String pattern) {
-<span class="fc" id="L55">        this.propertyType = new TextPropertyType(pattern);</span>
-<span class="fc" id="L56">        return this;</span>
+<span class="fc" id="L68">        this.propertyType = new TextPropertyType(pattern);</span>
+<span class="fc" id="L69">        return this;</span>
     }
 
     public PropertyDefinitionBuilder textType() {
-<span class="fc" id="L60">        return textType(null);</span>
+<span class="fc" id="L73">        return textType(null);</span>
     }
 
 
     public PropertyDefinitionBuilder integerType(Number min, Number max) {
-<span class="fc" id="L65">        this.propertyType = new IntegerPropertyType(min, max);</span>
-<span class="fc" id="L66">        return this;</span>
+<span class="fc" id="L78">        this.propertyType = new IntegerPropertyType(min, max);</span>
+<span class="fc" id="L79">        return this;</span>
     }
 
     public PropertyDefinitionBuilder integerType() {
-<span class="fc" id="L70">        return integerType(null,null);</span>
+<span class="fc" id="L83">        return integerType(null,null);</span>
     }
 
     public PropertyDefinitionBuilder decimalType(Number min, Number max) {
-<span class="fc" id="L74">        this.propertyType = new DecimalPropertyType(min, max);</span>
-<span class="fc" id="L75">        return this;</span>
+<span class="fc" id="L87">        this.propertyType = new DecimalPropertyType(min, max);</span>
+<span class="fc" id="L88">        return this;</span>
     }
 
     public PropertyDefinitionBuilder decimalType() {
-<span class="fc" id="L79">        return decimalType(null,null);</span>
+<span class="fc" id="L92">        return decimalType(null,null);</span>
     }
 
     public PropertyDefinitionBuilder enumType(String... values) {
-<span class="nc" id="L83">        this.propertyType = new EnumPropertyType(List.of(values));</span>
-<span class="nc" id="L84">        return this;</span>
+<span class="fc" id="L96">        this.propertyType = new EnumPropertyType(List.of(values));</span>
+<span class="fc" id="L97">        return this;</span>
+    }
+
+    public PropertyDefinitionBuilder booleanType() {
+<span class="fc" id="L101">        this.propertyType = new BooleanPropertyType();</span>
+<span class="fc" id="L102">        return this;</span>
     }
 
 
     public PropertyDefinitionBuilder propertyType(PropertyType propertyType) {
-<span class="fc" id="L89">        this.propertyType = propertyType;</span>
-<span class="fc" id="L90">        return this;</span>
+<span class="fc" id="L107">        this.propertyType = propertyType;</span>
+<span class="fc" id="L108">        return this;</span>
     }
 
 
     public PropertyDefinition build() {
-<span class="fc" id="L95">        Objects.requireNonNull(property);</span>
-<span class="fc" id="L96">        Objects.requireNonNull(propertyType);</span>
-<span class="fc" id="L97">        return new PropertyDefinition(property, description, required, defaultValue, propertyType);</span>
+<span class="fc" id="L113">        Objects.requireNonNull(property);</span>
+<span class="fc" id="L114">        Objects.requireNonNull(propertyType);</span>
+<span class="fc" id="L115">        return new PropertyDefinition(property, description, required, multivalue, defaultValue, propertyType);</span>
     }
+
 
 
 

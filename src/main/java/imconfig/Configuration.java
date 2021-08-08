@@ -1,4 +1,4 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
  */
 package imconfig;
@@ -6,23 +6,21 @@ package imconfig;
 
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 
 /**
  * The main interface used to get configuration values and create derived configurations.
  */
-public interface Configuration {
+public interface Configuration  {
 
+
+    /** Return a new configuration factory. Equivalent to invoke {@link ConfigurationFactory#instance()} */
+    static ConfigurationFactory factory() {
+        return ConfigurationFactory.instance();
+    }
 
 
     /**
@@ -78,12 +76,6 @@ public interface Configuration {
     <T> Optional<T> get(String key, Class<T> type);
 
 
-    default <T> Configuration ifPresent(String key, Class<T> type, Consumer<T> consumer) {
-        get(key,type).ifPresent(consumer);
-        return this;
-    }
-
-
     /**
      * @return A list with values of the specified type, empty if the key does
      *         not exist
@@ -113,17 +105,13 @@ public interface Configuration {
     Map<String, String> asMap();
 
 
-    /** @return A textual representation of the configuration */
-    @Override
-    String toString();
-
 
     /** Perform an action for each pair <code>[key,value]</code> */
     void forEach(BiConsumer<String, String> consumer);
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from a class annotated with {@link AnnotatedConfiguration}
      *
      * @param configuredClass Class annotated with {@link AnnotatedConfiguration}
@@ -133,31 +121,30 @@ public interface Configuration {
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from a {@link AnnotatedConfiguration} annotation
      *
-     * @param annotation
      * @throws ConfigurationException if the configuration was not loaded
      */
     Configuration appendFromAnnotation(AnnotatedConfiguration annotation);
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from the environment properties
      */
     Configuration appendFromEnvironment();
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from the {@link System} properties
      */
     Configuration appendFromSystem();
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from the resource of the specified path
      *
      * @throws ConfigurationException if the configuration was not loaded
@@ -167,7 +154,7 @@ public interface Configuration {
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from the specified URI
      *
      * @throws ConfigurationException if the configuration was not loaded
@@ -176,21 +163,21 @@ public interface Configuration {
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from a {@link Properties} object
      */
     Configuration appendFromProperties(Properties properties);
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from a {@link Map} object
      */
     Configuration appendFromMap(Map<String, ?> propertyMap);
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with the configuration from one or several Java class resources resolved
      * using the {@link ClassLoader#getResources(String)} method of the specified
      * class loader
@@ -199,7 +186,7 @@ public interface Configuration {
 
 
     /**
-     * Create a new configuration resulting the merge the current configuration
+     * Create a new configuration resulting in the merge the current configuration
      * with another one
      */
     Configuration append(Configuration otherConfiguration);
@@ -228,11 +215,18 @@ public interface Configuration {
 
 
     /**
-     * Check whether the current value for the given property is valid according its definition
-     * @param key The property key
-     * @return The validation message, or empty if the value is valid
+     * @return whether there is a definition for the given property
      */
-    Optional<String> validation(String key);
+    boolean hasDefinition(String key);
+
+
+    /**
+     * Check whether the current value for the given property is valid according its definition.
+     * If the property is multi-valued, it may return a different validation for each value
+     * @param key The property key
+     * @return The validation messages, or empty if the value is valid
+     */
+    List<String> validations(String key);
 
 
 
@@ -247,6 +241,30 @@ public interface Configuration {
      * @return An unmodifiable map in the form of <property,definition>
      */
     Map<String,PropertyDefinition> getDefinitions();
+
+
+    /**
+     * Return a map in form of <tt>property=[validation_message1,...]</tt>
+     * with the validation error messages for all invalid properties values
+     * according the current definition.
+     * <p>
+ *     Configurations without definition will always return an empty map.
+     * </p>
+     */
+    Map<String,List<String>> validations();
+
+
+    /**
+     * Ensures that all property values are valid according the current definition.
+     * Otherwise, it will raise a {@link ConfigurationException} with a list of every
+     * invalid value.
+     * <p>
+ *     Configurations without definition will never raise an exception using this method
+     * </p>
+     * @throws ConfigurationException if one or more properties have invalid values
+     * @return The same instance, for convenience
+     */
+    Configuration validate() throws ConfigurationException;
 
 
     /**
@@ -289,4 +307,9 @@ public interface Configuration {
      */
     Configuration accordingDefinitionsFromResource(String resource, ClassLoader classLoader);
 
+
+    /**
+     * Get a textual representation of all defined properties
+     */
+    String getDefinitionsToString();
 }

@@ -1,77 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApacheConfiguration2Factory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">ApacheConfiguration2Factory.java</span></div><h1>ApacheConfiguration2Factory.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApacheConfiguration2Factory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">ApacheConfiguration2Factory.java</span></div><h1>ApacheConfiguration2Factory.java</h1><pre class="source lang-java linenums">/*
  * @author Luis Iñesta Gelabert - luiinge@gmail.com
  */
 package imconfig.internal;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.EnvironmentConfiguration;
-import org.apache.commons.configuration2.JSONConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.SystemConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.YAMLConfiguration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.convert.ConversionHandler;
-import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
-import imconfig.ConfigurationException;
-import imconfig.ConfigurationFactory;
-import imconfig.Property;
-import imconfig.PropertyDefinition;
+import imconfig.*;
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.*;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.convert.*;
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
-<span class="fc" id="L46">public class ApacheConfiguration2Factory implements ConfigurationFactory {</span>
+<span class="fc" id="L23">public class ApacheConfiguration2Factory implements ConfigurationFactory {</span>
 
-<span class="fc" id="L48">    private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();</span>
-<span class="fc" id="L49">    private final PropertyDefinitionParser parser = new PropertyDefinitionParser();</span>
+<span class="fc" id="L25">    private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();</span>
+<span class="fc" id="L26">    private final PropertyDefinitionParser parser = new PropertyDefinitionParser();</span>
+
+<span class="fc" id="L28">    private char separator = 0;</span>
+
+
+    @Override
+    public ConfigurationFactory multivalueSeparator(char separator) {
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (separator == 0) {</span>
+<span class="nc" id="L34">            throw new IllegalArgumentException(&quot;Invalid separator symbol: &quot;+separator);</span>
+        }
+<span class="fc" id="L36">        this.separator = separator;</span>
+<span class="fc" id="L37">        return this;</span>
+    }
+
+
+    @Override
+    public boolean hasMultivalueSeparator() {
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        return this.separator != 0;</span>
+    }
+
+
+    @Override
+    public char multivalueSeparator() {
+<span class="fc" id="L49">        return this.separator;</span>
+    }
 
 
     @Override
     public Configuration merge(Configuration base, Configuration delta) {
 
-<span class="fc" id="L55">        AbstractConfiguration result = new BaseConfiguration();</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        for (String property : delta.keys()) {</span>
-<span class="fc" id="L57">            var existing = base.getList(property,String.class);</span>
-<span class="fc" id="L58">            var added = delta.getList(property,String.class);</span>
-<span class="pc bpc" id="L59" title="1 of 4 branches missed.">            if (existing.isEmpty() &amp;&amp; added.isEmpty()) {</span>
-<span class="nc" id="L60">                result.setProperty(property,&quot;&quot;);</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">            } else if (!added.isEmpty()) {</span>
-<span class="fc" id="L62">                added.forEach(value -&gt; result.addProperty(property,value));</span>
+<span class="fc" id="L56">        AbstractConfiguration result = new BaseConfiguration();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        for (String property : delta.keys()) {</span>
+<span class="fc" id="L58">            var existing = base.getList(property,String.class);</span>
+<span class="fc" id="L59">            var added = delta.getList(property,String.class);</span>
+<span class="pc bpc" id="L60" title="1 of 4 branches missed.">            if (existing.isEmpty() &amp;&amp; added.isEmpty()) {</span>
+<span class="nc" id="L61">                result.setProperty(property,&quot;&quot;);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            } else if (!added.isEmpty()) {</span>
+<span class="fc" id="L63">                added.forEach(value -&gt; result.addProperty(property,value));</span>
             }
-<span class="fc" id="L64">        }</span>
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (String property : base.keys()) {</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">            if (result.containsKey(property)) {</span>
-<span class="fc" id="L67">                continue;</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for (String property : base.keys()) {</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (result.containsKey(property)) {</span>
+<span class="fc" id="L68">                continue;</span>
             }
-<span class="fc" id="L69">            base.getList(property,String.class).forEach(value -&gt; result.addProperty(property,value));</span>
-<span class="fc" id="L70">        }</span>
-<span class="fc" id="L71">        Map&lt;String, PropertyDefinition&gt; definitions = new HashMap&lt;&gt;(base.getDefinitions());</span>
-<span class="fc" id="L72">        definitions.putAll(delta.getDefinitions());</span>
+<span class="fc" id="L70">            base.getList(property,String.class).forEach(value -&gt; result.addProperty(property,value));</span>
+<span class="fc" id="L71">        }</span>
+<span class="fc" id="L72">        Map&lt;String, PropertyDefinition&gt; definitions = new HashMap&lt;&gt;(base.getDefinitions());</span>
+<span class="fc" id="L73">        definitions.putAll(delta.getDefinitions());</span>
 
-<span class="fc" id="L74">        return new ApacheConfiguration2(this, definitions, result);</span>
+<span class="fc" id="L75">        return new ApacheConfiguration2(this, definitions, result);</span>
     }
 
 
@@ -80,16 +81,16 @@ import imconfig.PropertyDefinition;
 
     @Override
     public Configuration empty() {
-<span class="fc" id="L83">        return new ApacheConfiguration2(this, new BaseConfiguration());</span>
+<span class="fc" id="L84">        return new ApacheConfiguration2(this, new BaseConfiguration());</span>
     }
 
 
     @Override
     public Configuration fromAnnotation(Class&lt;?&gt; configuredClass) {
-<span class="fc" id="L89">        return Optional.ofNullable(configuredClass.getAnnotation(AnnotatedConfiguration.class))</span>
-<span class="fc" id="L90">            .map(this::fromAnnotation)</span>
-<span class="fc" id="L91">            .orElseThrow(</span>
-<span class="nc" id="L92">                () -&gt; new ConfigurationException(</span>
+<span class="fc" id="L90">        return Optional.ofNullable(configuredClass.getAnnotation(AnnotatedConfiguration.class))</span>
+<span class="fc" id="L91">            .map(this::fromAnnotation)</span>
+<span class="fc" id="L92">            .orElseThrow(</span>
+<span class="nc" id="L93">                () -&gt; new ConfigurationException(</span>
                     configuredClass + &quot; is not annotated with @Configurator&quot;
                 )
             );
@@ -98,114 +99,91 @@ import imconfig.PropertyDefinition;
 
     @Override
     public Configuration fromAnnotation(AnnotatedConfiguration annotation) {
-<span class="fc" id="L101">        BaseConfiguration configuration = configure(new BaseConfiguration());</span>
-<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (Property property : annotation.value()) {</span>
-<span class="fc" id="L103">            String[] value = property.value();</span>
-<span class="fc bfc" id="L104" title="All 2 branches covered.">            if (value.length == 1) {</span>
-<span class="fc" id="L105">                configuration.addProperty(property.key(), value[0]);</span>
+<span class="fc" id="L102">        BaseConfiguration configuration = configure(new BaseConfiguration());</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        for (Property property : annotation.value()) {</span>
+<span class="fc" id="L104">            String[] value = property.value();</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (value.length == 1) {</span>
+<span class="fc" id="L106">                configuration.addProperty(property.key(), value[0]);</span>
             } else {
-<span class="fc" id="L107">                configuration.addProperty(property.key(), value);</span>
+<span class="fc" id="L108">                configuration.addProperty(property.key(), value);</span>
             }
         }
-<span class="fc" id="L110">        return new ApacheConfiguration2(this, configuration);</span>
+<span class="fc" id="L111">        return new ApacheConfiguration2(this, configuration);</span>
 
     }
 
 
     @Override
     public Configuration fromEnvironment() {
-<span class="fc" id="L117">        return new ApacheConfiguration2(this, new EnvironmentConfiguration());</span>
+<span class="fc" id="L118">        return new ApacheConfiguration2(this, new EnvironmentConfiguration());</span>
     }
 
 
     @Override
     public Configuration fromSystem() {
-<span class="nc" id="L123">        return new ApacheConfiguration2(this, new SystemConfiguration());</span>
+<span class="nc" id="L124">        return new ApacheConfiguration2(this, new SystemConfiguration());</span>
     }
 
 
     @Override
     public Configuration fromPath(Path path) {
-<span class="nc" id="L129">        return fromURI(path.toUri());</span>
+<span class="nc" id="L130">        return fromURI(path.toUri());</span>
     }
 
 
-    @Override
-    public Configuration fromClasspathResourceOrURI(String path) {
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (path.startsWith(&quot;classpath:&quot;)) {</span>
-<span class="nc" id="L136">            return fromClasspathResource(path.substring(&quot;classpath:&quot;.length()));</span>
-        } else {
-<span class="nc" id="L138">            return fromURI(URI.create(path));</span>
-        }
-    }
 
-
+    @SuppressWarnings(&quot;CollectionDeclaredAsConcreteClass&quot;)
     @Override
     public Configuration fromProperties(Properties properties) {
-<span class="fc" id="L145">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
-<span class="fc bfc" id="L146" title="All 2 branches covered.">        for (final Entry&lt;Object, Object&gt; property : properties.entrySet()) {</span>
-<span class="fc" id="L147">            configuration.addProperty(property.getKey().toString(), property.getValue());</span>
-<span class="fc" id="L148">        }</span>
-<span class="fc" id="L149">        return new ApacheConfiguration2(this, configuration);</span>
+<span class="fc" id="L138">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for (final Entry&lt;Object, Object&gt; property : properties.entrySet()) {</span>
+<span class="fc" id="L140">            configuration.addProperty(property.getKey().toString(), property.getValue());</span>
+<span class="fc" id="L141">        }</span>
+<span class="fc" id="L142">        return new ApacheConfiguration2(this, configuration);</span>
     }
 
 
     @Override
     public Configuration fromMap(Map&lt;String, ?&gt; properties) {
-<span class="fc" id="L155">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
-<span class="fc bfc" id="L156" title="All 2 branches covered.">        for (final Entry&lt;String, ?&gt; property : properties.entrySet()) {</span>
-<span class="fc" id="L157">            configuration.addProperty(property.getKey(), property.getValue());</span>
-<span class="fc" id="L158">        }</span>
-<span class="fc" id="L159">        return new ApacheConfiguration2(this, configuration);</span>
+<span class="fc" id="L148">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        for (final Entry&lt;String, ?&gt; property : properties.entrySet()) {</span>
+<span class="fc" id="L150">            configuration.addProperty(property.getKey(), property.getValue());</span>
+<span class="fc" id="L151">        }</span>
+<span class="fc" id="L152">        return new ApacheConfiguration2(this, configuration);</span>
     }
 
 
 
-    private Configuration fromMap(Map&lt;String, ?&gt; properties, Collection&lt;PropertyDefinition&gt; defs) {
-<span class="fc" id="L165">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
-<span class="fc bfc" id="L166" title="All 2 branches covered.">        for (final Entry&lt;String, ?&gt; property : properties.entrySet()) {</span>
-<span class="fc" id="L167">            configuration.addProperty(property.getKey(), property.getValue());</span>
-<span class="fc" id="L168">        }</span>
-<span class="fc" id="L169">        var definitions = defs.stream()</span>
-<span class="fc" id="L170">            .collect(Collectors.toMap(PropertyDefinition::property,x-&gt;x));</span>
-<span class="fc" id="L171">        return new ApacheConfiguration2(this, definitions, configuration);</span>
+    private Configuration fromMap(Map&lt;String, ?&gt; properties, Collection&lt;PropertyDefinition&gt; definitions) {
+<span class="fc" id="L158">        final BaseConfiguration configuration = configure(new BaseConfiguration());</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        for (final Entry&lt;String, ?&gt; property : properties.entrySet()) {</span>
+<span class="fc" id="L160">            configuration.addProperty(property.getKey(), property.getValue());</span>
+<span class="fc" id="L161">        }</span>
+<span class="fc" id="L162">        var definitionMap = definitions.stream()</span>
+<span class="fc" id="L163">            .collect(Collectors.toMap(PropertyDefinition::property,x-&gt;x));</span>
+<span class="fc" id="L164">        return new ApacheConfiguration2(this, definitionMap, configuration);</span>
     }
 
-
-
-    @Override
-    public Configuration fromClasspathResource(String resourcePath, ClassLoader classLoader) {
-        try {
-<span class="fc" id="L179">            Configuration base = empty();</span>
-<span class="fc" id="L180">            List&lt;Configuration&gt; urlConfs = buildFromURLEnum(</span>
-<span class="fc" id="L181">                classLoader.getResources(resourcePath),</span>
-                resourcePath
-            );
-<span class="fc bfc" id="L184" title="All 2 branches covered.">            for (Configuration urlConf : urlConfs) {</span>
-<span class="fc" id="L185">                base = base.append(urlConf);</span>
-<span class="fc" id="L186">            }</span>
-<span class="fc" id="L187">            return base;</span>
-<span class="nc" id="L188">        } catch (IOException e) {</span>
-<span class="nc" id="L189">            throw new ConfigurationException(e);</span>
-        }
-    }
-
-
-    @Override
-    public Configuration fromClasspathResource(String resourcePath) {
-<span class="fc" id="L196">        return fromClasspathResource(resourcePath, getClass().getClassLoader());</span>
-    }
 
 
     @Override
     public Configuration fromURI(URI uri) {
-        try {
-<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (uri.getScheme() == null) {</span>
-<span class="nc" id="L204">                uri = Paths.get(uri.getPath()).toUri();</span>
-            }
-<span class="nc" id="L206">            return buildFromURL(uri.toURL());</span>
-<span class="nc" id="L207">        } catch (final MalformedURLException e) {</span>
-<span class="nc" id="L208">            throw new ConfigurationException(e);</span>
+<span class="nc" id="L171">        return fromURI(uri,null);</span>
+    }
+
+
+    @Override
+    public Configuration fromResource(String resource, ClassLoader classLoader) {
+<span class="fc" id="L177">        return fromURI(URI.create(&quot;classpath:///&quot;+resource),classLoader);</span>
+    }
+
+
+
+    private Configuration fromURI(URI uri, ClassLoader classLoader) {
+       try {
+<span class="fc" id="L184">           return buildFromURL(adaptURI(uri, classLoader));</span>
+<span class="nc" id="L185">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L186">           throw new ConfigurationException(e);</span>
         }
     }
 
@@ -213,36 +191,29 @@ import imconfig.PropertyDefinition;
 
     @Override
     public Configuration accordingDefinitions(Collection&lt;PropertyDefinition&gt; definitions) {
-<span class="fc" id="L216">        Map&lt;String,String&gt; defaultValues = definitions</span>
-<span class="fc" id="L217">            .stream()</span>
-<span class="fc" id="L218">            .filter(definition -&gt; definition.defaultValue().isPresent())</span>
-<span class="fc" id="L219">            .collect(Collectors.toMap(</span>
+<span class="fc" id="L194">        Map&lt;String,String&gt; defaultValues = definitions</span>
+<span class="fc" id="L195">            .stream()</span>
+<span class="fc" id="L196">            .filter(definition -&gt; definition.defaultValue().isPresent())</span>
+<span class="fc" id="L197">            .collect(Collectors.toMap(</span>
                 PropertyDefinition::property,
-<span class="fc" id="L221">                definition-&gt;definition.defaultValue().get()</span>
+<span class="fc" id="L199">                definition-&gt;definition.defaultValue().orElseThrow()</span>
             ));
-<span class="fc" id="L223">        return fromMap(defaultValues,definitions);</span>
+<span class="fc" id="L201">        return fromMap(defaultValues,definitions);</span>
     }
 
-
-    @Override
-    public Configuration accordingDefinitionsFromURL(URL url) {
-<span class="fc" id="L229">        try (InputStream inputStream = url.openStream()) {</span>
-<span class="fc" id="L230">            return accordingDefinitions(parser.read(inputStream));</span>
-<span class="nc" id="L231">        } catch (IOException e) {</span>
-<span class="nc" id="L232">            throw new ConfigurationException(e);</span>
-        }
-    }
 
 
     @Override
     public Configuration accordingDefinitionsFromURI(URI uri) {
-        try {
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">            if (uri.getScheme() == null) {</span>
-<span class="nc" id="L241">                uri = Paths.get(uri.getPath()).toUri();</span>
-            }
-<span class="fc" id="L243">            return accordingDefinitionsFromURL(uri.toURL());</span>
-<span class="nc" id="L244">        } catch (final MalformedURLException e) {</span>
-<span class="nc" id="L245">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L208">        return accordingDefinitionsFromURI(uri,null);</span>
+    }
+
+
+    private Configuration accordingDefinitionsFromURI(URI uri, ClassLoader classLoader) {
+<span class="fc" id="L213">        try (var inputStream = adaptURI(uri, classLoader).openStream()) {</span>
+<span class="fc" id="L214">            return accordingDefinitions(parser.read(inputStream));</span>
+<span class="nc" id="L215">        } catch (IOException e) {</span>
+<span class="nc" id="L216">            throw new ConfigurationException(e);</span>
         }
     }
 
@@ -250,10 +221,14 @@ import imconfig.PropertyDefinition;
 
     @Override
     public Configuration accordingDefinitionsFromPath(Path path) {
-<span class="fc" id="L253">        return accordingDefinitionsFromURI(path.toUri());</span>
+<span class="fc" id="L224">        return accordingDefinitionsFromURI(path.toUri());</span>
     }
 
 
+    @Override
+    public Configuration accordingDefinitionsFromResource(String resource,ClassLoader classLoader) {
+<span class="nc" id="L230">        return accordingDefinitionsFromURI(URI.create(&quot;classpath:///&quot;+resource),classLoader);</span>
+    }
 
 
 
@@ -261,74 +236,63 @@ import imconfig.PropertyDefinition;
 
     private Configuration buildFromURL(URL url) {
         Configuration configuration;
-<span class="fc bfc" id="L264" title="All 2 branches covered.">        if (url.getFile().endsWith(&quot;.properties&quot;)) {</span>
-<span class="fc" id="L265">            configuration = buildFromPropertiesFile(url);</span>
-<span class="fc bfc" id="L266" title="All 2 branches covered.">        } else if (url.getFile().endsWith(&quot;.json&quot;)) {</span>
-<span class="fc" id="L267">            configuration = buildFromJSON(url);</span>
-<span class="fc bfc" id="L268" title="All 2 branches covered.">        } else if (url.getFile().endsWith(&quot;.xml&quot;)) {</span>
-<span class="fc" id="L269">            configuration = buildFromXML(url);</span>
-<span class="fc bfc" id="L270" title="All 2 branches covered.">        } else if (url.getFile().endsWith(&quot;.yaml&quot;)) {</span>
-<span class="fc" id="L271">            configuration = buildFromYAML(url);</span>
+<span class="fc" id="L239">        String file = url.getFile();</span>
+<span class="fc bfc" id="L240" title="All 2 branches covered.">        if (file.endsWith(&quot;.properties&quot;)) {</span>
+<span class="fc" id="L241">            configuration = buildFromPropertiesFile(url);</span>
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        } else if (file.endsWith(&quot;.json&quot;)) {</span>
+<span class="fc" id="L243">            configuration = buildFromJSON(url);</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        } else if (file.endsWith(&quot;.xml&quot;)) {</span>
+<span class="fc" id="L245">            configuration = buildFromXML(url);</span>
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        } else if (file.endsWith(&quot;.yaml&quot;)) {</span>
+<span class="fc" id="L247">            configuration = buildFromYAML(url);</span>
         } else {
-<span class="fc" id="L273">            throw new ConfigurationException(&quot;Cannot determine resource type of &quot; + url);</span>
+<span class="fc" id="L249">            throw new ConfigurationException(&quot;Cannot determine resource type of &quot; + url);</span>
         }
-<span class="fc" id="L275">        return configuration;</span>
-    }
-
-
-    private List&lt;Configuration&gt; buildFromURLEnum(Enumeration&lt;URL&gt; urls, String resourcePath) {
-<span class="fc" id="L280">        final List&lt;Configuration&gt; configurations = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L281" title="All 2 branches covered.">        if (!urls.hasMoreElements()) {</span>
-<span class="fc" id="L282">            throw new ConfigurationException(&quot;Cannot find resource &quot; + resourcePath);</span>
-        } else {
-<span class="fc bfc" id="L284" title="All 2 branches covered.">            for (URL url : distinctURLs(urls)) {</span>
-<span class="fc" id="L285">                configurations.add(buildFromURL(url));</span>
-<span class="fc" id="L286">            }</span>
-        }
-<span class="fc" id="L288">        return configurations;</span>
+<span class="fc" id="L251">        return configuration;</span>
     }
 
 
 
     private Configuration buildFromJSON(URL url) {
-<span class="fc" id="L294">        try (InputStream stream = url.openStream()) {</span>
-<span class="fc" id="L295">            JSONConfiguration json = configure(new JSONConfiguration());</span>
-<span class="fc" id="L296">            json.read(stream);</span>
-<span class="fc" id="L297">            return new ApacheConfiguration2(this, Map.of(), json);</span>
-<span class="nc" id="L298">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
-<span class="nc" id="L299">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L257">        try (InputStream stream = url.openStream()) {</span>
+<span class="fc" id="L258">            JSONConfiguration json = configure(new JSONConfiguration());</span>
+<span class="fc" id="L259">            json.read(stream);</span>
+<span class="fc" id="L260">            return new ApacheConfiguration2(this, Map.of(), json);</span>
+<span class="nc" id="L261">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
+<span class="nc" id="L262">            throw new ConfigurationException(e);</span>
         }
     }
 
 
     private Configuration buildFromYAML(URL url) {
-<span class="fc" id="L305">        try (InputStream stream = url.openStream()) {</span>
-<span class="fc" id="L306">            YAMLConfiguration yaml = configure(new YAMLConfiguration());</span>
-<span class="fc" id="L307">            yaml.read(stream);</span>
-<span class="fc" id="L308">            return new ApacheConfiguration2(this, Map.of(), yaml);</span>
-<span class="nc" id="L309">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
-<span class="nc" id="L310">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L268">        try (InputStream stream = url.openStream()) {</span>
+<span class="fc" id="L269">            YAMLConfiguration yaml = configure(new YAMLConfiguration());</span>
+<span class="fc" id="L270">            yaml.read(stream);</span>
+<span class="fc" id="L271">            return new ApacheConfiguration2(this, Map.of(), yaml);</span>
+<span class="nc" id="L272">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
+<span class="nc" id="L273">            throw new ConfigurationException(e);</span>
         }
     }
 
 
     private Configuration buildFromPropertiesFile(URL url) {
-<span class="fc" id="L316">        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream)) {</span>
-<span class="fc" id="L317">            PropertiesConfiguration properties = configure(new PropertiesConfiguration());</span>
-<span class="fc" id="L318">            properties.read(reader);</span>
-<span class="fc" id="L319">            return new ApacheConfiguration2(this, properties);</span>
-<span class="nc" id="L320">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
-<span class="nc" id="L321">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L279">        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {</span>
+<span class="fc" id="L280">            PropertiesConfiguration properties = configure(new PropertiesConfiguration());</span>
+<span class="fc" id="L281">            properties.read(reader);</span>
+<span class="fc" id="L282">            return new ApacheConfiguration2(this, properties);</span>
+<span class="nc" id="L283">        } catch (IOException | org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
+<span class="nc" id="L284">            throw new ConfigurationException(e);</span>
         }
     }
 
 
     private Configuration buildFromXML(URL url) {
         try {
-<span class="fc" id="L328">            XMLConfiguration xml = configure(new Configurations().xml(url));</span>
-<span class="fc" id="L329">            return new ApacheConfiguration2(this, xml);</span>
-<span class="fc" id="L330">        } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
-<span class="fc" id="L331">            throw new ConfigurationException(e);</span>
+<span class="fc" id="L291">            var configurations = new Configurations();</span>
+<span class="fc" id="L292">            XMLConfiguration xml = configure(configurations.xml(url));</span>
+<span class="fc" id="L293">            return new ApacheConfiguration2(this, xml);</span>
+<span class="fc" id="L294">        } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {</span>
+<span class="fc" id="L295">            throw new ConfigurationException(e);</span>
         }
     }
 
@@ -336,12 +300,22 @@ import imconfig.PropertyDefinition;
 
 
     private &lt;T extends AbstractConfiguration&gt; T configure(T configuration) {
-<span class="fc" id="L339">        configuration.setConversionHandler(conversionHandler);</span>
-<span class="fc" id="L340">        return configuration;</span>
+<span class="fc" id="L303">        configuration.setConversionHandler(conversionHandler);</span>
+<span class="fc bfc" id="L304" title="All 2 branches covered.">        if (hasMultivalueSeparator()) {</span>
+<span class="fc" id="L305">            configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(multivalueSeparator()));</span>
+        }
+<span class="fc" id="L307">        return configuration;</span>
     }
 
-    private Set&lt;URL&gt; distinctURLs (Enumeration&lt;URL&gt; urls) {
-<span class="fc" id="L344">        return Collections.list(urls).stream().collect(Collectors.toSet());</span>
+
+
+    private URL adaptURI(URI uri, ClassLoader classLoader) throws MalformedURLException {
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (&quot;classpath&quot;.equals(uri.getScheme())) {</span>
+<span class="fc" id="L314">            return new URL(&quot;classpath&quot;,null, -1, uri.getPath(), new ClasspathURLStreamHandler(classLoader));</span>
+        } else {
+<span class="fc" id="L316">            return uri.toURL();</span>
+        }
     }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

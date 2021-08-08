@@ -1,46 +1,53 @@
-/**
+/*
  * @author Luis Iñesta Gelabert - luiinge@gmail.com
  */
 package imconfig.internal;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.stream.Collectors;
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.EnvironmentConfiguration;
-import org.apache.commons.configuration2.JSONConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.SystemConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.YAMLConfiguration;
-import org.apache.commons.configuration2.builder.fluent.Configurations;
-import org.apache.commons.configuration2.convert.ConversionHandler;
-import imconfig.AnnotatedConfiguration;
 import imconfig.Configuration;
-import imconfig.ConfigurationException;
-import imconfig.ConfigurationFactory;
-import imconfig.Property;
-import imconfig.PropertyDefinition;
+import imconfig.*;
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.*;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.convert.*;
+
+import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private final ConversionHandler conversionHandler = new ApacheConfiguration2ConversionHandler();
     private final PropertyDefinitionParser parser = new PropertyDefinitionParser();
+
+    private char separator = 0;
+
+
+    @Override
+    public ConfigurationFactory multivalueSeparator(char separator) {
+        if (separator == 0) {
+            throw new IllegalArgumentException("Invalid separator symbol: "+separator);
+        }
+        this.separator = separator;
+        return this;
+    }
+
+
+    @Override
+    public boolean hasMultivalueSeparator() {
+        return this.separator != 0;
+    }
+
+
+    @Override
+    public char multivalueSeparator() {
+        return this.separator;
+    }
 
 
     @Override
@@ -125,6 +132,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
 
 
+    @SuppressWarnings("CollectionDeclaredAsConcreteClass")
     @Override
     public Configuration fromProperties(Properties properties) {
         final BaseConfiguration configuration = configure(new BaseConfiguration());
@@ -146,14 +154,14 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
 
 
-    private Configuration fromMap(Map<String, ?> properties, Collection<PropertyDefinition> defs) {
+    private Configuration fromMap(Map<String, ?> properties, Collection<PropertyDefinition> definitions) {
         final BaseConfiguration configuration = configure(new BaseConfiguration());
         for (final Entry<String, ?> property : properties.entrySet()) {
             configuration.addProperty(property.getKey(), property.getValue());
         }
-        var definitions = defs.stream()
+        var definitionMap = definitions.stream()
             .collect(Collectors.toMap(PropertyDefinition::property,x->x));
-        return new ApacheConfiguration2(this, definitions, configuration);
+        return new ApacheConfiguration2(this, definitionMap, configuration);
     }
 
 
@@ -188,7 +196,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
             .filter(definition -> definition.defaultValue().isPresent())
             .collect(Collectors.toMap(
                 PropertyDefinition::property,
-                definition->definition.defaultValue().get()
+                definition->definition.defaultValue().orElseThrow()
             ));
         return fromMap(defaultValues,definitions);
     }
@@ -204,7 +212,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
     private Configuration accordingDefinitionsFromURI(URI uri, ClassLoader classLoader) {
         try (var inputStream = adaptURI(uri, classLoader).openStream()) {
             return accordingDefinitions(parser.read(inputStream));
-        } catch (final IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationException(e);
         }
     }
@@ -228,13 +236,14 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private Configuration buildFromURL(URL url) {
         Configuration configuration;
-        if (url.getFile().endsWith(".properties")) {
+        String file = url.getFile();
+        if (file.endsWith(".properties")) {
             configuration = buildFromPropertiesFile(url);
-        } else if (url.getFile().endsWith(".json")) {
+        } else if (file.endsWith(".json")) {
             configuration = buildFromJSON(url);
-        } else if (url.getFile().endsWith(".xml")) {
+        } else if (file.endsWith(".xml")) {
             configuration = buildFromXML(url);
-        } else if (url.getFile().endsWith(".yaml")) {
+        } else if (file.endsWith(".yaml")) {
             configuration = buildFromYAML(url);
         } else {
             throw new ConfigurationException("Cannot determine resource type of " + url);
@@ -267,7 +276,7 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
 
     private Configuration buildFromPropertiesFile(URL url) {
-        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream)) {
+        try (InputStream stream = url.openStream(); Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
             PropertiesConfiguration properties = configure(new PropertiesConfiguration());
             properties.read(reader);
             return new ApacheConfiguration2(this, properties);
@@ -279,7 +288,8 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private Configuration buildFromXML(URL url) {
         try {
-            XMLConfiguration xml = configure(new Configurations().xml(url));
+            var configurations = new Configurations();
+            XMLConfiguration xml = configure(configurations.xml(url));
             return new ApacheConfiguration2(this, xml);
         } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {
             throw new ConfigurationException(e);
@@ -291,6 +301,9 @@ public class ApacheConfiguration2Factory implements ConfigurationFactory {
 
     private <T extends AbstractConfiguration> T configure(T configuration) {
         configuration.setConversionHandler(conversionHandler);
+        if (hasMultivalueSeparator()) {
+            configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(multivalueSeparator()));
+        }
         return configuration;
     }
 

@@ -12,7 +12,6 @@ import imconfig.types.TextPropertyType;
  * This class allows you to create new {@link PropertyDefinition} objects in a fluent
  * manner, setting only the actual information you required. Invoke {@link #build()}
  * after setting the attributes to obtain the created object.
- * @author Luis Iñesta Gelabert - luiinge@gmail.com
  *
  */
 public class PropertyDefinitionBuilder {
@@ -20,6 +19,7 @@ public class PropertyDefinitionBuilder {
     private String property;
     private String description;
     private boolean required;
+    private boolean multivalue;
     private String defaultValue;
     private PropertyType propertyType;
 
@@ -42,6 +42,18 @@ public class PropertyDefinitionBuilder {
 
     public PropertyDefinitionBuilder required(Boolean required) {
         this.required = Boolean.TRUE.equals(required);
+        return this;
+    }
+
+
+    public PropertyDefinitionBuilder multivalue() {
+        this.multivalue = true;
+        return this;
+    }
+
+
+    public PropertyDefinitionBuilder multivalue(Boolean multivalue) {
+        this.multivalue = Boolean.TRUE.equals(multivalue);
         return this;
     }
 
@@ -100,7 +112,7 @@ public class PropertyDefinitionBuilder {
     public PropertyDefinition build() {
         Objects.requireNonNull(property);
         Objects.requireNonNull(propertyType);
-        return new PropertyDefinition(property, description, required, defaultValue, propertyType);
+        return new PropertyDefinition(property, description, required, multivalue, defaultValue, propertyType);
     }
 
 

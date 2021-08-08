@@ -23,16 +23,16 @@ public class DecimalPropertyType implements PropertyType {
     @Override
     public String hint() {
         String hint;
-<span class="nc bnc" id="L26" title="All 4 branches missed.">        if (min==null &amp;&amp; max==null) {</span>
-<span class="nc" id="L27">            hint = &quot;Any decimal number&quot;;</span>
-<span class="nc bnc" id="L28" title="All 2 branches missed.">        } else if (min==null) {</span>
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (min==null &amp;&amp; max==null) {</span>
+<span class="fc" id="L27">            hint = &quot;Any decimal number&quot;;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        } else if (min==null) {</span>
 <span class="nc" id="L29">            hint = &quot;Decimal number less than &quot;+max;</span>
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        } else if (max==null) {</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        } else if (max==null) {</span>
 <span class="nc" id="L31">            hint = &quot;Decimal number greater than &quot;+min;</span>
         } else {
-<span class="nc" id="L33">            hint = &quot;Decimal number between &quot;+min+&quot; and &quot;+max;</span>
+<span class="fc" id="L33">            hint = &quot;Decimal number between &quot;+min+&quot; and &quot;+max;</span>
         }
-<span class="nc" id="L35">        return hint;</span>
+<span class="fc" id="L35">        return hint;</span>
     }
 
 
