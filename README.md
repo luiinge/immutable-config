@@ -236,7 +236,7 @@ var configuration = Configuration.factory().accordingDefinitions(definitions);
 ### Maven dependency
 ```xml
 <dependency>
-    <groupId>immutable-config</groupId>
+    <groupId>io.github.luiinge</groupId>
     <artifactId>immutable-config</artifactId>
     <version>1.1.0</version>
 </dependency>
