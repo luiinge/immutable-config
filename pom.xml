@@ -11,7 +11,7 @@
 
     <groupId>io.github.luiinge</groupId>
     <artifactId>immutable-config</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
 
     <name>Immutable Configurations</name>
     <description>Configuration utility library</description>
@@ -42,61 +42,41 @@
     </scm>
 
 
-
-
     <properties>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <commons-collections.version>3.2.2</commons-collections.version>
-        <commons-logging.version>1.2</commons-logging.version>
-        <commons-configuration2.version>2.7</commons-configuration2.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <snakeyaml.version>1.29</snakeyaml.version>
-        <jackson.version>2.11.1</jackson.version>
-        <system-rules.version>1.19.0</system-rules.version>
+
     </properties>
 
 
     <dependencies>
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>${commons-collections.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons-logging.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>${commons-configuration2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>2.13.2</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${snakeyaml.version}</version>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.13.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.12.2</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-toml</artifactId>
+            <version>2.13.1</version>
+            <optional>true</optional>
         </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>com.github.stefanbirkner</groupId>
             <artifactId>system-rules</artifactId>
-            <version>${system-rules.version}</version>
+            <version>1.19.0</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

@@ -2,7 +2,7 @@ package imconfig;
 
 import java.util.*;
 
-public interface DefinedConfiguration extends Configuration {
+public interface DefinedConfig extends Config {
 
 
     /**

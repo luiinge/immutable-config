@@ -1,30 +1,28 @@
 package imconfig.internal;
 
 import imconfig.*;
-import imconfig.types.internal.PropertyTypeFactory;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import imconfig.types.internal.PropertyTypeFactory;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class PropertyDefinitionParser {
 
-    private final Yaml yaml = new Yaml();
     private final PropertyTypeFactory typeFactory = new PropertyTypeFactory();
+    private final ExternalReaderFactory externalReaderFactory;
 
 
-    @SuppressWarnings("unchecked")
-    Collection<PropertyDefinition> read (Reader reader) {
-        Map<String,Map<String,Object>> map = yaml.loadAs(reader, HashMap.class);
-        return map.entrySet().stream().map(this::parseDefinition).collect(Collectors.toList());
+    public PropertyDefinitionParser(ExternalReaderFactory externalReaderFactory) {
+        this.externalReaderFactory = externalReaderFactory;
     }
 
-
     @SuppressWarnings("unchecked")
-    Collection<PropertyDefinition> read (InputStream inputStream) {
-        Map<String,Map<String,Object>> map = yaml.loadAs(inputStream, HashMap.class);
+    Collection<PropertyDefinition> read (String extension, URL url, Charset charset) {
+        var reader = externalReaderFactory.readerForExtension(extension);
+        Map<String,Map<String,Object>> map = (Map<String, Map<String, Object>>) reader.readObject(url, charset);
         return map.entrySet().stream().map(this::parseDefinition).collect(Collectors.toList());
     }
 
@@ -45,7 +43,7 @@ public class PropertyDefinitionParser {
                 ))
                 .build();
         } catch (RuntimeException e) {
-            throw new ConfigurationException(
+            throw new ConfigException(
                 "Bad configuration of property '"+entry.getKey()+"' : "+e.getMessage(), e
             );
         }

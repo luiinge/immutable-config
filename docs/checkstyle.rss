@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigurationException.java">imconfig/ConfigurationException.java</a>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigException.java">imconfig/ConfigurationException.java</a>
                 </td>
                 <td>
                   0
@@ -242,7 +242,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.AnnotatedConfiguration.java">imconfig/AnnotatedConfiguration.java</a>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.AnnotatedConfig.java">imconfig/AnnotatedConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -298,7 +298,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigurationFactory.java">imconfig/ConfigurationFactory.java</a>
+                  <a href="https://github.com/luiinge/immutable-config/checkstyle.html#imconfig.ConfigFactory.java">imconfig/ConfigurationFactory.java</a>
                 </td>
                 <td>
                   0

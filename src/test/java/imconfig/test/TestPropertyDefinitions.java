@@ -239,10 +239,11 @@ public class TestPropertyDefinitions {
 
     @Test
     public void testDefinitionToString() {
+        ConfigFactory factory = ConfigFactory.instance();
         List<PropertyDefinition> definitions = definitions();
-        var configuration = ConfigurationFactory.instance()
+        var configuration = factory
             .accordingDefinitions(definitions)
-            .appendProperty("pE", "undefined property");
+            .append(factory.fromPairs("pE", "undefined property"));
 
         assertThat(configuration.getDefinitionsToString()).isEqualTo(
             "- pA: This is a required boolean property\n"+
@@ -265,16 +266,17 @@ public class TestPropertyDefinitions {
     @Test
     public void validationsOfConfiguration() {
         var definitions = definitions();
-        var configuration = Configuration.factory().accordingDefinitions(definitions)
-            .appendProperty("pB","four")
-            .appendProperty("pD", "20");
+        ConfigFactory factory = ConfigFactory.instance();
+        var configuration = factory.accordingDefinitions(definitions)
+            .append(factory.fromPairs("pB","four"))
+            .append(factory.fromPairs("pD", "20"));
         assertThat(configuration.validations()).containsExactly(
             Map.entry("pA",List.of("Property is required but not present")),
             Map.entry("pB",List.of("Invalid value 'four', expected: One of the following: one, two, three [default: two]")),
             Map.entry("pD",List.of("Invalid value '20', expected: Integer number between 10 and 15"))
         );
         assertThatCode(configuration::validate)
-            .isInstanceOf(ConfigurationException.class)
+            .isInstanceOf(ConfigException.class)
             .hasMessage(
                 "The configuration contains one or more invalid values:\n" +
                 "\tpA : Property is required but not present\n" +
@@ -284,17 +286,5 @@ public class TestPropertyDefinitions {
     }
 
 
-    @Test
-    public void validationsOfMultivaluedConfigurationProperty() {
-        var definitions = definitions();
-        var configuration = Configuration.factory().multivalueSeparator(',').accordingDefinitions(definitions)
-            .appendProperty("pE","one,two,five,six");
-        assertThat(configuration.validations()).containsExactly(
-            Map.entry("pA",List.of("Property is required but not present")),
-            Map.entry("pE",List.of(
-                "Invalid value 'five', expected: One of the following: one, two, three",
-                "Invalid value 'six', expected: One of the following: one, two, three"
-            ))
-        );
-    }
+
 }

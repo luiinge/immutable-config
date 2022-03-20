@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-public @interface AnnotatedConfiguration {
+public @interface AnnotatedConfig {
 
     /** Pairs of [key,value] that defines the configuration */
     Property[] value() default {};

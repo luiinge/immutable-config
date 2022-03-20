@@ -4,8 +4,8 @@
 package imconfig;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -16,7 +16,7 @@ import java.util.ServiceLoader;
 
 /**
  *  A configuration factory is responsible of creating new instances of
- * {@link Configuration} via multiple alternative sources such as URI,
+ * {@link Config} via multiple alternative sources such as URI,
  * classpath resources, maps, and properties objects. Any new configuration
  * object should be created using a factory.
  * <p>
@@ -26,50 +26,23 @@ import java.util.ServiceLoader;
  *  and .properties files.
  */
 
-public interface ConfigurationFactory {
+public interface ConfigFactory {
 
     /**
      * @return A new configuration factory
      */
-    static ConfigurationFactory instance() {
+    static ConfigFactory instance() {
         try {
-            return ServiceLoader.load(ConfigurationFactory.class).stream()
+            return ServiceLoader.load(ConfigFactory.class).stream()
                 .findFirst()
                 .orElseThrow()
                 .type()
                 .getConstructor()
                 .newInstance();
         } catch (ReflectiveOperationException e) {
-            throw new ConfigurationException(e);
+            throw new ConfigException(e);
         }
     }
-
-
-    /**
-     * Specify a symbol that will be used to separate different values expressed in one line.
-     * For some types of configuration load this is not necessary due to the source format has already
-     * a form of multi-value (for example, lists is YAML files), but for other types it is mandatory (e. g.,
-     * expressing multi-valued properties within a map).
-     *
-     * By default, no separation will be applied.
-     * @param separator The separation symbol (cannot be <tt>\0</tt>)
-     * @return The same instance, for convenience
-     */
-    ConfigurationFactory multivalueSeparator(char separator) ;
-
-
-    /**
-     * @return whether the multi-value separator has been established
-     */
-    boolean hasMultivalueSeparator();
-
-
-    /**
-     * Get the symbol that will be used to separate different values expressed in one line.
-     * @return the separator symbol, or <tt>\0</tt> if it has not been established.
-     */
-    char multivalueSeparator();
-
 
 
     /**
@@ -77,82 +50,81 @@ public interface ConfigurationFactory {
      * property is present in two or more configurations, the value from the
      * delta configuration will prevail (except when it has an empty value)
      */
-    Configuration merge(Configuration base, Configuration delta);
+    Config merge(Config base, Config delta);
 
 
     /**
      * Create a new empty configuration
      */
-    Configuration empty();
+    Config empty();
 
 
     /**
      * Create a new configuration from a class annotated with
-     * {@link AnnotatedConfiguration}
+     * {@link AnnotatedConfig}
      *
-     * @param configuredClass Class annotated with {@link AnnotatedConfiguration}
-     * @throws ConfigurationException if the configuration was not loaded
+     * @param configuredClass Class annotated with {@link AnnotatedConfig}
+     * @throws ConfigException if the configuration was not loaded
      */
-    Configuration fromAnnotation(Class<?> configuredClass);
+    Config fromAnnotation(Class<?> configuredClass);
 
 
     /**
-     * Create a new configuration from a {@link AnnotatedConfiguration} annotation
+     * Create a new configuration from a {@link AnnotatedConfig} annotation
      *
-     * @param annotation
-     * @throws ConfigurationException if the configuration was not loaded
+     * @throws ConfigException if the configuration was not loaded
      */
-    Configuration fromAnnotation(AnnotatedConfiguration annotation);
+    Config fromAnnotation(AnnotatedConfig annotation);
 
 
     /**
      * Create a new configuration from the OS environment properties
      */
-    Configuration fromEnvironment();
+    Config fromEnvironment();
 
 
     /**
      * Create a new configuration from the {@link System} properties
      */
-    Configuration fromSystem();
+    Config fromSystem();
 
 
     /**
      * Create a new configuration from the resource of the specified path
      *
-     * @throws ConfigurationException if the configuration was not loaded
+     * @throws ConfigException if the configuration was not loaded
      */
-    Configuration fromPath(Path path);
+    Config fromPath(Path path, Charset charset);
 
 
 
     /**
      * Create a new configuration from the specified URI.
      *
-     * @throws ConfigurationException if the configuration was not loaded
+     * @throws ConfigException if the configuration was not loaded
      */
-    Configuration fromURI(URI uri);
+    Config fromURI(URI uri, Charset charset);
 
 
     /**
      * Create a new configuration from the specified classpath resource.
      *
-     * @throws ConfigurationException if the configuration was not loaded
+     * @throws ConfigException if the configuration was not loaded
      */
-    Configuration fromResource(String resource, ClassLoader classLoader);
+    Config fromResource(String resource, Charset charset, ClassLoader classLoader);
 
 
 
     /**
      * Create a new configuration from a {@link Properties} object
      */
-    Configuration fromProperties(Properties properties);
+    Config fromProperties(Properties properties);
 
 
     /**
      * Create a new configuration from a {@link Map} object
      */
-    Configuration fromMap(Map<String, ?> propertyMap);
+    Config fromMap(Map<String, String> propertyMap);
 
 
 
@@ -161,7 +133,7 @@ public interface ConfigurationFactory {
      * <tt>key,value</tt>.
      * @throws IllegalArgumentException if the number of strings is not even
      */
-    default Configuration fromPairs(String... pairs) {
+    default Config fromPairs(String... pairs) {
         if (pairs.length % 2 == 1) {
             throw new IllegalArgumentException("Number of arguments must be even");
         }
@@ -180,7 +152,7 @@ public interface ConfigurationFactory {
      * Defined properties will be set to their default value if it exists
      * @see PropertyDefinition
      */
-    Configuration accordingDefinitions(Collection<PropertyDefinition> definitions);
+    Config accordingDefinitions(Collection<PropertyDefinition> definitions);
 
 
 
@@ -190,7 +162,7 @@ public interface ConfigurationFactory {
      * Defined properties will be set to their default value if it exists
      * @see PropertyDefinition
      */
-    Configuration accordingDefinitionsFromPath(Path path);
+    Config accordingDefinitionsFromPath(Path path, Charset charset);
 
 
     /**
@@ -201,7 +173,7 @@ public interface ConfigurationFactory {
      * Defined properties will be set to their default value if it exists
      * @see PropertyDefinition
      */
-    Configuration accordingDefinitionsFromURI(URI uri);
+    Config accordingDefinitionsFromURI(URI uri, Charset charset);
 
 
     /**
@@ -211,7 +183,7 @@ public interface ConfigurationFactory {
      * Defined properties will be set to their default value if it exists
      * @see PropertyDefinition
      */
-    Configuration accordingDefinitionsFromResource(String resource, ClassLoader classLoader);
+    Config accordingDefinitionsFromResource(String resource, Charset charset, ClassLoader classLoader);
 
 
 
