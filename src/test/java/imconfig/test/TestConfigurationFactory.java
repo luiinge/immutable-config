@@ -22,6 +22,7 @@ import org.junit.contrib.java.lang.system.EnvironmentVariables;
 import imconfig.AnnotatedConfig;
 
 
+
 public class TestConfigurationFactory {
 
     private static final ClassLoader CLASS_LOADER = TestConfigurationFactory.class.getClassLoader();
@@ -137,11 +138,12 @@ public class TestConfigurationFactory {
     }
 
 
+
+
     @Test
     public void createConfigurationFromYAMLFile() {
         Config conf = factory.fromResource("test-conf.yaml", UTF8, CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
-
     }
 
 
@@ -222,7 +224,7 @@ public class TestConfigurationFactory {
     @Test
     public void invokingToStringReturnsEveryValuedProperty() throws ConfigException {
         Assertions.assertThat(factory.fromAnnotation(ConfAnnotatedProps.class).toString())
-            .isEqualTo(
+            .hasToString(
                 "properties.test.key.bigdecimal : 755.87\n" +
                 "properties.test.key.bigdecimals : \n" +
                 "  - 755.87\n" +

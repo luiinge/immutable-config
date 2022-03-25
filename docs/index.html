@@ -1,0 +1,247 @@
+<html><head><title>Immutable Configurations - index</title><meta name="description" content="Configuration utility library"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="profile" href="http://www.w3.org/2005/10/profile"><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" integrity="sha512-BnbUDfEUfV0Slx6TunuB042k9tuKe3xrD6q4mg5Ed72LTgzDIcLPxg6yI2gcMFRyomt+yJJxE+zJwNmxki6/RA==" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer"><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" integrity="sha512-YBk7HhgDZvBxmtOfUdvX0z8IH2d10Hp3aEygaMNhtF8fSOvBZ16D/1bXZTJV6ndk/L/DlXxYStP8jrF77v2MIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><link href="css/common.css" rel="stylesheet"><link href="css/style.css" rel="stylesheet"><style>:root {
+--menu-regular-background-color: #575757;
+--menu-bold-background-color: #413e3e;
+--menu-foreground-color: #f1f4f4;
+--menu-decoration-color: #b7d4da;
+--gui-element-color: #f08080;
+}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-java.min.js" integrity="sha512-PWHY6Vao4E9K4LsGBYCY0ttDeiWZwuUozTbJvSy9UFHRz2J4Bl7rcWML3wEnJTVuCJhSwGne/8My5gTo/gnbpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-yaml.min.js" integrity="sha512-QRKKJS95wG2dOCdc7Cm0Zbu+L04xY8fTwhHG3UnqZPMiFrAN8uXrqVTx//eqvTaoYwNJ7oFN3Vej5gnJ+GAxkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head><body><a id="jump-to-content" href="#content">jump to content</a><header><div class="title-and-subtitle"><h1 class="title label"><i class="hidden"></i><span>Immutable Configurations</span></h1><span class="subtitle">Configuration utility library</span></div><nav class="sections"><ul><li><a class="label internal" href="changelog.html"><i class="fas fa-clipboard-list"></i><span>Changelog</span></a></li><li><a class="label internal" href="reports.html"><i class="fas fa-file-medical-alt"></i><span>Reports</span></a><ul class="dropdown"><li><a class="label internal" href="javadoc.html"><i class="fab fa-java"></i><span>Javadoc</span></a></li><li><a class="label internal" href="test-coverage.html"><i class="hidden"></i><span>Test Coverage</span></a></li><li><a class="label internal" href="test-results.html"><i class="hidden"></i><span>Test Results</span></a></li></ul></li><li><a class="label external" href="https://github.com/luiinge/immutable-config/tree/master" target="_blank" rel="external noreferrer noopener nofollow"><i class="fab fa-github"></i><span>Source</span></a></li><li><a class="label internal" href="license.html"><i class="fas fa-balance-scale"></i><span>License</span></a></li></ul></nav></header><nav class="breadcrumbs"><ol><li><a class="internal" href="index.html">Immutable Configurations</a></li></ol></nav><aside><nav class="toc"><ol><li><a class="internal" href="#usage">Usage</a></li><ol><li><a class="internal" href="#loading-configurations">Loading configurations</a></li><li><a class="internal" href="#retrieving-values">Retrieving values</a></li><li><a class="internal" href="#loading-configurations-from-external-sources">Loading configurations from external sources</a></li><li><a class="internal" href="#property-definitions">Property definitions</a></li><li><a class="internal" href="#maven-dependency">Maven dependency</a></li></ol><li><a class="internal" href="#requirements">Requirements</a></li><li><a class="internal" href="#contributing">Contributing</a></li><li><a class="internal" href="#authors">Authors</a></li><li><a class="internal" href="#license">License</a></li><li><a class="internal" href="#references">References</a></li></ol></ol></nav></aside><section class="content" id="content"><h1 id="immutable-configurations">Immutable Configurations</h1>
+<p><img src="https://img.shields.io/github/license/luiinge/immutable-config?style=plastic" alt="GitHub" />
+<img src="https://img.shields.io/github/workflow/status/luiinge/immutable-config/quality%20check/master?style=plastic" alt="GitHub Workflow Status (branch)" />
+<img src="https://img.shields.io/maven-central/v/io.github.luiinge/immutable-config?style=plastic" alt="Maven Central" /></p>
+<p><a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=alert_status" alt="Quality Gate Status" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=ncloc" alt="Lines of Code" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=coverage" alt="Coverage" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=bugs" alt="Bugs" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=code_smells" alt="Code Smells" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=duplicated_lines_density" alt="Duplicated Lines (%)" /></a>
+<a target="_blank" rel="external noreferrer noopener nofollow" href="https://sonarcloud.io/dashboard?id=luiinge_maven-immutable-config"><img src="https://sonarcloud.io/api/project_badges/measure?project=luiinge_immutable-config&amp;metric=sqale_index" alt="Technical Debt" /></a></p>
+<blockquote>
+<p>A multi-purpose, immutable configuration interface</p>
+</blockquote>
+<p>This library provides a simple interface in order to load and consume <em>configurations</em>,
+which are mainly a set of valued properties that can be parsed to specific Java types.
+The primary focus of the library is <strong>null-safety</strong>, <strong>immutability</strong>, and <strong>fluency</strong>.</p>
+<p>The <code>Config</code> class is immutable in order to ensure the values are not modified
+by any process, but it can build derived configurations. Also, when a property is not defined,
+the <code>get</code> and <code>getList</code> methods return an empty <code>Optional</code> and an empty immutable <code>List</code>,
+respectively, instead of <code>null</code>.</p>
+<p>In addition, this library implements a simple approach to create <em>property definitions</em>, so that
+each property in a configuration can have some meta-data regarding the actual values expected
+by the consumer system.</p>
+<p>There are a wide range of builder methods to get configurations from different sources, such as:</p>
+<ul>
+<li>OS environment variables</li>
+<li>Java system properties</li>
+<li>Java <code>.properties</code> files</li>
+<li>JSON files</li>
+<li>XAML files</li>
+<li>TOML files</li>
+<li><code>Map</code> and <code>Properties</code> objects</li>
+<li><em>In-code</em> pairs of &lt;key, value&gt;</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<h3 id="loading-configurations">Loading configurations</h3>
+<p>In order to obtain a configuration, simply use one of the static methods in <code>ConfigFactory</code>:</p>
+<pre><code class="language-java">Config conf = Config.factory().fromPath(Path.of(&quot;myConfig.yaml&quot;));
+</code></pre>
+<p>Two configurations can be merged, using one of them as base:</p>
+<pre><code class="language-java">Config confA = Config.factory().fromEnvironment();
+Config confB = Config.factory().fromPath(Path.of(&quot;myConfig.yaml&quot;));
+Config confC = confA.append(confB);
+</code></pre>
+<p>You can create a new configuration from Java objects:</p>
+<pre><code class="language-java">Map&lt;String,String&gt; map = Map.of(
+    &quot;propertyA&quot;,&quot;valueA&quot;,
+    &quot;propertyB&quot;,&quot;valueB&quot;
+);
+Config conf = Config.factory().fromMap(map);
+</code></pre>
+<pre><code class="language-java">Config conf = Config.factory().fromPairs(
+    &quot;propertyA&quot;,&quot;valueA&quot;,
+    &quot;propertyB&quot;,&quot;valueB&quot;
+);
+</code></pre>
+<p>In addition, you can annotate any class and use it as a configuration source:</p>
+<pre><code class="language-java">@AnnotatedConfig(properties={
+  @Property(key=&quot;propertyA&quot;, value=&quot;valueA&quot;),
+  @Property(key=&quot;propertyB&quot;, value=&quot;valueB&quot;)
+})
+class MyConfigClass { }
+</code></pre>
+<pre><code class="language-java">Config conf = Config.factory().fromAnnotation(MyConfigClass.class);
+</code></pre>
+<h3 id="retrieving-values">Retrieving values</h3>
+<ul>
+<li>All values are stored either as single <code>String</code> literals or lists of <code>String</code> literals.</li>
+<li>The <code>get</code> method returns an <code>Optional</code>, so you are forced to deal with
+possible nulls.</li>
+<li>In case you want to parse the raw value into a custom type, you can either make use of the
+<code>Optional</code> API, or pass directly the parsing function to the getter method</li>
+</ul>
+<pre><code class="language-java">  Config config = ... 
+  Optional&lt;String&gt; user = config.get(&quot;user&quot;);
+  Optional&lt;Integer&gt; year = config.get(&quot;year&quot;).map(Integer::valueOf);
+  Locale locale = config.get(&quot;language&quot;, Locale::new).orElse(Locale.ENGLISH);
+</code></pre>
+<h4 id="multi-valued-properties">Multi-valued properties</h4>
+<p>This library support <em>multi-valued properties</em>, that is, properties that have a list
+of values instead of a single one. For that, the method <code>getList</code> works similarly to
+<code>get</code> but returns a <code>List</code> (potentially empty) instead of an <code>Optional</code>.</p>
+<pre><code class="language-java">  Configuration configuration = ... 
+  List&lt;String&gt; servers = configuration.getList(&quot;servers&quot;);
+</code></pre>
+<p>When invoked aiming a single-value property, it would return a collection of 1 item.
+Alternatively, invoking <code>get</code> aiming a multi-valued property, it would return the
+first element present.</p>
+<h3 id="loading-configurations">Loading configurations from external sources</h3>
+<p>By using the methods <code>fromPath</code>, <code>fromResource</code>, <code>fromURI</code> you can create
+a <code>Config</code> instance reflecting the configuration defined in such sources.
+The accepted formats are Java Properties files, YAML, JSON, XML and TOML.
+Some of these formats would require additional dependencies to work:</p>
+<p>| format | required dependencies |
+| --- | --- |
+| <code>properties</code> | none |
+| <code>JSON</code> | <code>com.fasterxml.jackson.core:jackson-databind</code> |
+| <code>YAML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</code> |
+| <code>XML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-xml</code> |
+| <code>TOML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-toml</code> |</p>
+<blockquote>
+<p>These extra dependencies are <em>NOT</em> transitive dependencies, that is, they
+would be not included directly. The main reason behind this decision is
+to avoid adding dependencies that only would be use in specific scenarios.
+It is responsibility of the client to add them to the build in case they
+were required.</p>
+</blockquote>
+<h3 id="property-definitions">Property definitions</h3>
+<p>You can also create <em>definitions</em> to express what properties your application expects, including
+some basic validations and default values. Each expected property is defined by its key, data type,
+default value, and additional constraints regarding the data type.
+Supported types are:</p>
+<p>| type      | description           | additional constraints |
+| --------- | --------------------- | ---------------------- |
+| <code>text</code>    | plain text            | regular expression     |
+| <code>enum</code>    | strict list of values |                        |
+| <code>boolean</code> | <code>true</code> or <code>false</code>     |                        |
+| <code>integer</code> | integer number        | min and/or max bounds  |
+| <code>decimal</code> | decimal number        | min and/or max bounds  |</p>
+<p>Property definitions can be either read from YAML files (as a kind of <em>meta-configuration</em>), or
+created programmatically, using any of the existing methods starting with <code>according...</code> . Notice that
+the definition is always applied to a <code>Configuration</code> object.</p>
+<p>Once a configuration has one or more definitions applied, you can validate it using
+the method <code>validate()</code>. If there are invalid property values itt would throw an
+<code>InvalidConfigException</code>, along with a descriptive message informing of every
+invalid value. You can also get the list of violations calling the method <code>validations()</code>.</p>
+<p>Notice that you can retrieve invalid values normally using the <code>get()</code> and <code>getList()</code>
+methods.</p>
+<h4 id="loading-property-definitions-from-external-file">Loading property definitions from external file</h4>
+<p>Property definitions can be easily readed from YAML, JSON or XML files using the following method:</p>
+<pre><code class="language-java">    Config definition = Config.factory().accordingDefinitionsFromPath(Path.of(&quot;my-definition.yaml&quot;));
+</code></pre>
+<p>The property definition file uses the following structure:</p>
+<pre><code>&lt;property-key&gt;:
+    type: &lt;text|enum|boolean|integer|decimal&gt;
+    [description: &lt;optional description&gt;]
+    [requires: &lt;true|false&gt; (false if ommitted)]
+    [defaultValue: &lt;optional default value&gt;]
+    [constrains: (regarding the property type)
+       &lt;min | max | pattern | values&gt;: &lt;constraint-value&gt; 
+       ...
+    ]
+</code></pre>
+<p>as shown is this example:</p>
+<pre><code class="language-yaml">my-properties.property-required:
+   description: This is a test property that is required
+   required: true
+   type: text
+
+my-properties.property-with-default-value:
+   description: This is a property with a default value
+   type: integer
+   defaultValue: 5
+
+my-properties.property-regex-text:
+   type: text
+   constraints:
+      pattern: A\d\dB
+
+my-properties.property-min-max-number:
+   type: integer
+   constraints:
+      min: 2
+      max: 3
+
+my-properties.property-enumeration:
+   type: enum
+   constraints:
+      values:
+         - red
+         - yellow
+         - orange
+
+my-properties.property-boolean:
+   type: boolean
+</code></pre>
+<h4 id="create-property-definitions-programmatically">Create property definitions programmatically</h4>
+<p>If you prefer to encapsulate the properties definition within your code, it is possible to
+create the definitions programatically and then apply them to a configuration.</p>
+<pre><code class="language-java">var definitions = List.of(
+    PropertyDefinition.builder(&quot;my-properties.property-required&quot;)
+        .description(&quot;This is a test property that is required&quot;)
+        .required()
+        .textType()
+        .build(),
+    PropertyDefinition.builder(&quot;my-properties.property-with-default-value&quot;)
+        .description(&quot;my-properties.property-with-default-value&quot;)
+        .integerType()
+        .defaultValue(5)
+        .build(),
+    PropertyDefinition.builder(&quot;my-properties.property-min-max-number&quot;)
+        .integerType(2,3)
+        .build()
+);
+var configuration = Config.factory().accordingDefinitions(definitions);
+</code></pre>
+<h3 id="maven-dependency">Maven dependency</h3>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.github.luiinge&lt;/groupId&gt;
+    &lt;artifactId&gt;immutable-config&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Java 11 or newer.</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<h2 id="authors">Authors</h2>
+<ul>
+<li>Luis Iñesta Gelabert - luiinge@gmail.com</li>
+</ul>
+<h2 id="license">License</h2>
+<pre><code>MIT License
+
+Copyright (c) 2020 Luis Iñesta Gelabert - luiinge@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li>[<strong>1</strong>] <em>Apache Commons Configuration</em> - https://commons.apache.org/proper/commons-configuration</li>
+</ul>
+<div class="footer">Generated with <a href="https://luiinge.github.io/docsite-maven-plugin/">Docsite</a>. Last published on 2022-03-25</div></section></body></html>

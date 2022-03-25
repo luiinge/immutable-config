@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig</a> &gt; <span class="el_source">PropertyDefinition.java</span></div><h1>PropertyDefinition.java</h1><pre class="source lang-java linenums">package imconfig;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
+
+/**
+ * This class instantiates an immutable value object that represents
+ * the definition of a given property.
+ * &lt;p&gt;
+ * Property definitions can be created manually or read from a YAML file.
+ *
+ */
+public class PropertyDefinition {
+
+    /**
+     * Get a new builder
+     */
+    public static PropertyDefinitionBuilder builder() {
+<span class="fc" id="L20">        return new PropertyDefinitionBuilder();</span>
+    }
+
+
+    /**
+     * Get a new builder for the given property
+     */
+    public static PropertyDefinitionBuilder builder(String property) {
+<span class="fc" id="L28">        return new PropertyDefinitionBuilder().property(property);</span>
+    }
+
+
+    private final String property;
+    private final String description;
+    private final boolean required;
+    private final boolean multivalue;
+    private final String defaultValue;
+    private final PropertyType propertyType;
+
+
+    PropertyDefinition(
+        String property,
+        String description,
+        boolean required,
+        boolean multivalue,
+        String defaultValue,
+        PropertyType type
+<span class="fc" id="L47">    ) {</span>
+<span class="fc" id="L48">        this.property = property;</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        this.description = (description == null ? &quot;&quot; : description);</span>
+<span class="fc" id="L50">        this.defaultValue = defaultValue;</span>
+<span class="fc" id="L51">        this.multivalue = multivalue;</span>
+<span class="fc" id="L52">        this.required = required;</span>
+<span class="fc" id="L53">        this.propertyType = type;</span>
+<span class="fc" id="L54">    }</span>
+
+
+    public String property() {
+<span class="fc" id="L58">        return property;</span>
+    }
+
+    public String description() {
+<span class="fc" id="L62">        return description;</span>
+    }
+
+    public boolean required() {
+<span class="fc" id="L66">        return required;</span>
+    }
+
+    public Optional&lt;String&gt; defaultValue() {
+<span class="fc" id="L70">        return Optional.ofNullable(defaultValue);</span>
+    }
+
+    public String type() {
+<span class="fc" id="L74">        return propertyType.name();</span>
+    }
+
+    public boolean multivalue() {
+<span class="fc" id="L78">        return multivalue;</span>
+    }
+
+    public String hint() {
+<span class="fc" id="L82">        return String.format(</span>
+            &quot;%s%s%s&quot;,
+<span class="fc" id="L84">            propertyType.hint(),</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            defaultValue != null ? &quot; [default: &quot;+defaultValue+&quot;]&quot; : &quot;&quot;,</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            required ? &quot; (required)&quot; : &quot;&quot;</span>
+        );
+    }
+
+
+    public Optional&lt;String&gt; validate(String value) {
+<span class="fc bfc" id="L92" title="All 4 branches covered.">        if (value == null || value.isBlank()) {</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (required) {</span>
+<span class="fc" id="L94">                return Optional.of(&quot;Property is required but not present&quot;);</span>
+            }
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        } else if (!propertyType.accepts(value)) {</span>
+<span class="fc" id="L97">            return Optional.of(&quot;Invalid value '&quot;+value+&quot;', expected: &quot;+hint());</span>
+        }
+<span class="fc" id="L99">        return Optional.empty();</span>
+    }
+
+
+    @Override
+    public String toString() {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">       var hint = multivalue ?</span>
+<span class="fc" id="L106">           &quot;List of &quot;+hint().substring(0,1).toLowerCase()+hint().substring(1) :</span>
+<span class="fc" id="L107">           hint();</span>
+<span class="fc" id="L108">       return String.format(</span>
+           &quot;- %s: %s%s&quot;,
+           property,
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">           description.isBlank() ? hint : description,</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">           description.isBlank() ? &quot;&quot; : &quot;\n  &quot;+hint</span>
+       );
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,30 @@
+--class-path
+'/home/luis/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/2.3.2/jakarta.xml.bind-api-2.3.2.jar:/home/luis/.m2/repository/jakarta/activation/jakarta.activation-api/1.2.1/jakarta.activation-api-1.2.1.jar:/home/luis/.m2/repository/com/fasterxml/woodstox/woodstox-core/6.2.4/woodstox-core-6.2.4.jar'
+--module-path
+'/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.13.2/jackson-databind-2.13.2.jar:/home/luis/.m2/repository/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.12.2/jackson-module-jaxb-annotations-2.12.2.jar:/home/luis/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-toml/2.13.1/jackson-dataformat-toml-2.13.1.jar:/home/luis/.m2/repository/org/yaml/snakeyaml/1.28/snakeyaml-1.28.jar:/home/luis/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-xml/2.12.2/jackson-dataformat-xml-2.12.2.jar:/home/luis/.m2/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar:/home/luis/github/immutable-config/target/immutable-config-2.0.0.jar:/home/luis/.m2/repository/org/codehaus/woodstox/stax2-api/4.2.1/stax2-api-4.2.1.jar:/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.2/jackson-annotations-2.13.2.jar:/home/luis/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.13.1/jackson-dataformat-yaml-2.13.1.jar:/home/luis/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.13.2/jackson-core-2.13.2.jar'
+--patch-module
+imconfig='/home/luis/github/immutable-config/src/main/java:/home/luis/github/immutable-config/target/generated-sources/annotations'
+-encoding
+'UTF-8'
+-protected
+--release
+11
+--module-source-path
+'/home/luis/github/immutable-config/target/site/apidocs/src'
+-author
+-bottom
+'Copyright &#169; 2020&#x2013;2022 <a href="https://github.com/luiinge">luiinge</a>. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/luis/github/immutable-config/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Immutable Configurations 2.0.0 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/home/luis/github/immutable-config/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'Immutable Configurations 2.0.0 API'

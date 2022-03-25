@@ -42,10 +42,6 @@
     </scm>
 
 
-    <properties>
-
-    </properties>
-
 
     <dependencies>
         <dependency>
@@ -92,6 +88,39 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.github.luiinge</groupId>
+                <artifactId>docsite-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <outputFolder>docs</outputFolder>
+                    <forceDelete>true</forceDelete>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

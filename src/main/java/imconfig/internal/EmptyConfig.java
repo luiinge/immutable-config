@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class EmptyConfig implements Config {
 
-    static Config INSTANCE = new EmptyConfig();
+    final static Config INSTANCE = new EmptyConfig();
 
 
     @Override
@@ -77,8 +77,20 @@ public class EmptyConfig implements Config {
 
 
     @Override
+    public String get(String key, String fallback) {
+        return fallback;
+    }
+
+
+    @Override
     public <T> Optional<T> get(String key, Function<String, T> mapper) {
         return Optional.empty();
+    }
+
+
+    @Override
+    public <T> T get(String key, Function<String, T> mapper, T fallback) {
+        return fallback;
     }
 
 

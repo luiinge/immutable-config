@@ -113,8 +113,20 @@ public class MapBasedConfig extends AbstractConfig {
 
 
     @Override
+    public String get(String key, String fallback) {
+        return get(key).orElse(fallback);
+    }
+
+
+    @Override
     public <T> Optional<T> get(String key, Function<String,T> mapper) {
         return get(key).map(mapper);
+    }
+
+
+    @Override
+    public <T> T get(String key, Function<String, T> mapper, T fallback) {
+        return get(key, mapper).orElse(fallback);
     }
 
 

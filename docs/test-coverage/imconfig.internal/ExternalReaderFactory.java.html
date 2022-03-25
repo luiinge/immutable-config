@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExternalReaderFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">ExternalReaderFactory.java</span></div><h1>ExternalReaderFactory.java</h1><pre class="source lang-java linenums">package imconfig.internal;
+
+import imconfig.*;
+import imconfig.internal.readers.*;
+import java.util.*;
+
+<span class="fc" id="L7">public class ExternalReaderFactory {</span>
+
+    public static final String JACKSON_DATABIND = &quot;com.fasterxml.jackson.core:jackson-databind&quot;;
+
+<span class="fc" id="L11">    private final Map&lt;String,ExternalReader&gt; externalReaders = new HashMap&lt;&gt;();</span>
+
+
+
+
+    public ExternalReader readerForExtension(String extension) {
+<span class="fc bfc" id="L17" title="All 6 branches covered.">        switch (extension) {</span>
+            case &quot;properties&quot;:
+<span class="fc" id="L19">                return externalReaders.computeIfAbsent(extension, x-&gt;new PropertiesReader());</span>
+            case &quot;json&quot;:
+<span class="fc" id="L21">                return externalReaders.computeIfAbsent(extension, x-&gt;newJsonReader());</span>
+            case &quot;xml&quot;:
+<span class="fc" id="L23">                return externalReaders.computeIfAbsent(extension, x-&gt;newXmlReader());</span>
+            case &quot;yaml&quot;:
+<span class="fc" id="L25">                return externalReaders.computeIfAbsent(extension, x-&gt;newYamlReader());</span>
+            case &quot;toml&quot;:
+<span class="fc" id="L27">                return externalReaders.computeIfAbsent(extension, x-&gt;newTomlReader());</span>
+            default:
+<span class="fc" id="L29">                throw new ConfigException(&quot;No reader implemented for resource of type &quot;+extension);</span>
+        }
+    }
+
+
+    private JsonReader newJsonReader() {
+        try {
+<span class="fc" id="L36">            return new JsonReader();</span>
+<span class="nc" id="L37">        } catch (NoClassDefFoundError e) {</span>
+<span class="nc" id="L38">            throw new OptionalOperationException(</span>
+                e,
+                JACKSON_DATABIND
+            );
+        }
+    }
+
+    private YamlReader newYamlReader() {
+        try {
+<span class="fc" id="L47">            return new YamlReader();</span>
+<span class="nc" id="L48">        } catch (NoClassDefFoundError e) {</span>
+<span class="nc" id="L49">            throw new OptionalOperationException(</span>
+                e,
+                JACKSON_DATABIND,
+                &quot;com.fasterxml.jackson.dataformat:jackson-dataformat-yaml&quot;
+            );
+        }
+    }
+
+    private XmlReader newXmlReader() {
+        try {
+<span class="fc" id="L59">            return new XmlReader();</span>
+<span class="nc" id="L60">        } catch (NoClassDefFoundError e) {</span>
+<span class="nc" id="L61">            throw new OptionalOperationException(</span>
+                e,
+                JACKSON_DATABIND,
+                &quot;com.fasterxml.jackson.dataformat:jackson-dataformat-xml&quot;
+            );
+        }
+    }
+
+
+    private TomlReader newTomlReader() {
+        try {
+<span class="fc" id="L72">            return new TomlReader();</span>
+<span class="nc" id="L73">        } catch (NoClassDefFoundError e) {</span>
+<span class="nc" id="L74">            throw new OptionalOperationException(</span>
+                e,
+                JACKSON_DATABIND,
+                &quot;com.fasterxml.jackson.dataformat:jackson-dataformat-toml&quot;
+            );
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -286,5 +286,13 @@ public class TestPropertyDefinitions {
     }
 
 
+    @Test
+    public void propertyWithDefaultValue() {
+        var conf = ConfigFactory.instance().accordingDefinitions(List.of(
+            PropertyDefinition.builder("property").integerType().defaultValue("55").build()
+        ));
+        assertThat(conf.get("property",Integer::valueOf)).contains(55);
+    }
+
 
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">AbstractConfig.java</span></div><h1>AbstractConfig.java</h1><pre class="source lang-java linenums">/*
+ * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+ */
+package imconfig.internal;
+
+
+
+import java.util.*;
+import java.util.stream.*;
+
+import static java.util.stream.Collectors.*;
+import imconfig.*;
+
+
+public abstract class AbstractConfig implements Config {
+
+    protected final ConfigFactory builder;
+    protected final Map&lt;String,PropertyDefinition&gt; definitions;
+
+
+    protected AbstractConfig(
+        ConfigFactory builder,
+        Map&lt;String,PropertyDefinition&gt; definitions
+<span class="fc" id="L24">    ) {</span>
+<span class="fc" id="L25">        this.builder = builder;</span>
+<span class="fc" id="L26">        this.definitions = new LinkedHashMap&lt;&gt;(definitions);</span>
+<span class="fc" id="L27">    }</span>
+
+
+    @Override
+    public Config append(Config otherConfig) {
+<span class="fc" id="L32">        return builder.merge(this, otherConfig);</span>
+    }
+
+
+
+    @Override
+    public Map&lt;String, PropertyDefinition&gt; getDefinitions() {
+<span class="fc" id="L39">        return new LinkedHashMap&lt;&gt;(definitions);</span>
+    }
+
+
+    @Override
+    public Optional&lt;PropertyDefinition&gt; getDefinition(String key) {
+<span class="fc" id="L45">        return Optional.ofNullable(definitions.get(key));</span>
+    }
+
+
+    @Override
+    public boolean hasDefinition(String key) {
+<span class="nc" id="L51">        return definitions.containsKey(key);</span>
+    }
+
+
+    @Override
+    public List&lt;String&gt; validations(String key) {
+<span class="fc" id="L57">        return getDefinition(key).map(definition -&gt; validations(key, definition)).orElseGet(List::of);</span>
+    }
+
+
+    private List&lt;String&gt; validations(String key, PropertyDefinition definition) {
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        List&lt;String&gt; values = definition.multivalue() ?</span>
+<span class="nc" id="L63">            getList(key) :</span>
+<span class="fc" id="L64">            get(key).map(List::of).orElseGet(List::of);</span>
+<span class="fc" id="L65">        return values</span>
+<span class="fc" id="L66">        .stream()</span>
+<span class="fc" id="L67">        .map(definition::validate)</span>
+<span class="fc" id="L68">        .flatMap(Optional::stream)</span>
+<span class="fc" id="L69">        .collect(toList());</span>
+    }
+
+
+    @Override
+    public Map&lt;String,List&lt;String&gt;&gt; validations() {
+<span class="fc" id="L75">        var invalidValues = keyStream()</span>
+<span class="fc" id="L76">            .map(key -&gt; Map.entry(key, validations(key)))</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            .filter(entry -&gt; !entry.getValue().isEmpty());</span>
+<span class="fc" id="L78">        var missingValues = definitions.values().stream()</span>
+<span class="fc" id="L79">            .filter(PropertyDefinition::required)</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">            .filter(it-&gt;!this.hasProperty(it.property()))</span>
+<span class="fc" id="L81">            .map(it-&gt;Map.entry(</span>
+<span class="fc" id="L82">                it.property(),</span>
+<span class="fc" id="L83">                it.validate(null).map(List::of).orElseGet(List::of)</span>
+            ));
+<span class="fc" id="L85">        return Stream.concat(invalidValues,missingValues)</span>
+<span class="fc" id="L86">            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+    }
+
+
+    @Override
+    public Config validate() {
+<span class="fc" id="L92">        var validations = validations();</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (!validations.isEmpty()) {</span>
+<span class="fc" id="L94">           var message = validations.entrySet().stream()</span>
+<span class="fc" id="L95">               .map(entry -&gt; String.format(</span>
+                   &quot;%s : %s&quot;,
+<span class="fc" id="L97">                   entry.getKey(),</span>
+<span class="fc" id="L98">                   String.join(&quot;\n&quot;+(&quot; &quot;).repeat(entry.getKey().length() + 3),  entry.getValue())</span>
+               ))
+<span class="fc" id="L100">               .collect(Collectors.joining(&quot;\n\t&quot;, &quot;The configuration contains one or more invalid values:\n\t&quot;,&quot;&quot;));</span>
+<span class="fc" id="L101">           throw new ConfigException(message);</span>
+        }
+<span class="nc" id="L103">        return this;</span>
+    }
+
+
+    @Override
+    public Config accordingDefinitions(Collection&lt;PropertyDefinition&gt; definitions) {
+<span class="nc" id="L109">        return builder.merge(this, builder.accordingDefinitions(definitions));</span>
+    }
+
+
+
+    @Override
+    public String getDefinitionsToString() {
+<span class="fc" id="L116">       return getDefinitions().values().stream()</span>
+<span class="fc" id="L117">           .map(PropertyDefinition::toString)</span>
+<span class="fc" id="L118">           .collect(Collectors.joining(&quot;\n&quot;));</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

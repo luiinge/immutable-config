@@ -110,7 +110,7 @@ of values instead of a single one. For that, the method `getList` works similarl
 
 ```java
   Configuration configuration = ... 
-  List<String> servers = configuration.getList("servers", String.class);
+  List<String> servers = configuration.getList("servers");
 ```
 When invoked aiming a single-value property, it would return a collection of 1 item.
 Alternatively, invoking `get` aiming a multi-valued property, it would return the 
@@ -158,9 +158,13 @@ Property definitions can be either read from YAML files (as a kind of _meta-conf
 created programmatically, using any of the existing methods starting with `according...` . Notice that
 the definition is always applied to a `Configuration` object.
 
-Once a configuration has a definition applied, its existing properties must abide by the definition. 
-Trying to retrieve a property with an illegal value, or a required property without value, would result 
-in an exception. 
+Once a configuration has one or more definitions applied, you can validate it using 
+the method `validate()`. If there are invalid property values itt would throw an 
+`InvalidConfigException`, along with a descriptive message informing of every 
+invalid value. You can also get the list of violations calling the method `validations()`.
+
+Notice that you can retrieve invalid values normally using the `get()` and `getList()` 
+methods.
 
 #### Loading property definitions from external file
 
@@ -268,6 +272,7 @@ Requirements
 
 License
 -----------------------------------------------------------------------------------------
+```
 MIT License
 
 Copyright (c) 2020 Luis Iñesta Gelabert - luiinge@gmail.com
@@ -289,7 +294,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
+```
 
 
 References
