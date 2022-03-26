@@ -8,17 +8,17 @@ public final class PropertyTypeFactory {
 
     public PropertyType create(String type, Map<String, Object> arguments) {
         if (type == null) {
-            throw new ConfigurationException("type must be defined");
+            throw new ConfigException("type must be defined");
         }
         if (arguments == null) {
             arguments = Map.of();
         }
         try {
             return createrPropertyType(type, arguments);
-        } catch (ConfigurationException e)  {
+        } catch (ConfigException e)  {
             throw e;
         } catch (RuntimeException e)  {
-            throw new ConfigurationException("Bad property definition",e);
+            throw new ConfigException("Bad property definition",e);
         }
     }
 
@@ -46,7 +46,7 @@ public final class PropertyTypeFactory {
         if ("boolean".equals(type)) {
             return new BooleanPropertyType();
         }
-        throw new ConfigurationException(
+        throw new ConfigException(
             "Undefined property type: "+ type +
             " . Accepted values are: text, integer, decimal, enum"
         );

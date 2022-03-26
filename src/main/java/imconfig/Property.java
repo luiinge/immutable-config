@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * Pair of [key,value] used in {@link AnnotatedConfiguration#value()}
+ * Pair of [key,value] used in {@link AnnotatedConfig#value()}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })

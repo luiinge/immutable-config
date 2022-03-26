@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig</a> &gt; <span class="el_source">ConfigFactory.java</span></div><h1>ConfigFactory.java</h1><pre class="source lang-java linenums">/*
+ * @author Luis Iñesta Gelabert - linesta@iti.es | luiinge@gmail.com
+ */
+package imconfig;
+
+
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ServiceLoader;
+
+
+/**
+ *  A configuration factory is responsible of creating new instances of
+ * {@link Config} via multiple alternative sources such as URI,
+ * classpath resources, maps, and properties objects. Any new configuration
+ * object should be created using a factory.
+ * &lt;p&gt;
+ *  On building a configuration from a external resource, the builder would
+ *  autodetect the resource type (usually looking at its file extension) and
+ *  treat the content properly, accepting multiple formats as JSON, YAML, XML,
+ *  and .properties files.
+ */
+
+public interface ConfigFactory {
+
+    /**
+     * @return A new configuration factory
+     */
+    static ConfigFactory instance() {
+        try {
+<span class="fc" id="L36">            return ServiceLoader.load(ConfigFactory.class).stream()</span>
+<span class="fc" id="L37">                .findFirst()</span>
+<span class="fc" id="L38">                .orElseThrow()</span>
+<span class="fc" id="L39">                .type()</span>
+<span class="fc" id="L40">                .getConstructor()</span>
+<span class="fc" id="L41">                .newInstance();</span>
+<span class="nc" id="L42">        } catch (ReflectiveOperationException e) {</span>
+<span class="nc" id="L43">            throw new ConfigException(e);</span>
+        }
+    }
+
+
+    /**
+     * Create a new configuration composed of two other configurations. When the same
+     * property is present in two or more configurations, the value from the
+     * delta configuration will prevail (except when it has an empty value)
+     */
+    Config merge(Config base, Config delta);
+
+
+    /**
+     * Create a new empty configuration
+     */
+    Config empty();
+
+
+    /**
+     * Create a new configuration from a class annotated with
+     * {@link AnnotatedConfig}
+     *
+     * @param configuredClass Class annotated with {@link AnnotatedConfig}
+     * @throws ConfigException if the configuration was not loaded
+     */
+    Config fromAnnotation(Class&lt;?&gt; configuredClass);
+
+
+    /**
+     * Create a new configuration from a {@link AnnotatedConfig} annotation
+     *
+     * @throws ConfigException if the configuration was not loaded
+     */
+    Config fromAnnotation(AnnotatedConfig annotation);
+
+
+    /**
+     * Create a new configuration from the OS environment properties
+     */
+    Config fromEnvironment();
+
+
+    /**
+     * Create a new configuration from the {@link System} properties
+     */
+    Config fromSystem();
+
+
+    /**
+     * Create a new configuration from the resource of the specified path
+     *
+     * @throws ConfigException if the configuration was not loaded
+     */
+    Config fromPath(Path path, Charset charset);
+
+
+
+    /**
+     * Create a new configuration from the specified URI.
+     *
+     * @throws ConfigException if the configuration was not loaded
+     */
+    Config fromURI(URI uri, Charset charset);
+
+
+    /**
+     * Create a new configuration from the specified classpath resource.
+     *
+     * @throws ConfigException if the configuration was not loaded
+     */
+    Config fromResource(String resource, Charset charset, ClassLoader classLoader);
+
+
+
+    /**
+     * Create a new configuration from a {@link Properties} object
+     */
+    Config fromProperties(Properties properties);
+
+
+    /**
+     * Create a new configuration from a {@link Map} object
+     */
+    Config fromMap(Map&lt;String, String&gt; propertyMap);
+
+
+
+    /**
+     * Create a new configuration from directly passed strings, using each two entries as a pair of
+     * &lt;tt&gt;key,value&lt;/tt&gt;.
+     * @throws IllegalArgumentException if the number of strings is not even
+     */
+    default Config fromPairs(String... pairs) {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (pairs.length % 2 == 1) {</span>
+<span class="nc" id="L138">            throw new IllegalArgumentException(&quot;Number of arguments must be even&quot;);</span>
+        }
+<span class="fc" id="L140">        Map&lt;String,String&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (int i=0;i&lt;pairs.length;i+=2) {</span>
+<span class="fc" id="L142">            map.put(pairs[i],pairs[i+1]);</span>
+        }
+<span class="fc" id="L144">        return fromMap(map);</span>
+    }
+
+
+
+    /**
+     * Create a new empty configuration according the given property definitions
+     * &lt;p&gt;
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Config accordingDefinitions(Collection&lt;PropertyDefinition&gt; definitions);
+
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given path.
+     * &lt;p&gt;
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Config accordingDefinitionsFromPath(Path path, Charset charset);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given URI.
+     * &lt;p&gt;
+     * You can use the schema &lt;pre&gt;classpath:&lt;/pre&gt; to reference classpath resources.
+     * &lt;p&gt;
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Config accordingDefinitionsFromURI(URI uri, Charset charset);
+
+
+    /**
+     * Create a new empty configuration according the property definitions from the given
+     * classpath resource.
+     * &lt;p&gt;
+     * Defined properties will be set to their default value if it exists
+     * @see PropertyDefinition
+     */
+    Config accordingDefinitionsFromResource(String resource, Charset charset, ClassLoader classLoader);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

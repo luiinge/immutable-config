@@ -1,3 +1,4 @@
+import imconfig.ConfigFactory;
 
 /**
  This module provides a simple interface in order to load and consume configurations,
@@ -11,12 +12,15 @@ module imconfig {
 
     exports imconfig;
 
-    requires org.apache.commons.configuration2;
-    requires org.yaml.snakeyaml;
     requires org.slf4j;
-    requires org.apache.commons.lang3;
 
-    uses imconfig.ConfigurationFactory;
+    requires static com.fasterxml.jackson.core;
+    requires static com.fasterxml.jackson.databind;
+    requires static com.fasterxml.jackson.dataformat.xml;
+    requires static com.fasterxml.jackson.dataformat.yaml;
+    requires static com.fasterxml.jackson.dataformat.toml;
 
-    provides imconfig.ConfigurationFactory with imconfig.internal.ApacheConfiguration2Factory;
+    uses ConfigFactory;
+
+    provides ConfigFactory with imconfig.internal.MapBasedConfigurationFactory;
 }

@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"m":"imconfig","l":"imconfig"},{"m":"imconfig","l":"imconfig.types"}]

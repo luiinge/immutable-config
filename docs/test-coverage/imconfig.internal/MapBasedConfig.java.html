@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MapBasedConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.internal</a> &gt; <span class="el_source">MapBasedConfig.java</span></div><h1>MapBasedConfig.java</h1><pre class="source lang-java linenums">package imconfig.internal;
+
+import imconfig.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+
+@SuppressWarnings(&quot;unchecked&quot;)
+public class MapBasedConfig extends AbstractConfig {
+
+    private final Map&lt;String,?&gt; values;
+
+    MapBasedConfig(
+        ConfigFactory builder,
+        Map&lt;String,?&gt; values,
+        Map&lt;String,PropertyDefinition&gt; definitions
+    ) {
+<span class="fc" id="L18">        super(builder, definitions);</span>
+<span class="fc" id="L19">        this.values = Map.copyOf(values);</span>
+<span class="fc" id="L20">    }</span>
+
+    MapBasedConfig(
+        ConfigFactory builder,
+        Map&lt;String,?&gt; values,
+        Collection&lt;PropertyDefinition&gt; definitions
+    ) {
+<span class="fc" id="L27">        this(builder,values,asMap(definitions));</span>
+<span class="fc" id="L28">    }</span>
+
+
+    @Override
+    public Config filtered(Predicate&lt;String&gt; filter) {
+<span class="fc" id="L33">        var newValues = values.entrySet().stream()</span>
+<span class="fc" id="L34">            .filter(it -&gt; filter.test(it.getKey()))</span>
+<span class="fc" id="L35">            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="fc" id="L36">        return new MapBasedConfig(builder, newValues, definitions);</span>
+    }
+
+
+    @Override
+    public Config alteringKeys(UnaryOperator&lt;String&gt; alterOperation) {
+<span class="nc" id="L42">        var newValues = values.entrySet().stream()</span>
+<span class="nc" id="L43">            .map(it -&gt; Map.entry(alterOperation.apply(it.getKey()), it.getValue()))</span>
+<span class="nc" id="L44">            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="nc" id="L45">        return new MapBasedConfig(builder, newValues, definitions);</span>
+    }
+
+
+    @Override
+    public Config prefixing(String keyPrefix) {
+<span class="fc" id="L51">        var newValues = values.entrySet().stream()</span>
+<span class="fc" id="L52">            .map(it -&gt; Map.entry(keyPrefix+&quot;.&quot;+it.getKey(), it.getValue()))</span>
+<span class="fc" id="L53">            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));</span>
+<span class="fc" id="L54">        return new MapBasedConfig(builder, newValues, definitions);</span>
+    }
+
+
+    @Override
+    public Config inner(String keyPrefix) {
+<span class="nc" id="L60">        return this</span>
+<span class="nc" id="L61">            .filtered(it -&gt; it.startsWith(keyPrefix+&quot;.&quot;))</span>
+<span class="nc" id="L62">            .alteringKeys(it -&gt; it.substring(it.indexOf(keyPrefix+&quot;.&quot;)+keyPrefix.length()+1));</span>
+    }
+
+
+    @Override
+    public boolean isEmpty() {
+<span class="nc" id="L68">        return values.isEmpty();</span>
+    }
+
+
+    @Override
+    public boolean hasProperty(String key) {
+<span class="fc" id="L74">        return values.containsKey(key);</span>
+    }
+
+
+    @Override
+    public boolean hasMultivaluedProperty(String key) {
+<span class="fc" id="L80">        return values.get(key) instanceof List;</span>
+    }
+
+
+    @Override
+    public Iterable&lt;String&gt; keys() {
+<span class="fc" id="L86">        return List.copyOf(values.keySet());</span>
+    }
+
+
+    @Override
+    public Iterator&lt;String&gt; keyIterator() {
+<span class="nc" id="L92">        return values.keySet().iterator();</span>
+    }
+
+
+    @Override
+    public Stream&lt;String&gt; keyStream() {
+<span class="fc" id="L98">        return values.keySet().stream();</span>
+    }
+
+
+    @Override
+    public Optional&lt;String&gt; get(String key) {
+<span class="fc" id="L104">        Object value = values.get(key);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L106">            return Optional.empty();</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="nc" id="L108">            return ((List&lt;?&gt;)value).stream().findFirst().map(String::valueOf);</span>
+        } else {
+<span class="fc" id="L110">            return Optional.of((String)value);</span>
+        }
+    }
+
+
+    @Override
+    public String get(String key, String fallback) {
+<span class="nc" id="L117">        return get(key).orElse(fallback);</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; Optional&lt;T&gt; get(String key, Function&lt;String,T&gt; mapper) {
+<span class="fc" id="L123">        return get(key).map(mapper);</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; T get(String key, Function&lt;String, T&gt; mapper, T fallback) {
+<span class="nc" id="L129">        return get(key, mapper).orElse(fallback);</span>
+    }
+
+
+    @Override
+    public List&lt;String&gt; getList(String key) {
+<span class="fc" id="L135">        Object value = values.get(key);</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L137">            return List.of();</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L139">            return (List&lt;String&gt;) value;</span>
+        } else {
+<span class="fc" id="L141">            return List.of((String)value);</span>
+        }
+    }
+
+
+    @Override
+    public &lt;T&gt; List&lt;T&gt; getList(String key, Function&lt;String, T&gt; mapper) {
+<span class="fc" id="L148">        return getStream(key).map(mapper).collect(Collectors.toUnmodifiableList());</span>
+    }
+
+
+    @Override
+    public Set&lt;String&gt; getSet(String key) {
+<span class="nc" id="L154">        return Set.copyOf(getList(key));</span>
+    }
+
+
+    @Override
+    public &lt;T&gt; Set&lt;T&gt; getSet(String key, Function&lt;String, T&gt; mapper) {
+<span class="nc" id="L160">        return getStream(key).map(mapper).collect(Collectors.toUnmodifiableSet());</span>
+    }
+
+    @Override
+    public Stream&lt;String&gt; getStream(String key) {
+<span class="fc" id="L165">        Object value = values.get(key);</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (value == null) {</span>
+<span class="nc" id="L167">            return Stream.empty();</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        } else if (value instanceof List) {</span>
+<span class="fc" id="L169">            return ((List&lt;?&gt;)value).stream().map(String::valueOf);</span>
+        } else {
+<span class="nc" id="L171">            return Stream.of((String)value);</span>
+        }
+    }
+
+
+    @Override
+    public Properties asProperties() {
+<span class="fc" id="L178">        Properties properties = new Properties();</span>
+<span class="fc" id="L179">        values.forEach((key,value)-&gt; {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">            if (value instanceof List) {</span>
+<span class="nc" id="L181">                properties.setProperty(key, String.join(&quot;,&quot;, (List&lt;String&gt;)value));</span>
+            } else {
+<span class="fc" id="L183">                properties.setProperty(key, (String) value);</span>
+            }
+<span class="fc" id="L185">        });</span>
+<span class="fc" id="L186">        return properties;</span>
+    }
+
+
+    @Override
+    public Map&lt;String, String&gt; asMap() {
+<span class="fc" id="L192">        Map&lt;String,String&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L193">        values.forEach((key,value)-&gt; {</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">            if (value instanceof List) {</span>
+<span class="nc" id="L195">                map.put(key, String.join(&quot;,&quot;, (List&lt;String&gt;)value));</span>
+            } else {
+<span class="fc" id="L197">                map.put(key, (String) value);</span>
+            }
+<span class="fc" id="L199">        });</span>
+<span class="fc" id="L200">        return map;</span>
+    }
+
+
+    @Override
+    public String toString() {
+<span class="fc" id="L206">        StringBuilder string = new StringBuilder();</span>
+<span class="fc" id="L207">        values.keySet().stream().sorted().forEach(key -&gt; {</span>
+<span class="fc" id="L208">            Object value = values.get(key);</span>
+<span class="fc" id="L209">            string.append(key).append(&quot; : &quot;);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            if (value instanceof List) {</span>
+<span class="fc" id="L211">                string.append(&quot;\n&quot;);</span>
+<span class="fc" id="L212">                ((List&lt;?&gt;)value).forEach(item -&gt; string.append(&quot;  - &quot;).append(item).append(&quot;\n&quot;));</span>
+            } else {
+<span class="fc" id="L214">                string.append(value).append(&quot;\n&quot;);</span>
+            }
+<span class="fc" id="L216">        });</span>
+<span class="fc" id="L217">        return string.toString();</span>
+    }
+
+
+
+
+    private static Map&lt;String,PropertyDefinition&gt; asMap(Collection&lt;PropertyDefinition&gt; definitions) {
+<span class="fc" id="L224">        return definitions.stream().collect(Collectors.toMap(</span>
+            PropertyDefinition::property,
+<span class="fc" id="L226">            Function.identity(),</span>
+<span class="nc" id="L227">            (a,b)-&gt;b,</span>
+            LinkedHashMap::new
+        ));
+    }
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

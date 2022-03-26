@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IntegerPropertyType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Immutable Configurations</a> &gt; <a href="index.source.html" class="el_package">imconfig.types</a> &gt; <span class="el_source">IntegerPropertyType.java</span></div><h1>IntegerPropertyType.java</h1><pre class="source lang-java linenums">package imconfig.types;
+
+import imconfig.PropertyType;
+
+public class IntegerPropertyType implements PropertyType {
+
+    private final Long min;
+    private final Long max;
+
+<span class="fc" id="L10">    public IntegerPropertyType(Number min, Number max) {</span>
+<span class="fc bfc" id="L11" title="All 2 branches covered.">        this.min = (min == null ? null : min.longValue());</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">        this.max = (max == null ? null : max.longValue());</span>
+<span class="pc bpc" id="L13" title="1 of 6 branches missed.">        if (this.min != null &amp;&amp; this.max != null &amp;&amp; this.min &gt; this.max) {</span>
+<span class="fc" id="L14">            throw new IllegalArgumentException(&quot;Minimum value cannot be greater than maximum value&quot;);</span>
+        }
+<span class="fc" id="L16">    }</span>
+
+    @Override
+    public String name() {
+<span class="fc" id="L20">        return &quot;integer&quot;;</span>
+    }
+
+    @Override
+    public String hint() {
+        String hint;
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (min==null &amp;&amp; max==null) {</span>
+<span class="fc" id="L27">            hint = &quot;Any integer number&quot;;</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        } else if (min==null) {</span>
+<span class="nc" id="L29">            hint = &quot;Integer number less than &quot;+max;</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        } else if (max==null) {</span>
+<span class="nc" id="L31">            hint = &quot;Integer number greater than &quot;+min;</span>
+        } else {
+<span class="fc" id="L33">            hint = &quot;Integer number between &quot;+min+&quot; and &quot;+max;</span>
+        }
+<span class="fc" id="L35">        return hint;</span>
+    }
+
+
+    @Override
+    public boolean accepts(String value) {
+<span class="fc" id="L41">        boolean accepted = true;</span>
+        try {
+<span class="fc" id="L43">            Long parsedValue = Long.valueOf(value);</span>
+<span class="fc bfc" id="L44" title="All 4 branches covered.">            if (min != null &amp;&amp; parsedValue.compareTo(min) &lt; 0) {</span>
+<span class="fc" id="L45">                accepted = false;</span>
+            }
+<span class="fc bfc" id="L47" title="All 4 branches covered.">            if (max != null &amp;&amp; parsedValue.compareTo(max) &gt; 0) {</span>
+<span class="fc" id="L48">                accepted = false;</span>
+            }
+<span class="fc" id="L50">            return accepted;</span>
+<span class="fc" id="L51">        } catch (NumberFormatException e) {</span>
+<span class="fc" id="L52">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

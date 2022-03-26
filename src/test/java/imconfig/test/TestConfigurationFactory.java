@@ -4,6 +4,8 @@
 package imconfig.test;
 
 
+import imconfig.*;
+import java.nio.charset.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -17,17 +19,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
-import imconfig.AnnotatedConfiguration;
-import imconfig.Configuration;
-import imconfig.ConfigurationFactory;
-import imconfig.ConfigurationException;
-import imconfig.Property;
+import imconfig.AnnotatedConfig;
+
 
 
 public class TestConfigurationFactory {
 
     private static final ClassLoader CLASS_LOADER = TestConfigurationFactory.class.getClassLoader();
-
+    public static final Charset UTF8 = StandardCharsets.UTF_8;
+    
     private static final String KEY_ENV = "test.env.key";
     private static final String VAL_ENV = "Test Environment Value";
 
@@ -84,11 +84,11 @@ public class TestConfigurationFactory {
     @Rule
     public final EnvironmentVariables env = new EnvironmentVariables();
 
-    private ConfigurationFactory factory;
+    private ConfigFactory factory;
 
 
 
-    @AnnotatedConfiguration({
+    @AnnotatedConfig({
         @Property(key = KEY_ENV, value = VAL_ENV),
         @Property(key = KEY_STRING, value = VAL_STRING),
         @Property(key = KEY_STRINGS, value = { VAL_STRINGS_1, VAL_STRINGS_2 }),
@@ -126,52 +126,60 @@ public class TestConfigurationFactory {
 
     @Before
     public void prepare() {
-        factory = ConfigurationFactory.instance().multivalueSeparator(',');
+        factory = ConfigFactory.instance();
         env.set(KEY_ENV, VAL_ENV);
     }
 
 
     @Test
     public void createConfigurationFromEnvironmentProperties() {
-        Configuration conf = factory.fromEnvironment();
+        Config conf = factory.fromEnvironment();
         assertEnvironmentPropertiesExist(conf);
     }
+
+
 
 
     @Test
     public void createConfigurationFromYAMLFile() {
-        Configuration conf = factory.fromResource("test-conf.yaml", CLASS_LOADER);
-        assertExpectedPropertiesExist(conf);
-
-    }
-
-
-    @Test
-    public void createConfigurationFromPropertiesFile() throws ConfigurationException {
-        Configuration conf = factory.fromResource("test-conf.properties", CLASS_LOADER);
+        Config conf = factory.fromResource("test-conf.yaml", UTF8, CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void createConfigurationFromJSONFile() throws ConfigurationException {
-        Configuration conf = factory.fromResource("test-conf.json", CLASS_LOADER);
+    public void createConfigurationFromPropertiesFile() throws ConfigException {
+        Config conf = factory.fromResource("test-conf.properties", UTF8, CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void createConfigurationFromXMLFile() throws ConfigurationException {
-        Configuration conf = factory.fromResource("test-conf.xml", CLASS_LOADER);
+    public void createConfigurationFromJSONFile() throws ConfigException {
+        Config conf = factory.fromResource("test-conf.json", UTF8, CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
-    public void appendEnvironmentConfigurationWithPropertiesFile() throws ConfigurationException {
-        Configuration conf = Configuration.factory().multivalueSeparator(',')
-            .fromEnvironment()
-            .appendFromResource("test-conf.properties", CLASS_LOADER);
+    public void createConfigurationFromXMLFile() throws ConfigException {
+        Config conf = factory.fromResource("test-conf.xml", UTF8, CLASS_LOADER);
+        assertExpectedPropertiesExist(conf);
+    }
+
+
+    @Test
+    public void createConfigurationFromTOMLFile() throws ConfigException {
+        Config conf = factory.fromResource("test-conf.toml", UTF8, CLASS_LOADER);
+        assertExpectedPropertiesExist(conf);
+    }
+
+
+    @Test
+    public void appendEnvironmentConfigurationWithPropertiesFile() throws ConfigException {
+        ConfigFactory fact = Config.factory();
+        Config conf = fact.fromEnvironment()
+            .append(fact.fromResource("test-conf.properties", UTF8, CLASS_LOADER));
         assertExpectedPropertiesExist(conf);
         assertEnvironmentPropertiesExist(conf);
     }
@@ -179,76 +187,96 @@ public class TestConfigurationFactory {
 
 
     @Test
-    public void createConfigurationFromAnnotatedClass() throws ConfigurationException {
-        Configuration conf = factory.fromAnnotation(ConfAnnotatedProps.class);
+    public void createConfigurationFromAnnotatedClass() throws ConfigException {
+        Config conf = factory.fromAnnotation(ConfAnnotatedProps.class);
         assertExpectedPropertiesExist(conf);
     }
 
 
     @Test
     public void appendProperty() {
-        Configuration conf = factory
+        Config conf = factory
             .fromAnnotation(ConfAnnotatedProps.class)
-            .appendProperty("appended.property", "appendedValue");
+            .append(factory.fromPairs("appended.property", "appendedValue"));
         assertExpectedPropertiesExist(conf);
-        assertThat(conf.get("appended.property", String.class)).contains("appendedValue");
+        assertThat(conf.get("appended.property")).contains("appendedValue");
     }
 
 
-    @Test(expected = ConfigurationException.class)
-    public void cannotCreateConfigurationFromMalformedFile() throws ConfigurationException {
-        factory.fromResource("malformed-conf.xml", CLASS_LOADER);
+    @Test(expected = ConfigException.class)
+    public void cannotCreateConfigurationFromMalformedFile() throws ConfigException {
+        factory.fromResource("malformed-conf.xml", UTF8, CLASS_LOADER);
     }
 
 
-    @Test(expected = ConfigurationException.class)
-    public void cannotCreateConfigurationFromFileWithUnrecognizedFormat() throws ConfigurationException {
-        factory.fromResource("unrecognized-format.xyq", CLASS_LOADER);
+    @Test(expected = ConfigException.class)
+    public void cannotCreateConfigurationFromFileWithUnrecognizedFormat() throws ConfigException {
+        factory.fromResource("unrecognized-format.xyq", UTF8, CLASS_LOADER);
     }
 
 
-    @Test(expected = ConfigurationException.class)
-    public void cannotCreateConfigurationFromNonExistingFile() throws ConfigurationException {
-        factory.fromResource("unexisting-file", CLASS_LOADER);
+    @Test(expected = ConfigException.class)
+    public void cannotCreateConfigurationFromNonExistingFile() throws ConfigException {
+        factory.fromResource("unexisting-file", UTF8, CLASS_LOADER);
     }
 
 
     @Test
-    public void invokingToStringReturnsEveryValuedProperty() throws ConfigurationException {
-        Assertions.assertThat(factory.fromAnnotation(ConfAnnotatedProps.class))
+    public void invokingToStringReturnsEveryValuedProperty() throws ConfigException {
+        Assertions.assertThat(factory.fromAnnotation(ConfAnnotatedProps.class).toString())
             .hasToString(
-                "configuration:\n" +
-                "---------------\n" +
-                "test.env.key : Test Environment Value\n" +
-                "properties.test.key.string : Properties Test String Value\n" +
-                "properties.test.key.strings : [Properties Array Value 1, Properties Array Value 2]\n" +
-                "properties.test.key.bool : true\n" +
-                "properties.test.key.bools : [true, false, true]\n" +
-                "properties.test.key.integer : 77\n" +
-                "properties.test.key.integers : [77, 79, 83]\n" +
-                "properties.test.key.long : 54353\n" +
-                "properties.test.key.longs : [54353, 65256, 98432]\n" +
-                "properties.test.key.float : 6.98\n" +
-                "properties.test.key.floats : [6.98, 2.23, 1.24]\n" +
-                "properties.test.key.double : 3.45\n" +
-                "properties.test.key.doubles : [3.45, 6.76, 9.32]\n" +
                 "properties.test.key.bigdecimal : 755.87\n" +
-                "properties.test.key.bigdecimals : [755.87, 876.43, 908.32]\n" +
+                "properties.test.key.bigdecimals : \n" +
+                "  - 755.87\n" +
+                "  - 876.43\n" +
+                "  - 908.32\n" +
                 "properties.test.key.biginteger : 123456789\n" +
-                "properties.test.key.bigintegers : [123456789, 543987532, 549874348]\n" +
+                "properties.test.key.bigintegers : \n" +
+                "  - 123456789\n" +
+                "  - 543987532\n" +
+                "  - 549874348\n" +
+                "properties.test.key.bool : true\n" +
+                "properties.test.key.bools : \n" +
+                "  - true\n" +
+                "  - false\n" +
+                "  - true\n" +
+                "properties.test.key.double : 3.45\n" +
+                "properties.test.key.doubles : \n" +
+                "  - 3.45\n" +
+                "  - 6.76\n" +
+                "  - 9.32\n" +
+                "properties.test.key.float : 6.98\n" +
+                "properties.test.key.floats : \n" +
+                "  - 6.98\n" +
+                "  - 2.23\n" +
+                "  - 1.24\n" +
+                "properties.test.key.integer : 77\n" +
+                "properties.test.key.integers : \n" +
+                "  - 77\n" +
+                "  - 79\n" +
+                "  - 83\n" +
+                "properties.test.key.long : 54353\n" +
+                "properties.test.key.longs : \n" +
+                "  - 54353\n" +
+                "  - 65256\n" +
+                "  - 98432\n" +
+                "properties.test.key.string : Properties Test String Value\n" +
+                "properties.test.key.strings : \n" +
+                "  - Properties Array Value 1\n" +
+                "  - Properties Array Value 2\n" +
                 "properties2.test2.key.string : Properties Test String Value\n" +
-                "---------------"
+                "test.env.key : Test Environment Value\n"
             );
     }
 
 
     @Test
-    public void testFilter() throws ConfigurationException {
-        Configuration conf = factory
+    public void testFilter() throws ConfigException {
+        Config conf = factory
             .fromAnnotation(ConfAnnotatedProps.class)
-            .filtered("properties2");
-        assertThat(conf.get("properties.test.key.string", String.class)).isEmpty();
-        assertThat(conf.get("properties2.test2.key.string", String.class)).contains(VAL_STRING);
+            .filtered(it -> it.startsWith("properties2"));
+        assertThat(conf.get("properties.test.key.string")).isEmpty();
+        assertThat(conf.get("properties2.test2.key.string")).contains(VAL_STRING);
     }
 
 
@@ -264,19 +292,19 @@ public class TestConfigurationFactory {
         map2.put("property.c", "c");
         map2.put("property.d", "");
 
-        Configuration conf1 = factory.fromMap(map1).appendFromMap(map2);
-        assertThat(conf1.get("property.a", String.class)).contains("aa");
-        assertThat(conf1.get("property.b", String.class)).contains("b");
-        assertThat(conf1.get("property.c", String.class)).contains("c");
-        assertThat(conf1.get("property.d", String.class)).contains("d");
-        assertThat(conf1.getList("property.a", String.class)).hasSize(1);
+        Config conf1 = factory.fromMap(map1).append(factory.fromMap(map2));
+        assertThat(conf1.get("property.a")).contains("aa");
+        assertThat(conf1.get("property.b")).contains("b");
+        assertThat(conf1.get("property.c")).contains("c");
+        assertThat(conf1.get("property.d")).isNotEmpty();
+        assertThat(conf1.getList("property.a")).hasSize(1);
 
-        Configuration conf2 = factory.fromMap(map2).appendFromMap(map1);
-        assertThat(conf2.get("property.a", String.class)).contains("a");
-        assertThat(conf2.get("property.b", String.class)).contains("b");
-        assertThat(conf2.get("property.c", String.class)).contains("c");
-        assertThat(conf1.get("property.d", String.class)).contains("d");
-        assertThat(conf2.getList("property.a", String.class)).hasSize(1);
+        Config conf2 = factory.fromMap(map2).append(factory.fromMap(map1));
+        assertThat(conf2.get("property.a")).contains("a");
+        assertThat(conf2.get("property.b")).contains("b");
+        assertThat(conf2.get("property.c")).contains("");
+        assertThat(conf1.get("property.d")).contains("");
+        assertThat(conf2.getList("property.a")).hasSize(1);
 
     }
 
@@ -293,9 +321,9 @@ public class TestConfigurationFactory {
         assertThat(conf.hasProperty("property.a")).isTrue();
         assertThat(conf.hasProperty("property.b")).isTrue();
         assertThat(conf.hasProperty("property.c")).isTrue();
-        assertThat(conf.get("property.a", String.class)).isEmpty();
-        assertThat(conf.get("property.b", Integer.class)).isEmpty();
-        assertThat(conf.get("property.c", String.class)).isNotEmpty();
+        assertThat(conf.get("property.a")).isNotEmpty();
+        assertThat(conf.get("property.b")).contains("");
+        assertThat(conf.get("property.c")).isNotEmpty();
     }
 
 
@@ -311,9 +339,9 @@ public class TestConfigurationFactory {
         assertThat(conf.hasProperty("property.a")).isTrue();
         assertThat(conf.hasProperty("property.b")).isTrue();
         assertThat(conf.hasProperty("property.c")).isTrue();
-        assertThat(conf.getList("property.a", String.class)).isEmpty();
-        assertThat(conf.getList("property.b", Integer.class)).isEmpty();
-        assertThat(conf.getList("property.c",String.class)).isNotEmpty();
+        assertThat(conf.getList("property.a")).isNotEmpty();
+        assertThat(conf.getList("property.b")).isNotEmpty();
+        assertThat(conf.getList("property.c")).isNotEmpty();
     }
 
 
@@ -324,14 +352,12 @@ public class TestConfigurationFactory {
             "property.a", "",
             "property.b", "",
             "property.c", "c"
-        ).withPrefix("prefix");
+        ).prefixing("prefix");
         assertThat(conf.keys()).contains("prefix.property.a","prefix.property.b","prefix.property.c");
         assertThat(conf.hasProperty("prefix.property.a")).isTrue();
         assertThat(conf.hasProperty("prefix.property.b")).isTrue();
         assertThat(conf.hasProperty("prefix.property.c")).isTrue();
-        assertThat(conf.get("prefix.property.a", String.class)).isEmpty();
-        assertThat(conf.get("prefix.property.a", Integer.class)).isEmpty();
-        assertThat(conf.getList("prefix.property.b",String.class)).isEmpty();
+        assertThat(conf.getList("prefix.property.b")).isNotEmpty();
     }
 
 
@@ -366,41 +392,41 @@ public class TestConfigurationFactory {
 
 
 
-    private void assertExpectedPropertiesExist(Configuration conf) {
+    private void assertExpectedPropertiesExist(Config conf) {
 
         System.out.println(conf);
 
-        Assertions.assertThat(conf.get(KEY_STRING, String.class).get()).contains(VAL_STRING);
-        Assertions.assertThat(conf.getList(KEY_STRINGS, String.class)).containsExactlyInAnyOrder(
+        Assertions.assertThat(conf.get(KEY_STRING)).contains(VAL_STRING);
+        Assertions.assertThat(conf.getList(KEY_STRINGS)).containsExactlyInAnyOrder(
             VAL_STRINGS_1,
             VAL_STRINGS_2
         );
-        Assertions.assertThat(conf.get(KEY_BOOL, Boolean.class)).contains(true);
-        Assertions.assertThat(conf.getList(KEY_BOOLS, Boolean.class))
+        Assertions.assertThat(conf.get(KEY_BOOL).map(Boolean::valueOf)).contains(true);
+        Assertions.assertThat(conf.getList(KEY_BOOLS, Boolean::valueOf))
             .containsExactlyInAnyOrder(true, false, true);
-        Assertions.assertThat(conf.get(KEY_INTEGER, Integer.class)).contains(77);
-        Assertions.assertThat(conf.getList(KEY_INTEGERS, Integer.class))
+        Assertions.assertThat(conf.get(KEY_INTEGER,Integer::valueOf)).contains(77);
+        Assertions.assertThat(conf.getList(KEY_INTEGERS, Integer::valueOf))
             .containsExactlyInAnyOrder(77, 79, 83);
-        Assertions.assertThat(conf.get(KEY_LONG, Long.class)).contains(54353L);
-        Assertions.assertThat(conf.getList(KEY_LONGS, Long.class))
+        Assertions.assertThat(conf.get(KEY_LONG,Long::valueOf)).contains(54353L);
+        Assertions.assertThat(conf.getList(KEY_LONGS, Long::valueOf))
             .containsExactlyInAnyOrder(54353L, 65256L, 98432L);
-        Assertions.assertThat(conf.get(KEY_DOUBLE, Double.class)).contains(3.45);
-        Assertions.assertThat(conf.getList(KEY_DOUBLES, Double.class))
+        Assertions.assertThat(conf.get(KEY_DOUBLE, Double::valueOf)).contains(3.45);
+        Assertions.assertThat(conf.getList(KEY_DOUBLES, Double::valueOf))
             .containsExactlyInAnyOrder(3.45, 6.76, 9.32);
-        Assertions.assertThat(conf.get(KEY_FLOAT, Float.class)).contains(6.98f);
-        Assertions.assertThat(conf.getList(KEY_FLOATS, Float.class))
+        Assertions.assertThat(conf.get(KEY_FLOAT, Float::valueOf)).contains(6.98f);
+        Assertions.assertThat(conf.getList(KEY_FLOATS, Float::valueOf))
             .containsExactlyInAnyOrder(6.98f, 2.23f, 1.24f);
-        Assertions.assertThat(conf.get(KEY_BIGDECIMAL, BigDecimal.class).get())
+        Assertions.assertThat(conf.get(KEY_BIGDECIMAL, BigDecimal::new).get())
             .isEqualByComparingTo(new BigDecimal(VAL_BIGDECIMAL));
-        Assertions.assertThat(conf.getList(KEY_BIGDECIMALS, BigDecimal.class))
+        Assertions.assertThat(conf.getList(KEY_BIGDECIMALS, BigDecimal::new))
             .containsExactlyInAnyOrder(
                 new BigDecimal(VAL_BIGDECIMALS_1),
                 new BigDecimal(VAL_BIGDECIMALS_2),
                 new BigDecimal(VAL_BIGDECIMALS_3)
             );
-        Assertions.assertThat(conf.get(KEY_BIGINTEGER, BigInteger.class).get())
+        Assertions.assertThat(conf.get(KEY_BIGINTEGER, BigInteger::new).get())
             .isEqualByComparingTo(new BigInteger(VAL_BIGINTEGER));
-        Assertions.assertThat(conf.getList(KEY_BIGINTEGERS, BigInteger.class))
+        Assertions.assertThat(conf.getList(KEY_BIGINTEGERS, BigInteger::new))
             .containsExactlyInAnyOrder(
                 new BigInteger(VAL_BIGINTEGERS_1),
                 new BigInteger(VAL_BIGINTEGERS_2),
@@ -411,15 +437,15 @@ public class TestConfigurationFactory {
     }
 
 
-    private void assertNullProperties(Configuration conf) {
+    private void assertNullProperties(Config conf) {
         String nonExistingKey = "xxx";
-        Assertions.assertThat(conf.get(nonExistingKey, String.class)).isEmpty();
-        Assertions.assertThat(conf.getList(nonExistingKey, String.class)).isEmpty();
+        Assertions.assertThat(conf.get(nonExistingKey)).isEmpty();
+        Assertions.assertThat(conf.getList(nonExistingKey)).isEmpty();
     }
 
 
-    private void assertEnvironmentPropertiesExist(Configuration conf) {
-        Assertions.assertThat(conf.get(KEY_ENV, String.class)).contains(VAL_ENV);
+    private void assertEnvironmentPropertiesExist(Config conf) {
+        Assertions.assertThat(conf.get(KEY_ENV)).contains(VAL_ENV);
     }
 
 }

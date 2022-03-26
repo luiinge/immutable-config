@@ -22,7 +22,7 @@ This library provides a simple interface in order to load and consume *configura
 which are mainly a set of valued properties that can be parsed to specific Java types.
 The primary focus of the library is **null-safety**, **immutability**, and **fluency**.
 
-The `Configuration` class is immutable in order to ensure the values are not modified
+The `Config` class is immutable in order to ensure the values are not modified
 by any process, but it can build derived configurations. Also, when a property is not defined,
 the `get` and `getList` methods return an empty `Optional` and an empty immutable `List`, 
 respectively, instead of `null`.
@@ -37,37 +37,38 @@ There are a wide range of builder methods to get configurations from different s
 - Java `.properties` files
 - JSON files
 - XAML files
+- TOML files
 - `Map` and `Properties` objects
 - *In-code* pairs of <key, value>
-
-
-The internal implementation is mainly a wrapper around [Apache Commons Configuration][1],
-but it may change at any point.
 
 
 Usage
 -----------------------------------------------------------------------------------------
 
+### Maven dependency
+
+```xml
+<dependency>
+    <groupId>io.github.luiinge</groupId>
+    <artifactId>immutable-config</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
 ### Loading configurations
 
-In order to obtain a configuration, simply use one of the static methods in `ConfigurationFactory`:
+In order to obtain a configuration, simply use one of the static methods in `ConfigFactory`:
 
 ```java
-Configuration conf = Configuration.factory().fromPath(Path.of("myConfig.yaml"));
+Config conf = Config.factory().fromPath(Path.of("myConfig.yaml"));
 ```
 
 Two configurations can be merged, using one of them as base:
 
 ```java
-Configuration confA = Configuration.factory().fromEnvironment();
-Configuration confB = Configuration.factory().fromPath(Path.of("myConfig.yaml"));
-Configuration confC = confA.append(confB);
-```
-or, using the chainable methods:
-```java
-Configuration conf = Configuration.factory()
-  .fromEnvironment()
-  .appendFromPath(Path.of("myConfig.yaml"));
+Config confA = Config.factory().fromEnvironment();
+Config confB = Config.factory().fromPath(Path.of("myConfig.yaml"));
+Config confC = confA.append(confB);
 ```
 
 You can create a new configuration from Java objects:
@@ -76,10 +77,10 @@ Map<String,String> map = Map.of(
     "propertyA","valueA",
     "propertyB","valueB"
 );
-Configuration conf = Configuration.factory().fromMap(map);
+Config conf = Config.factory().fromMap(map);
 ```
 ```java
-Configuration conf = Configuration.factory().fromPairs(
+Config conf = Config.factory().fromPairs(
     "propertyA","valueA",
     "propertyB","valueB"
 );
@@ -88,34 +89,28 @@ Configuration conf = Configuration.factory().fromPairs(
 In addition, you can annotate any class and use it as a configuration source:
 
 ```java
-@AnnotatedConfiguration(properties={
+@AnnotatedConfig(properties={
   @Property(key="propertyA", value="valueA"),
   @Property(key="propertyB", value="valueB")
 })
 class MyConfigClass { }
 ```
 ```java
-Configuration conf = Configuration.factory().fromAnnotation(MyConfigClass.class);
+Config conf = Config.factory().fromAnnotation(MyConfigClass.class);
 ```
 
 ### Retrieving values
-In order to retrieve a value, you must establish the Java type you want to get.
-The supported types are:
-- `String`
-- `Byte`, `Short`, `Integer`, `Long`
-- `Float`, `Double`
-- `BigDecimal`, `BigInteger`
-- `LocalTime`, `LocalDate`, `LocalDateTime` (using ISO-8601)
-
-Notice that the `get` method returns an `Optional`, so you are forced to deal with 
-possible nulls. Also, you can chain mapping methods in case you want a data type 
-that is not automatically converted.
+- All values are stored either as single `String` literals or lists of `String` literals.
+- The `get` method returns an `Optional`, so you are forced to deal with 
+possible nulls. 
+- In case you want to parse the raw value into a custom type, you can either make use of the 
+`Optional` API, or pass directly the parsing function to the getter method
 
 ```java
-  Configuration configuration = ... 
-  Optional<String> user = configuration.get("user", String.class);
-  Optional<Integer> year = configuration.get("year", Integer.class );
-  Locale locale = configuration.get("language", String.class).map(Locale::new).orElse(Locale.ENGLISH);
+  Config config = ... 
+  Optional<String> user = config.get("user");
+  Optional<Integer> year = config.get("year").map(Integer::valueOf);
+  Locale locale = config.get("language", Locale::new).orElse(Locale.ENGLISH);
 ```
 
 #### Multi-valued properties
@@ -125,8 +120,34 @@ of values instead of a single one. For that, the method `getList` works similarl
 
 ```java
   Configuration configuration = ... 
-  List<String> servers = configuration.getList("servers", String.class);
+  List<String> servers = configuration.getList("servers");
 ```
+When invoked aiming a single-value property, it would return a collection of 1 item.
+Alternatively, invoking `get` aiming a multi-valued property, it would return the 
+first element present.
+
+### Loading configurations from external sources
+By using the methods `fromPath`, `fromResource`, `fromURI` you can create 
+a `Config` instance reflecting the configuration defined in such sources.
+The accepted formats are Java Properties files, YAML, JSON, XML and TOML.
+Some of these formats would require additional dependencies to work:
+
+
+| format | required dependencies |
+| --- | --- |
+| `properties` | none |
+| `JSON` | `com.fasterxml.jackson.core:jackson-databind` |
+| `YAML` | `com.fasterxml.jackson.dataformat:jackson-dataformat-yaml` |
+| `XML` | `com.fasterxml.jackson.dataformat:jackson-dataformat-xml` |
+| `TOML` | `com.fasterxml.jackson.dataformat:jackson-dataformat-toml` |
+
+
+> These extra dependencies are *NOT* transitive dependencies, that is, they 
+would be not included directly. The main reason behind this decision is 
+to avoid adding dependencies that only would be use in specific scenarios.
+It is responsibility of the client to add them to the build in case they 
+were required.
+
 
 ### Property definitions
 
@@ -138,7 +159,7 @@ Supported types are:
 | type      | description           | additional constraints |
 | --------- | --------------------- | ---------------------- |
 | `text`    | plain text            | regular expression     |
-| `enum`    | strict list of values |                        |ls
+| `enum`    | strict list of values |                        |
 | `boolean` | `true` or `false`     |                        |
 | `integer` | integer number        | min and/or max bounds  |
 | `decimal` | decimal number        | min and/or max bounds  |
@@ -147,19 +168,23 @@ Property definitions can be either read from YAML files (as a kind of _meta-conf
 created programmatically, using any of the existing methods starting with `according...` . Notice that
 the definition is always applied to a `Configuration` object.
 
-Once a configuration has a definition applied, its existing properties must abide by the definition. 
-Trying to retrieve a property with an illegal value, or a required property without value, would result 
-in an exception. 
+Once a configuration has one or more definitions applied, you can validate it using 
+the method `validate()`. If there are invalid property values itt would throw an 
+`InvalidConfigException`, along with a descriptive message informing of every 
+invalid value. You can also get the list of violations calling the method `validations()`.
 
-#### Loading property definitions from YAML file
+Notice that you can retrieve invalid values normally using the `get()` and `getList()` 
+methods.
 
-Property definitions can be easily readed from YAML files using the following method:
+#### Loading property definitions from external file
+
+Property definitions can be easily readed from YAML, JSON or XML files using the following method:
 
 ```java
-    Configuration definition = Configuration.factory().accordingDefinitionsFromPath(Path.of("my-definition.yaml"));
+    Config definition = Config.factory().accordingDefinitionsFromPath(Path.of("my-definition.yaml"));
 ```
 
-The property definition YAML file uses the following structure:
+The property definition file uses the following structure:
 ```
 <property-key>:
     type: <text|enum|boolean|integer|decimal>
@@ -229,7 +254,7 @@ var definitions = List.of(
         .integerType(2,3)
         .build()
 );
-var configuration = Configuration.factory().accordingDefinitions(definitions);
+var configuration = Config.factory().accordingDefinitions(definitions);
 ```
 
 
@@ -238,7 +263,7 @@ var configuration = Configuration.factory().accordingDefinitions(definitions);
 <dependency>
     <groupId>io.github.luiinge</groupId>
     <artifactId>immutable-config</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -257,6 +282,7 @@ Requirements
 
 License
 -----------------------------------------------------------------------------------------
+```
 MIT License
 
 Copyright (c) 2020 Luis Iñesta Gelabert - luiinge@gmail.com
@@ -278,12 +304,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
 
-
-
-References
------------------------------------------------------------------------------------------
-
-- [**1**] *Apache Commons Configuration* - https://commons.apache.org/proper/commons-configuration
-
-[1]:  https://commons.apache.org/proper/commons-configuration
