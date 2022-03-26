@@ -4,7 +4,7 @@
 --menu-foreground-color: #f1f4f4;
 --menu-decoration-color: #b7d4da;
 --gui-element-color: #f08080;
-}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-java.min.js" integrity="sha512-PWHY6Vao4E9K4LsGBYCY0ttDeiWZwuUozTbJvSy9UFHRz2J4Bl7rcWML3wEnJTVuCJhSwGne/8My5gTo/gnbpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-yaml.min.js" integrity="sha512-QRKKJS95wG2dOCdc7Cm0Zbu+L04xY8fTwhHG3UnqZPMiFrAN8uXrqVTx//eqvTaoYwNJ7oFN3Vej5gnJ+GAxkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head><body><a id="jump-to-content" href="#content">jump to content</a><header><div class="title-and-subtitle"><h1 class="title label"><i class="hidden"></i><span>Immutable Configurations</span></h1><span class="subtitle">Configuration utility library</span></div><nav class="sections"><ul><li><a class="label internal" href="changelog.html"><i class="fas fa-clipboard-list"></i><span>Changelog</span></a></li><li><a class="label internal" href="reports.html"><i class="fas fa-file-medical-alt"></i><span>Reports</span></a><ul class="dropdown"><li><a class="label internal" href="javadoc.html"><i class="fab fa-java"></i><span>Javadoc</span></a></li><li><a class="label internal" href="test-coverage.html"><i class="hidden"></i><span>Test Coverage</span></a></li><li><a class="label internal" href="test-results.html"><i class="hidden"></i><span>Test Results</span></a></li></ul></li><li><a class="label external" href="https://github.com/luiinge/immutable-config/tree/master" target="_blank" rel="external noreferrer noopener nofollow"><i class="fab fa-github"></i><span>Source</span></a></li><li><a class="label internal" href="license.html"><i class="fas fa-balance-scale"></i><span>License</span></a></li></ul></nav></header><nav class="breadcrumbs"><ol><li><a class="internal" href="index.html">Immutable Configurations</a></li></ol></nav><aside><nav class="toc"><ol><li><a class="internal" href="#usage">Usage</a></li><ol><li><a class="internal" href="#loading-configurations">Loading configurations</a></li><li><a class="internal" href="#retrieving-values">Retrieving values</a></li><li><a class="internal" href="#loading-configurations-from-external-sources">Loading configurations from external sources</a></li><li><a class="internal" href="#property-definitions">Property definitions</a></li><li><a class="internal" href="#maven-dependency">Maven dependency</a></li></ol><li><a class="internal" href="#requirements">Requirements</a></li><li><a class="internal" href="#contributing">Contributing</a></li><li><a class="internal" href="#authors">Authors</a></li><li><a class="internal" href="#license">License</a></li><li><a class="internal" href="#references">References</a></li></ol></ol></nav></aside><section class="content" id="content"><h1 id="immutable-configurations">Immutable Configurations</h1>
+}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-java.min.js" integrity="sha512-PWHY6Vao4E9K4LsGBYCY0ttDeiWZwuUozTbJvSy9UFHRz2J4Bl7rcWML3wEnJTVuCJhSwGne/8My5gTo/gnbpg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-yaml.min.js" integrity="sha512-QRKKJS95wG2dOCdc7Cm0Zbu+L04xY8fTwhHG3UnqZPMiFrAN8uXrqVTx//eqvTaoYwNJ7oFN3Vej5gnJ+GAxkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head><body><a id="jump-to-content" href="#content">jump to content</a><header><div class="title-and-subtitle"><h1 class="title label"><i class="hidden"></i><span>Immutable Configurations</span></h1><span class="subtitle">Configuration utility library</span></div><nav class="sections"><ul><li><a class="label internal" href="changelog.html"><i class="fas fa-clipboard-list"></i><span>Changelog</span></a></li><li><a class="label internal" href="reports.html"><i class="fas fa-file-medical-alt"></i><span>Reports</span></a><ul class="dropdown"><li><a class="label internal" href="javadoc.html"><i class="fab fa-java"></i><span>Javadoc</span></a></li><li><a class="label internal" href="dependencies.html"><i class="hidden"></i><span>Dependencies</span></a></li><li><a class="label internal" href="test-coverage.html"><i class="hidden"></i><span>Test Coverage</span></a></li><li><a class="label internal" href="test-results.html"><i class="hidden"></i><span>Test Results</span></a></li></ul></li><li><a class="label external" href="https://github.com/luiinge/immutable-config/tree/master" target="_blank" rel="external noreferrer noopener nofollow"><i class="fab fa-github"></i><span>Source</span></a></li><li><a class="label internal" href="license.html"><i class="fas fa-balance-scale"></i><span>License</span></a></li></ul></nav><div class="company"><img class="hidden"></div></header><nav class="breadcrumbs"><ol><li><a class="internal" href="index.html">Immutable Configurations</a></li></ol></nav><aside><nav class="toc"><ol><li><a class="internal" href="#usage">Usage</a></li><ol><li><a class="internal" href="#maven-dependency">Maven dependency</a></li><li><a class="internal" href="#loading-configurations">Loading configurations</a></li><li><a class="internal" href="#retrieving-values">Retrieving values</a></li><li><a class="internal" href="#loading-configurations-from-external-sources">Loading configurations from external sources</a></li><li><a class="internal" href="#property-definitions">Property definitions</a></li><li><a class="internal" href="#maven-dependency">Maven dependency</a></li></ol><li><a class="internal" href="#requirements">Requirements</a></li><li><a class="internal" href="#contributing">Contributing</a></li><li><a class="internal" href="#authors">Authors</a></li><li><a class="internal" href="#license">License</a></li></ol></ol></nav></aside><section class="content" id="content"><h1 id="immutable-configurations">Immutable Configurations</h1>
 <p><img src="https://img.shields.io/github/license/luiinge/immutable-config?style=plastic" alt="GitHub" />
 <img src="https://img.shields.io/github/workflow/status/luiinge/immutable-config/quality%20check/master?style=plastic" alt="GitHub Workflow Status (branch)" />
 <img src="https://img.shields.io/maven-central/v/io.github.luiinge/immutable-config?style=plastic" alt="Maven Central" /></p>
@@ -40,6 +40,13 @@ by the consumer system.</p>
 <li><em>In-code</em> pairs of &lt;key, value&gt;</li>
 </ul>
 <h2 id="usage">Usage</h2>
+<h3 id="maven-dependency">Maven dependency</h3>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.github.luiinge&lt;/groupId&gt;
+    &lt;artifactId&gt;immutable-config&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
 <h3 id="loading-configurations">Loading configurations</h3>
 <p>In order to obtain a configuration, simply use one of the static methods in <code>ConfigFactory</code>:</p>
 <pre><code class="language-java">Config conf = Config.factory().fromPath(Path.of(&quot;myConfig.yaml&quot;));
@@ -98,13 +105,18 @@ first element present.</p>
 a <code>Config</code> instance reflecting the configuration defined in such sources.
 The accepted formats are Java Properties files, YAML, JSON, XML and TOML.
 Some of these formats would require additional dependencies to work:</p>
-<p>| format | required dependencies |
-| --- | --- |
-| <code>properties</code> | none |
-| <code>JSON</code> | <code>com.fasterxml.jackson.core:jackson-databind</code> |
-| <code>YAML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</code> |
-| <code>XML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-xml</code> |
-| <code>TOML</code> | <code>com.fasterxml.jackson.dataformat:jackson-dataformat-toml</code> |</p>
+<table>
+<thead>
+<tr><th>format</th><th>required dependencies</th></tr>
+</thead>
+<tbody>
+<tr><td><code>properties</code></td><td>none</td></tr>
+<tr><td><code>JSON</code></td><td><code>com.fasterxml.jackson.core:jackson-databind</code></td></tr>
+<tr><td><code>YAML</code></td><td><code>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</code></td></tr>
+<tr><td><code>XML</code></td><td><code>com.fasterxml.jackson.dataformat:jackson-dataformat-xml</code></td></tr>
+<tr><td><code>TOML</code></td><td><code>com.fasterxml.jackson.dataformat:jackson-dataformat-toml</code></td></tr>
+</tbody>
+</table>
 <blockquote>
 <p>These extra dependencies are <em>NOT</em> transitive dependencies, that is, they
 would be not included directly. The main reason behind this decision is
@@ -117,13 +129,18 @@ were required.</p>
 some basic validations and default values. Each expected property is defined by its key, data type,
 default value, and additional constraints regarding the data type.
 Supported types are:</p>
-<p>| type      | description           | additional constraints |
-| --------- | --------------------- | ---------------------- |
-| <code>text</code>    | plain text            | regular expression     |
-| <code>enum</code>    | strict list of values |                        |
-| <code>boolean</code> | <code>true</code> or <code>false</code>     |                        |
-| <code>integer</code> | integer number        | min and/or max bounds  |
-| <code>decimal</code> | decimal number        | min and/or max bounds  |</p>
+<table>
+<thead>
+<tr><th>type</th><th>description</th><th>additional constraints</th></tr>
+</thead>
+<tbody>
+<tr><td><code>text</code></td><td>plain text</td><td>regular expression</td></tr>
+<tr><td><code>enum</code></td><td>strict list of values</td><td> </td></tr>
+<tr><td><code>boolean</code></td><td><code>true</code> or <code>false</code></td><td> </td></tr>
+<tr><td><code>integer</code></td><td>integer number</td><td>min and/or max bounds</td></tr>
+<tr><td><code>decimal</code></td><td>decimal number</td><td>min and/or max bounds</td></tr>
+</tbody>
+</table>
 <p>Property definitions can be either read from YAML files (as a kind of <em>meta-configuration</em>), or
 created programmatically, using any of the existing methods starting with <code>according...</code> . Notice that
 the definition is always applied to a <code>Configuration</code> object.</p>
@@ -240,8 +257,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 </code></pre>
-<h2 id="references">References</h2>
-<ul>
-<li>[<strong>1</strong>] <em>Apache Commons Configuration</em> - https://commons.apache.org/proper/commons-configuration</li>
-</ul>
-<div class="footer">Generated with <a href="https://luiinge.github.io/docsite-maven-plugin/">Docsite</a>. Last published on 2022-03-25</div></section></body></html>
+<div class="footer">Generated with <a href="https://luiinge.github.io/docsite-maven-plugin/">Docsite</a>. Last published on 2022-03-26</div></section></body></html>

@@ -45,6 +45,16 @@ There are a wide range of builder methods to get configurations from different s
 Usage
 -----------------------------------------------------------------------------------------
 
+### Maven dependency
+
+```xml
+<dependency>
+    <groupId>io.github.luiinge</groupId>
+    <artifactId>immutable-config</artifactId>
+    <version>2.0.0</version>
+</dependency>
+```
+
 ### Loading configurations
 
 In order to obtain a configuration, simply use one of the static methods in `ConfigFactory`:
@@ -296,10 +306,3 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-
-References
------------------------------------------------------------------------------------------
-
-- [**1**] *Apache Commons Configuration* - https://commons.apache.org/proper/commons-configuration
-
-[1]:  https://commons.apache.org/proper/commons-configuration
