@@ -84,6 +84,56 @@ public interface Config {
      */
     String get(String key, String fallback);
 
+
+    /**
+     * @return An optional boolean value, empty if the key does not exist
+     */
+    default Optional<Boolean> getBoolean(String key) {
+        return get(key, Boolean::valueOf);
+    }
+
+
+    /**
+     * @return A boolean value, using the fallback if the key does not exist
+     */
+    default boolean getBoolean(String key, boolean fallback) {
+        return get(key, Boolean::parseBoolean, fallback);
+    }
+
+
+    /**
+     * @return An optional integer value, empty if the key does not exist
+     */
+    default Optional<Integer> getInt(String key) {
+        return get(key, Integer::valueOf);
+    }
+
+
+    /**
+     * @return An integer value, using the fallback if the key does not exist
+     */
+    default int getInt(String key, int fallback) {
+        return get(key, Integer::parseInt, fallback);
+    }
+
+
+    /**
+     * @return An optional long value, empty if the key does not exist
+     */
+    default Optional<Long> getLong(String key) {
+        return get(key, Long::valueOf);
+    }
+
+
+    /**
+     * @return A boolean value, using the fallback if the key does not exist
+     */
+    default long getLong(String key, long fallback) {
+        return get(key, Long::parseLong, fallback);
+    }
+
+
+
     /**
      * @return An optional mapped value, empty if the key does not exist
      */
