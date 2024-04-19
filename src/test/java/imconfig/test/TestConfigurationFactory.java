@@ -148,6 +148,13 @@ public class TestConfigurationFactory {
 
 
     @Test
+    public void createConfigurationFromYMLFile() {
+        Config conf = factory.fromResource("test-conf.yml", UTF8, CLASS_LOADER);
+        assertExpectedPropertiesExist(conf);
+    }
+
+
+    @Test
     public void createConfigurationFromPropertiesFile() throws ConfigException {
         Config conf = factory.fromResource("test-conf.properties", UTF8, CLASS_LOADER);
         assertExpectedPropertiesExist(conf);
