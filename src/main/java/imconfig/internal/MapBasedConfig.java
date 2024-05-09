@@ -8,15 +8,26 @@ import java.util.stream.*;
 @SuppressWarnings("unchecked")
 public class MapBasedConfig extends AbstractConfig {
 
+    private final String key;
     private final Map<String,?> values;
 
     MapBasedConfig(
         ConfigFactory builder,
         Map<String,?> values,
-        Map<String,PropertyDefinition> definitions
+        Map<String,PropertyDefinition> definitions,
+        String key
     ) {
         super(builder, definitions);
         this.values = Map.copyOf(values);
+        this.key = key;
+    }
+
+    MapBasedConfig(
+            ConfigFactory builder,
+            Map<String,?> values,
+            Map<String,PropertyDefinition> definitions
+    ) {
+        this(builder,values, definitions, "");
     }
 
     MapBasedConfig(
@@ -57,9 +68,10 @@ public class MapBasedConfig extends AbstractConfig {
 
     @Override
     public Config inner(String keyPrefix) {
-        return this
-            .filtered(it -> it.startsWith(keyPrefix+"."))
-            .alteringKeys(it -> it.substring(it.indexOf(keyPrefix+".")+keyPrefix.length()+1));
+        Config newConfig = this
+                .filtered(it -> it.startsWith(keyPrefix+"."))
+                .alteringKeys(it -> it.substring(it.indexOf(keyPrefix+".")+keyPrefix.length()+1));
+        return new MapBasedConfig(builder, newConfig.asMap(), definitions, key.isEmpty() ? keyPrefix : key + "." + keyPrefix);
     }
 
 
@@ -80,6 +92,10 @@ public class MapBasedConfig extends AbstractConfig {
         return values.get(key) instanceof List;
     }
 
+    @Override
+    public String key() {
+        return key;
+    }
 
     @Override
     public Iterable<String> keys() {
