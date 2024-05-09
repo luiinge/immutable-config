@@ -51,6 +51,10 @@ public class EmptyConfig implements Config {
         return false;
     }
 
+    @Override
+    public String key() {
+        return null;
+    }
 
     @Override
     public Iterable<String> keys() {

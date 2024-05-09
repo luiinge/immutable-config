@@ -31,6 +31,7 @@ public class TestConfigurationFactory {
     private static final String KEY_ENV = "test.env.key";
     private static final String VAL_ENV = "Test Environment Value";
 
+    private static final String KEY_PROPERTIES = "properties.test.key";
     private static final String KEY_STRING = "properties.test.key.string";
     private static final String KEY_STRINGS = "properties.test.key.strings";
     private static final String KEY_BOOL = "properties.test.key.bool";
@@ -441,6 +442,8 @@ public class TestConfigurationFactory {
             );
 
         assertNullProperties(conf);
+        Assertions.assertThat(conf.inner(KEY_ENV).key()).isEqualTo(KEY_ENV);
+        Assertions.assertThat(conf.inner(KEY_PROPERTIES).inner("string").key()).isEqualTo(KEY_STRING);
     }
 
 

@@ -58,6 +58,8 @@ public interface Config {
     /** @return <code>true</code> if there is a multi-valued property with the given key */
     boolean hasMultivaluedProperty(String key);
 
+    /** @return the current key */
+    String key();
 
     /** @return An iterable object over all the keys of the configuration,
      *  even for those which have no value */
