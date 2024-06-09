@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,26 +18,32 @@ public class TestConfigurationFactoryDefinitions {
 
 
     private final ConfigFactory factory = ConfigFactory.instance();
-    private final Path definitionPath = Path.of("src", "test", "resources", "definition.yaml");
+    private final Path basePath = Path.of("src", "test", "resources");
 
 
     @Test
     public void testBuildEmptyConfigurationWithDefinitionFromURI() {
-        var conf = factory.accordingDefinitionsFromURI(definitionPath.toUri(), StandardCharsets.UTF_8);
-        assertConfiguration(conf);
+        for (Path definitionPath : List.of(
+                basePath.resolve("definition.yaml"), basePath.resolve("definition.yml"))) {
+            var conf = factory.accordingDefinitionsFromURI(definitionPath.toUri(), StandardCharsets.UTF_8);
+            assertConfiguration(conf);
+        }
     }
 
     @Test
     public void testBuildEmptyConfigurationWithDefinitionFromPath() {
-        var conf = factory.accordingDefinitionsFromPath(definitionPath, StandardCharsets.UTF_8);
-        assertConfiguration(conf);
+        for (Path definitionPath : List.of(
+                basePath.resolve("definition.yaml"), basePath.resolve("definition.yml"))) {
+            var conf = factory.accordingDefinitionsFromPath(definitionPath, StandardCharsets.UTF_8);
+            assertConfiguration(conf);
+        }
     }
 
 
     @Test
     public void testAttachDefinitionFromURI() {
         var conf = factory.empty()
-            .append(factory.accordingDefinitionsFromURI(definitionPath.toUri(), StandardCharsets.UTF_8));
+            .append(factory.accordingDefinitionsFromURI(basePath.resolve("definition.yaml").toUri(), StandardCharsets.UTF_8));
         assertConfiguration(conf);
     }
 
@@ -44,7 +51,7 @@ public class TestConfigurationFactoryDefinitions {
     @Test
     public void testAttachDefinitionFromPath() {
         var conf = factory.empty()
-            .append(factory.accordingDefinitionsFromPath(definitionPath, StandardCharsets.UTF_8));
+            .append(factory.accordingDefinitionsFromPath(basePath.resolve("definition.yaml"), StandardCharsets.UTF_8));
         assertConfiguration(conf);
     }
 
@@ -53,7 +60,7 @@ public class TestConfigurationFactoryDefinitions {
     public void testConfigurationValidation() {
         var conf = factory
             .fromPairs("defined.property.min-max-number", "6")
-            .append(factory.accordingDefinitionsFromPath(definitionPath,StandardCharsets.UTF_8));
+            .append(factory.accordingDefinitionsFromPath(basePath.resolve("definition.yaml"),StandardCharsets.UTF_8));
         assertThat(conf.validations("defined.property.min-max-number"))
         .contains("Invalid value '6', expected: Integer number between 2 and 3");
     }

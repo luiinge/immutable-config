@@ -21,7 +21,7 @@ public class ExternalReaderFactory {
                 return externalReaders.computeIfAbsent(extension, x->newJsonReader());
             case "xml":
                 return externalReaders.computeIfAbsent(extension, x->newXmlReader());
-            case "yaml":
+            case "yaml": case "yml":
                 return externalReaders.computeIfAbsent(extension, x->newYamlReader());
             case "toml":
                 return externalReaders.computeIfAbsent(extension, x->newTomlReader());
